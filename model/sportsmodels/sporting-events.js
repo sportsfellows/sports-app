@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const Schema = mongoose.Schem;abstract
+const Schema = mongoose.Schema
 
 const sportingEventSchema = Schema ({
   name: { type: String, required: true },
@@ -9,4 +9,4 @@ const sportingEventSchema = Schema ({
   created: { type: Date, required: true, default: Date.now },
 });
 
-module.exports = mongoose.model('sporting-event', sportingEventSchema);
+module.exports = mongoose.model('sportingEvent', sportingEventSchema);
