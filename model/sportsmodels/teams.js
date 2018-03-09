@@ -9,4 +9,4 @@ const team = Schema({
   created: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('team', teamSchema) 
+module.exports = mongoose.model('team', teamSchema);
