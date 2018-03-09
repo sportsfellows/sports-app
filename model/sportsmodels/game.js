@@ -12,3 +12,5 @@ const gameSchema = Schema ({
   awayScore: { type: Number, default: null},
   dateTime: { type: Date, default: null, required: true },
 });
+
+module.exports = mongoose.model('gameSchema', gameSchema);
