@@ -9,4 +9,4 @@ const sportingEventSchema = Schema ({
   created: { type: Date, required: true, default: Date.now },
 });
 
-module.exports = mongoose.model('sportingEvent', sportingEventSchema);
+module.exports = mongoose.model('sportingEvent', sportingEventSchema); 
