@@ -11,10 +11,17 @@ const debug = require('sports-app:user');
 const Schema = mongoose.Schema;
 
 const userSchema = Schema({
+  image: { type: }, // ??
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   findHash: { type: String, unique: true },
+  country: { type: String, uppercase: true }, // compare to countries which this is legal??
+  state: { type: String, uppercase: true }, // compare to states where this is legal??
+  age: { type: Date, min: 18 },
+  balance: { type: Number },
+  leagues: { type: Array },
+  id: { type: String, unique: true },
 });
 
 userSchema.methods.generatePasswordHash = function(password) {
