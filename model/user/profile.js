@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const debug = require('debug')('sportsapp:user');
+const debug = require('debug')('sportsapp:profile');
 const createError = require('http-errors');
 const User = require('./user.js');
 const League = require('../league/league.js');

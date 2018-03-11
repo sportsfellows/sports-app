@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 
+// const commentRouter = require('./routes/league/comment-router.js');
+// const messageBoardRouter = require('./routes/league/messageBoard-router.js');
 // const leagueRouter = require('./routes/league/league-router.js');
 // const groupRouter = require('./routes/league/group-router.js');
 // const scoreboardRouter = require('./routes/league/scoreboard-router.js');
@@ -34,6 +36,8 @@ app.use(authRouter);
 // app.use(userPickRouter);
 // app.use(scoreboardRouter);
 // app.use(groupRouter);
+// app.use(messageBoardRouter);
+// app.use(commentRouter);
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
