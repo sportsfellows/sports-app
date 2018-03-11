@@ -1,53 +1,255 @@
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
-## Lab 07: HTTP Server
-A basic HTTP server with GET and POST routes. Users can request cowified strings with the POST route, and can use query strings to access cowified ascii images in the browser.
+## Project 1: Asset Management
+
+I added additional functionality to my 2 resource API, I have incorporated Amazon S3 so users can upload images to Amazon S3 and my database savesa  URL pointing to the site.
 
 ## Tech/frameworks/packages
 
 - node 
+- MongoDB
 - npm
 - node packages
-  - jest
-  - eslint
-  - dotenv
-  - winston
-  - http
-  - cowsay
-  - url
+  - Production
+    - bcrypt
+    - bluebird
+    - body-parser
+    - cors
+    - debug
+    - dotenv
+    - eslint
+    - express
+    - http-errors
+    - jsonwebtoken
+    - mongoose
+    - morgan
+  - Dev
+    - jest
+    - superagent
 
-## Code Example
-`echo '{"text": "Get Cool Cow Text"}' | http post localhost:3000/api/cowsay`
-## Installation
+## Entity Relationship Diagram
 
-1. Fork and clone https://github.com/kennieU/README.md to your computer.
-1. `cd` into `lab-ken/` and run `npm install`.
-1. `touch .env` and add `PORT=3000`.
+![Demo](./public/img/erd.png)
+https://www.lucidchart.com/documents/view/ccfd14a4-7127-4097-8bf9-ca0d567cc323/0
+
+## Models
+
+user model (
+  _id <type>,
+  username <type>,
+  email <type>,
+  password <type>,
+  findHash <type>
+);
+
+sportingEvent model (
+  _id <type>,
+  sportingEventName <type>,
+  desc <type>,
+  createdOn <type>,
+  tags <type>
+);
+
+game model (
+  _id <type>,
+  homeTeam <type>,
+  awayTeam <type>,
+  weight <type>,
+  winner <type>,
+  homeScore <type>,
+  awayScore <type>,
+  date <type>,
+  status <type>,
+  tags <type>
+);
+
+team model (
+  _id <type>,
+  teamName <type>,
+  sportingEventID <type>,
+  createdOn <type>,
+  seed <type>,
+  record <type>,
+  pretournamentRecord <type>,
+  tags <type>
+);
+
+league model (
+  _id <type>,
+  leagueName <type>,
+  sportingEventID <type>,
+  owner <type>,
+  scoring <type>,
+  poolSize <type>,
+  privacy <type>,
+  password <type>,
+  winner <type>,
+  status <type>,
+  users <type>,
+  createdOn <type>,
+  size <type>,
+  paidUsers <type>,
+  tags <type>
+);
+
+scoreboard model (
+  _id <type>,
+  userID <type>,
+  leagueID <type>,
+  score <type>
+);
+
+group model (
+  _id <type>,
+  groupName <type>,
+  privacy <type>,
+  size <type>,
+  motto <type>,
+  createdOn <type>,
+  image <type>,
+  owner <type>,
+  password <type>,
+  users <type>,
+  tags <type>
+);
+
+profile model (
+  _id <type>,
+  image <type>,
+  country <type>,
+  state <type>,
+  birthDate <type>,
+  accountBalance <type>,
+  status <type>,
+  createdOn <type>,
+  lastLogin <type>,
+  leagues <type>,
+  groups <type>,
+  userID <type>,
+  tags <type>
+);
+
+comment model (
+  _id <type>,
+  userID <type>,
+  content <type>,
+  createdOn <type>,
+  messageBoardID <type>,
+  tags <type>
+);
+
+messageBoard model (
+  _id <type>,
+  leagueID <type>,
+  groupID <type>,
+  tags <type>
+);
+
+userPick model (
+  _id <type>,
+  userID <type>,
+  leagueID <type>,
+  gameID <type>,
+  pick <type>
+);
+
+
+## How to use?
+Clone this repo, cd into `lab-brian`, run `npm install`, brew install httpie and mongodb if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
+
+Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell. Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
+
+Make POST/GET/DELETE/PUT requests to the server and your local MongoDB.
+
+## Routes
+
+#### `POST /api/signup && /api/list`
+
+Create a new  user with the properties `username`, `email`, `password` and `findHash` which is created for you. Or create a new list with the properties `name`, `desc`, and `created` along with `userID` which are created for you.
+
+```
+http POST :3000/api/signup username=briguy999 email=brianbixby0@gmail.com password=password1
+
+http POST :3000/api/list name='my cool list' desc='this list is so cool'
+```
+
+Throws an error if any of the requested properties that are not created for you are missing.
+
+The User model will return a json web token and the list model will return a new list if there are no errors.
+
+#### `GET /api/signin && /api/list/<list id>  && /api/lists`
+
+Retrieve the json web token for a created user, or retrieve a single list or all lists for an authenticated user.
+
+```
+http -a <username>:<password> :3000/api/signin
+http -a <username>:<password> :3000/api/list/<list id>
+http -a <username>:<password> :3000/api/lists
+```
+
+Throws an error if the route can't be found, the list id is invalid or the use is not authenticated.
+
+#### `DELETE /api/list/<list id>`
+
+Deletes a specific list as requested by the <list id>.
+
+```
+http -a <username>:<password> DELETE :3000/api/list/<list id>
+```
+
+If successful, a 204 status is returned.
+
+Throws an error if the request parameter (id) is missing or the user is not authenticated.
+
+
+#### `PUT /api/list/<list id>`
+
+Updates a Jlist with the properties `name`, `desc`, `created` and `userID` from your MongoDB as requested by the <list id>.
+
+```
+http -a <username>:<password> PUT :3000/api/list/<list id> name='new list name'
+```
+
+If successful, the list is returned with a 200 status.
+
+If a request is made with a list id that is not found, a 404 status is returned.
+
+If a request is made with no list id a 400 status is returned.
+
+If a request is made with out an authenticated user a 401 status is returned.
 
 ## Tests
 
-run `npm test` to check tests.
+run `npm run tests` to check tests.
 
-1. POST should respond with a 200 status code and an object with a "content" property containing a cow string.
-1. POST should respond with a 400 status code and an object containing an error property if an object is sent without a text property.
-1. POST should respond with a 400 status code and an object containing an error property if no data is sent.
-1. POST should respond with a 404 status code and an object containing an error property if a bad route is sent.
+#### POST
 
-## How to use?
+1. The User model should create and return s json web token and a 200 status code if there is no error.
+2. The List model should create and return a new list.
+3. Both should respond with a 400 status code if there is no request body.
+4. The List model should respond with a 401 status code if there is no json web token provided.
 
-After installation, from `lab-ken/` run `npm start` to start the server. 
+#### GET
 
-From a different terminal window, make POST requests using httpie (install with homebrew if you need it).
+1. The User model should return a user's json web token and a 200 status code if there is no error.
+2. The list model should return a user's list and a 200 status code if there is no error.
+3. The List model should respond with a 401 status code if there is no json web token provided
+4. should respond with a 404 status code if a request is made with an id that is not found.
+5. The List model should respond with a 200 status code and all lists if there is no parameter (id).
 
-`echo '{"text": "Get Cool Cow Text"}' | http post localhost:3000/api/cowsay` 
+#### DELETE
 
-To use POST, you must send an object with a "text" key and string value.
+1. The List model should return a 204 status code if there are no errors.
+2. The List model should respond with a 400 status code if there is no parameter (id).
+3. The List model should respond with a 404 status code if a request is made with an id that is not found.
+4. The List model should respond with a 401 status code if there is no json web token provided.
 
-To access the GET route, go to `localhost:3000/` in a browser.
+#### PUT
 
-From there, click on `cowsay` to get some cows. To get special cows in the browser, use a query string with `text`.
-
-Example url: `http://localhost:3000/cowsay?text=Noob%20Nub%20Doobey%20Dub`
+1. The List model should update and return the updated list along with a 200 status code if there are no errors.
+2. The List model should respond with a 400 status code if there is an invalid request body.
+3. The List model should respond with a 404 status code if a request is made with an id that is not found.
+4. The List model should respond with a 401 status code if there is no json web token provided.
 
 ## Contribute
 
@@ -55,8 +257,8 @@ You can totally contribute to this project if you want. Fork the repo, make some
 
 ## Credits
 
-
+Initial codebase created by Code Fellows.
 
 ## License
 
-MIT.
+MIT. Use it up!

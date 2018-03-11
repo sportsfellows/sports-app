@@ -21,7 +21,6 @@ const userSchema = Schema({
   age: { type: Date, min: 18 },
   balance: { type: Number },
   leagues: { type: Array },
-  id: { type: String, unique: true },
 });
 
 userSchema.methods.generatePasswordHash = function(password) {
