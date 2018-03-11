@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 // const leagueRouter = require('./routes/league/league-router.js');
+// const groupRouter = require('./routes/league/group-router.js');
 // const scoreboardRouter = require('./routes/league/scoreboard-router.js');
 // const userPickRouter = require('./routes/league/userPick-router.js');
 // const gameRouter = require('./routes/sportingEvent/game-router.js');
@@ -32,6 +33,7 @@ app.use(authRouter);
 // app.use(leagueRouter);
 // app.use(userPickRouter);
 // app.use(scoreboardRouter);
+// app.use(groupRouter);
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {

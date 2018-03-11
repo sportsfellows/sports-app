@@ -1,12 +1,16 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const teamSchema = Schema({
-  name: { type: String, require: true, unique: true},
-  sportingEventID: { type: Schema.Types.ObjectId, required: true },
-  created: { type: Date, default: Date.now },
+const teamSchema = mongoose.Schema({
+  teamName: { type: String, required: true, unique: true},
+  sportingEventID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  createdOn: { type: Date, default: Date.now },
+  seed: { type: Number },
+  wins: {type: Number, default: 0 },
+  losses: {type: Number, default: 0 },
+  pretournamentRecord: {type: String},
+  tags: {},
 });
 
 module.exports = mongoose.model('team', teamSchema);
