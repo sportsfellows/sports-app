@@ -30,18 +30,16 @@ teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
 teamRouter.put('/api/team/:teamId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/team:teamId');
 
+  if (!req.body) return next(createError(400, 'expected a request body'));
   Team.findByIdAndUpdate(req.params.teamId, req.body, {new:true})
     .then( team => res.json(team))
     .catch(next);
 });
 
-teamRouter.delete('api/team/:teamId');
+teamRouter.delete('/api/team/:teamId', bearerAuth, function(req, res, next) {
+  debug('DELETE: /api/team/:teamId');
 
-teamRouter.delete('/api/team', bearerAuth, function (req, res, next) {
-  debug('DELETE: /api/team');
-  return next(createError(400, 'expected a team ID'));
+  Team.findByIdAndRemove(req.params.teamId)
+    .then(() => res.status(204).send())
+    .catch(next);
 });
-
-Team.findByIdAndRemove(req.params.teamId)
-  .then( () => res.status(204).send())
-  .catch(next);

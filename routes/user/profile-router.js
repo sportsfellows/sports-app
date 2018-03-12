@@ -62,20 +62,10 @@ profileRouter.get('/api/profile/:profileId', bearerAuth, function (req, res, nex
 profileRouter.put('/api/profile/:profileId', bearerAuth, jsonParser, function (req, res, next) {
   debug('PUT: /api/profile:profileId');
 
-  if (!req.body) {
-    return next(createError(400, 'request body not provided'));
-  }
-
+  if (!req.body) return next(createError(400, 'expected a request body'));
   Profile.findByIdAndUpdate(req.params.profileId, req.body, { new: true })
     .then(profile => res.json(profile))
     .catch(next);
-});
-
-// PUT route without a profileId
-profileRouter.put('/api/profile', bearerAuth, jsonParser, function (req, res, next) {
-  debug('PUT: /api/profile');
-
-  return next(createError(400, 'profileId not provided'));
 });
 
 profileRouter.delete('/api/profile/:profileId', bearerAuth, function (req, res, next) {
@@ -84,11 +74,4 @@ profileRouter.delete('/api/profile/:profileId', bearerAuth, function (req, res, 
   Profile.findByIdAndRemove(req.params.profileId)
     .then(() => res.status(204).send())
     .catch(next);
-});
-
-// DELETE route without a profileId
-profileRouter.delete('api/profile', bearerAuth, function (req, res, next) {
-  debug('DELETE: /api/profile');
-
-  return next(createError(400, 'profileId not provided'));
 });
