@@ -30,9 +30,7 @@ scoreBoardRouter.get('/api/scoreboard/:scoreBoardId', bearerAuth, function(req, 
 scoreBoardRouter.put('/api/scoreboard/:scoreBoardId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/scoreboard:scoreBoardId');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO SCOREEBOARD ID
-
+  if (!req.body) return next(createError(400, 'expected a request body'));
   ScoreBoard.findByIdAndUpdate(req.params.scoreBoardId, req.body, {new: true})
     .then( scoreBoard => res.json(scoreBoard))
     .catch(next);
@@ -41,8 +39,6 @@ scoreBoardRouter.put('/api/scoreboard/:scoreBoardId', bearerAuth, jsonParser, fu
 
 scoreBoardRouter.delete('/api/scoreboard/:scoreBoardId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/scoreboard/:scoreBoardId');
-
-  // TO DO: CREATE 400 ERROR IF NO SCOREBOARD ID
 
   ScoreBoard.findByIdAndRemove(req.params.scoreBoardId)
     .then( () => res.status(204).send())

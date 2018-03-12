@@ -30,19 +30,14 @@ userPickRouter.get('/api/userpick:userPickId', bearerAuth, function(req, res, ne
 userPickRouter.put('/api/userpick/:userPickId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/userpick:userPickId');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO USERPICK ID
-
+  if (!req.body) return next(createError(400, 'expected a request body'));
   UserPick.findByIdAndUpdate(req.params.userPickId, req.body, {new: true})
     .then( userPick => res.json(userPick))
     .catch(next);
 });
 
-
 userPickRouter.delete('/api/userpick/:userPickId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/userpick/:userPickId');
-
-  // TO DO: CREATE 400 ERROR IF NO USERPICK ID
 
   UserPick.findByIdAndRemove(req.params.userPickId)
     .then( () => res.status(204).send())
