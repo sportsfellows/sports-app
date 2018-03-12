@@ -13,8 +13,7 @@ const teamRouter = module.exports = Router();
 teamRouter.post('/api/team', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/team');
 
-  if (!req.body.team || req.body.desc)
-    return next(createError(400, 'expected a request body name and desc'));
+  if (!req.body.teamName || !req.body.sportingEventID) return next(createError(400, 'expected a request body teamName and sportingEventID'));
   new Team(req.body).save()
     .then( team => res.json(team))
     .catch(next);
@@ -31,9 +30,6 @@ teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
 teamRouter.put('/api/team/:teamId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/team:teamId');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO TEAM ID
-
   Team.findByIdAndUpdate(req.params.teamId, req.body, {new:true})
     .then( team => res.json(team))
     .catch(next);
@@ -41,7 +37,10 @@ teamRouter.put('/api/team/:teamId', bearerAuth, jsonParser, function(req, res, n
 
 teamRouter.delete('api/team/:teamId');
 
-// TO DO: CREATE 400 ERROR IF NO TEAM ID
+teamRouter.delete('/api/team', bearerAuth, function (req, res, next) {
+  debug('DELETE: /api/team');
+  return next(createError(400, 'expected a team ID'));
+});
 
 Team.findByIdAndRemove(req.params.teamId)
   .then( () => res.status(204).send())
