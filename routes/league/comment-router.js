@@ -13,7 +13,7 @@ const commentRouter = module.exports = Router();
 commentRouter.post('/api/comment', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/comment');
 
-  if (!req.body.userID || !req.body.messageBoardID || req.body.content) return next(createError(400, 'expected a request body userID, messageBoardID and content'));
+  if (!req.body.userID || !req.body.messageBoardID || !req.body.content) return next(createError(400, 'expected a request body userID, messageBoardID and content'));
   new Comment(req.body).save()
     .then( comment => res.json(comment))
     .catch(next);
@@ -30,7 +30,7 @@ commentRouter.get('/api/comment/:commentId', bearerAuth, function(req, res, next
 commentRouter.put('/api/comment/:commentId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/comment:commentId');
 
-  if (!req.body.userID || !req.body.messageBoardID || req.body.content) return next(createError(400, 'expected a request body userID, messageBoardID and content'));
+  if (!req.body) return next(createError(400, 'expected a request body'));
   Comment.findByIdAndUpdate(req.params.commentId, req.body, {new: true})
     .then( comment => res.json(comment))
     .catch(next);

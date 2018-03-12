@@ -30,19 +30,14 @@ messageBoardRouter.get('/api/messageboard/:messageBoardId', bearerAuth, function
 messageBoardRouter.put('/api/messageboard/:messageBoardId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/messageboard:messageBoardId');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO MESSAGEBOARD ID
-
+  if (!req.body) return next(createError(400, 'expected a request body'));
   MessageBoard.findByIdAndUpdate(req.params.messageBoardId, req.body, {new: true})
     .then( messageBoard => res.json(messageBoard))
     .catch(next);
 });
 
-
 messageBoardRouter.delete('/api/messageboard/:messageBoardId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/messageboard/:messageBoardId');
-
-  // TO DO: CREATE 400 ERROR IF NO MESSAGEBOARD ID
 
   MessageBoard.findByIdAndRemove(req.params.messageBoardId)
     .then( () => res.status(204).send())
