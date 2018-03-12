@@ -23,10 +23,8 @@ const upload = multer({ dest: dataDir });
 function s3uploadProm(params) {
   debug('s3uploadProm');
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => { // eslint-disable-line
     s3.upload(params, (err, s3data) => {
-      // if(err) reject(err);
-      // console.log('s3data: ', s3data);
       resolve(s3data);
     });
   });
@@ -48,6 +46,9 @@ profileRouter.post('/api/profile', bearerAuth, upload.single('image'), jsonParse
     Key: `${req.file.filename}${ext}`,
     Body: fs.createReadStream(req.file.path),
   };
+
+  // kinda confused on how to include the image with the profile. do we need a pic model?
+  // Profile.findById(req.user._id)
 });
 
 profileRouter.get('/api/profile/:profileId', bearerAuth, function (req, res, next) {
