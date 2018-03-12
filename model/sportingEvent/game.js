@@ -11,7 +11,7 @@ const gameSchema = mongoose.Schema ({
   awayScore: { type: Number, default: 0 },
   status: { type: String, default: 'scheduled' },
   winner: { type: mongoose.Schema.Types.ObjectId },
-  tag: { type: String },
+  tags: { type: String },
 });
 
 module.exports = mongoose.model('gameSchema', gameSchema);
