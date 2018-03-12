@@ -13,7 +13,7 @@ const gameRouter = module.exports = Router();
 gameRouter.post('/api/game', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/game');
 
-  if (!req.body.homeTeam || !req.body.awayTeam || !req.body.dateTime ) return next(createError(400, 'expected a request body homeTeam, awayTeam and dateTime'));
+  if (!req.body.homeTeam || !req.body.awayTeam || !req.body.dateTime || !req.body.sportingEventID ) return next(createError(400, 'expected a request body homeTeam, awayTeam and dateTime'));
   new Game(req.body).save()
     .then( game => res.json(game))
     .catch(next);

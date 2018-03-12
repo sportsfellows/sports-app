@@ -14,6 +14,8 @@ groupRouter.post('/api/group', bearerAuth, jsonParser, function(req, res, next) 
   debug('POST: /api/group');
 
   if (!req.body.groupName || !req.body.privacy || !req.body.owner) return next(createError(400, 'expected a request body groupName, privacy and owner'));
+  req.body.owner = req.user._id;
+  req.body.users = req.user._id;
   new Group(req.body).save()
     .then (group => res.json(group))
     .catch(next);

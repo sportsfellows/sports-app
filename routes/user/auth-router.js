@@ -7,6 +7,7 @@ const Router = require('express').Router;
 const basicAuth = require('../../lib/basic-auth-middleware.js');
 // const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 const User = require('../../model/user/user.js');
+const Profile = require('../../model/user/profile.js');
 
 const authRouter = module.exports = Router();
 
@@ -22,7 +23,15 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
     .then( user => user.save())
     .then( user => user.generateToken())
     .then( token => res.send(token))
+    .then( user => {
+      let profile = { userID }
+    })
+    // new Profile(req.body).save()
+    // .then(profile => res.json(profile))
+    // .catch(next);
     .catch(next);
+
+  
 });
 
 authRouter.get('/api/signin', basicAuth, function(req, res, next) {

@@ -14,6 +14,7 @@ commentRouter.post('/api/comment', bearerAuth, jsonParser, function(req, res, ne
   debug('POST: /api/comment');
 
   if (!req.body.userID || !req.body.messageBoardID || !req.body.content) return next(createError(400, 'expected a request body userID, messageBoardID and content'));
+  req.body.userID = req.user._id;
   new Comment(req.body).save()
     .then( comment => res.json(comment))
     .catch(next);
