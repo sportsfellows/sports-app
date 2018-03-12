@@ -28,6 +28,10 @@ groupRouter.get('/api/group/:groupId', bearerAuth, function(req, res, next) {
 
 groupRouter.put('/api/group/:groupId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/group/:groupId');
+
+  Group.findByIdAndUpdate(req.params.groupId)
+    .then(group => res.json(group))
+    .catch(next);
 });
 
 groupRouter.delete('/api/group/:groupId', bearerAuth, function(req, res, next) {
