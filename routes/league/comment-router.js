@@ -30,9 +30,7 @@ commentRouter.get('/api/comment/:commentId', bearerAuth, function(req, res, next
 commentRouter.put('/api/comment/:commentId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/comment:commentId');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO COMMENT ID
-
+  if (!req.body.userID || !req.body.messageBoardID || req.body.content) return next(createError(400, 'expected a request body userID, messageBoardID and content'));
   Comment.findByIdAndUpdate(req.params.commentId, req.body, {new: true})
     .then( comment => res.json(comment))
     .catch(next);
@@ -41,8 +39,6 @@ commentRouter.put('/api/comment/:commentId', bearerAuth, jsonParser, function(re
 
 commentRouter.delete('/api/comment/:commentId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/comment/:commentId');
-
-  // TO DO: CREATE 400 ERROR IF NO COMMENT ID
 
   Comment.findByIdAndRemove(req.params.commentId)
     .then( () => res.status(204).send())
