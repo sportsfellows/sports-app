@@ -7,13 +7,13 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 
-// const commentRouter = require('./routes/league/comment-router.js');
-// const messageBoardRouter = require('./routes/league/messageBoard-router.js');
+const commentRouter = require('./routes/league/comment-router.js');
+const messageBoardRouter = require('./routes/league/messageBoard-router.js');
 // const leagueRouter = require('./routes/league/league-router.js');
 // const groupRouter = require('./routes/league/group-router.js');
-// const scoreboardRouter = require('./routes/league/scoreboard-router.js');
-// const userPickRouter = require('./routes/league/userPick-router.js');
-// const gameRouter = require('./routes/sportingEvent/game-router.js');
+const scoreBoardRouter = require('./routes/league/scoreBoard-router.js');
+const userPickRouter = require('./routes/league/userPick-router.js');
+const gameRouter = require('./routes/sportingEvent/game-router.js');
 const sportingEventsRouter = require('./routes/sportingEvent/sportingEvent-router.js');
 // const teamRouter = require('./routes/sportingEvent/team-router.js');
 const authRouter = require('./routes/user/auth-router.js');
@@ -30,14 +30,14 @@ app.use(morgan('dev'));
 app.use(authRouter);
 app.use(profileRouter);
 app.use(sportingEventsRouter);
-// app.use(gameRouter);
+app.use(gameRouter);
 // app.use(teamRouter);
 // app.use(leagueRouter);
-// app.use(userPickRouter);
-// app.use(scoreboardRouter);
+app.use(userPickRouter);
+app.use(scoreBoardRouter);
 // app.use(groupRouter);
-// app.use(messageBoardRouter);
-// app.use(commentRouter);
+app.use(messageBoardRouter);
+app.use(commentRouter);
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
