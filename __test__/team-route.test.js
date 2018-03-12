@@ -13,6 +13,51 @@ const exampleTeam = {
 };
 
 describe('Team Router', function() {
+  describe('POST: /api/team', function() {
+    describe('with a valid body teamName and sportingEventID', function() {
+      afterEach( done => {
+        if (this.tempTeam) {
+          Team.deleteTeam(this.tempTeam.id)
+          .then( () => done())
+          .catch( err => done(err));
+        }
+      });
+
+      it('should return a team', done => {
+        request.post(`${url}/api/team`)
+        .send(exampleTeam)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).toEqual(400);
+          expect(res.body.name).toEqual(exampleTeam.name);
+          expect(res.body.content).toEqual(exampleTeam.content);
+          this.tempTeam = res.body;
+          done();
+        });
+      });
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   describe('GET: /api/team', function() {
     describe('with a valid id', function() {
       beforeEach( done => {
