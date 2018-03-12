@@ -23,7 +23,7 @@ const upload = multer({ dest: dataDir });
 function s3uploadProm(params) {
   debug('s3uploadProm');
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => { // eslint-disable-line
     s3.upload(params, (err, s3data) => {
       // if(err) reject(err);
       // console.log('s3data: ', s3data);
