@@ -1,11 +1,6 @@
 'use strict';
 
 const mongoose = require('mongoose');
-// const debug = require('debug')('sportsapp:league');
-// const createError = require('http-errors');
-const User = require('../user/user.js');
-// const League = require('../league/league.js');
-// const Group = require('../league/group.js');
 
 const leagueSchema = mongoose.Schema({
   leagueName: { type: String, required: true },
@@ -24,4 +19,4 @@ const leagueSchema = mongoose.Schema({
   tags: { type: String },
 });
 
-const League = module.exports = mongoose.model('profile', leagueSchema);
+module.exports = mongoose.model('league', leagueSchema);

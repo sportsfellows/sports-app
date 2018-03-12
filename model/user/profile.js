@@ -1,11 +1,11 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const debug = require('debug')('sportsapp:user');
-const createError = require('http-errors');
-const User = require('./user.js');
-const League = require('../league/league.js');
-const Group = require('../league/group.js');
+// const debug = require('debug')('sportsapp:profile');
+// const createError = require('http-errors');
+// const User = require('./user.js');
+// const League = require('../league/league.js');
+// const Group = require('../league/group.js');
 
 const profileSchema = mongoose.Schema({
   userID: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -22,4 +22,4 @@ const profileSchema = mongoose.Schema({
   tags: {type: String },
 });
 
-const Profile = module.exports = mongoose.model('profile', profileSchema);
+module.exports = mongoose.model('profile', profileSchema);
