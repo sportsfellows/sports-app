@@ -2,9 +2,9 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-const debug = require('debug')('note:league-router');
+const debug = require('debug')('sportsapp:league-router');
 // const createError = require('http-errors');
-const League = require('../model/league.js');
+const League = require('../../model/league.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 const leagueRouter = module.exports = new Router();
 
@@ -28,7 +28,7 @@ leagueRouter.put('/api/league/:leagueId', bearerAuth, jsonParser, function(req, 
   debug('PUT: /api/league/:leagueId');
 
   League.findByIdAndUpdate(req.params.leagueId, req.body, {new: true })
-    .then( profile => res.json( profile))
+    .then( league => res.json(league))
     .catch(next);
 });
 
@@ -37,7 +37,7 @@ leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next
 
   // TO DO: CREATE 400 ERROR IF NO PROFILE ID
 
-  League.findByIdAndRemove(req.params.profileId)
+  League.findByIdAndRemove(req.params.leagueId)
     .then( () => res.status(204).send())
     .catch(next);
 });
