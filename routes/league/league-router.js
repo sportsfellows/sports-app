@@ -5,7 +5,7 @@ const jsonParser = require('body-parser').json();
 const debug = require('debug')('sportsapp:league-router');
 const createError = require('http-errors');
 
-const League = require('../../model/league.js');
+const League = require('../../model/league/league.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const leagueRouter = module.exports = Router();

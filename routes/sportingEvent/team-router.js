@@ -5,8 +5,8 @@ const jsonParser = require('body-parser').json();
 const debug = require('debug')('sportsapp:team-router');
 const createError = require('http-errors');
 
-const Team = require('../model/sportingEvent/team.js');
-const bearerAuth = require('../..lib/bearer-auth-middleware.js');
+const Team = require('../../model/sportingEvent/team.js');
+const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const teamRouter = module.exports = Router();
 
