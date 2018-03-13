@@ -7,6 +7,8 @@ const userPickSchema = mongoose.Schema({
   leagueID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'league' },
   gameID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'game' },
   pick: { type: mongoose.Schema.Types.ObjectId, ref: 'team' },
+  correct: {type: Boolean },
+  gameTime: { type: Date },
 });
 
 module.exports = mongoose.model('userPick', userPickSchema);
