@@ -34,13 +34,3 @@ Profile.findByuserIDAndAddLeague = function(uid, lid) {
       return profile.save();
     });
 };
-// .then( menu => {
-//   entree.menuID = menu._id;
-//   this.tempMenu = menu;
-//   return new Entree(entree).save();
-// })
-// .then( entree => {
-//   this.tempMenu.entrees.push(entree._id);
-//   this.tempEntree = entree;
-//   return this.tempMenu.save();
-// })

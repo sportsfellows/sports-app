@@ -45,6 +45,46 @@ leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, json
     .catch(next);
 });
 
+// http PUT :3000/api/league/5aa757d3c73ef35216478a19/adduser 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImIyMTM5ODllMTI5NmQ3YTYwNzk2ZDgxMmY1MDczYTljY2E4ZjU0MDE0OWVlOGI1MjkyYzZlNzRjZDE3MDg3MTUiLCJpYXQiOjE1MjA5ODI0NzN9.G3_nsq7jr6mXIHYjQ8Bb9a66evVsEFAgl5aZ_iYH_gM'
+leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT: /api/league/:leagueId/adduser');
+
+  return League.findById(req.params.leagueId)
+    .then( league => {
+      league.users.push(req.user._id);
+      return league.save();
+    })
+    .then( () => {
+      return Profile.findOne({ userID: req.user._id })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( profile => {
+          profile.leagues.push(req.params.leagueId);
+          return profile.save();
+        });
+    })
+    .then( () => res.json(req.params.leagueId))
+    .catch(next);
+});
+
+// leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, function(req, res, next) {
+//   debug('PUT: /api/league/:leagueId/adduser');
+
+//   return Profile.findOne({ userID: req.user._id })
+//     .catch( err => Promise.reject(createError(404, err.message)))
+//     .then( profile => {
+//       profile.leagues.push(req.params.leagueId);
+//       return profile.save();
+//     })
+//     .then( () => {
+//       return League.findById(req.params.leagueId)
+//         .then( league => {
+//           league.users.push(req.user._id);
+//           return league.save();
+//         });
+//     })
+//     .catch(next);
+// });
+
 leagueRouter.get('/api/league/:leagueId', bearerAuth, function(req, res, next) {
   debug('GET: /api/league/:leagueId');
 
@@ -61,14 +101,7 @@ leagueRouter.get('/api/leagues', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
-leagueRouter.put('/api/league/:leagueId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/league/:leagueId');
 
-  if (!req.body) return next(createError(400, 'expected a request body'));
-  League.findByIdAndUpdate(req.params.leagueId, req.body, {new: true })
-    .then( league => res.json(league))
-    .catch(next);
-});
 
 leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/league/:leagueId');
