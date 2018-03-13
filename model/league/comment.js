@@ -3,8 +3,8 @@
 const mongoose = require('mongoose');
 
 const commentSchema = mongoose.Schema({
-  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
-  messageBoardID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  profileID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'profile' },
+  messageBoardID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'messageBoard' },
   content: { type: String, required: true },
   createdOn: { type: Date, default: Date.now },
   tags: { type: String },

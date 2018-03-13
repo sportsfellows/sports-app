@@ -8,7 +8,8 @@ const mongoose = require('mongoose');
 // const Group = require('../league/group.js');
 
 const profileSchema = mongoose.Schema({
-  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
+  username: {type: String, required: true },
   image: { type: String },
   country: { type: String, uppercase: true },
   state: { type: String, uppercase: true },

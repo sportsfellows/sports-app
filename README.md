@@ -31,6 +31,7 @@ I added additional functionality to my 2 resource API, I have incorporated Amazo
 
 ![Demo](./public/img/erd.png)
 https://www.lucidchart.com/documents/view/ccfd14a4-7127-4097-8bf9-ca0d567cc323/0
+MONGODB_URI='mongodb://heroku_5s3dhwdr:vm0d8l4q47rb9psbn1o247o2in@ds263138.mlab.com:63138/heroku_5s3dhwdr'
 
 ## Models
 

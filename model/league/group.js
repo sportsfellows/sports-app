@@ -9,9 +9,9 @@ const groupSchema = mongoose.Schema({
   motto: { type: String },
   createdOn: { type: Date, default: Date.now },
   image: { type: String },
-  owner: { type: mongoose.Schema.Types.ObjectId, required: true },
+  owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'profile' },
   password: { type: String },
-  users: [{type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
+  profiles: [{type: mongoose.Schema.Types.ObjectId, ref: 'profile'}],
   tags: { type: String },  
 });
 
