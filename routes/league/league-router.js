@@ -7,6 +7,9 @@ const createError = require('http-errors');
 
 const League = require('../../model/league/league.js');
 const MessageBoard = require('../../model/league/messageBoard.js');
+const ScoreBoard = require('../../model/league/scoreBoard.js');
+// const User = require('../../model/user/user.js');
+const Profile = require('../../model/user/profile.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const leagueRouter = module.exports = Router();
@@ -16,9 +19,6 @@ leagueRouter.post('/api/league', bearerAuth, jsonParser, function(req, res, next
   debug(`POST: /api/league`);
 
   if (!req.body.leagueName || !req.body.sportingEventID || !req.body.scoring || !req.body.poolSize || !req.body.privacy) return next(createError(400, 'expected a request body  leagueName, sportingeventID, owner, scoring, poolSize and privacy'));
-  // new League(req.body).save()
-  //   .then (league => res.json(league))
-  //   .catch(next);
   req.body.owner = req.user._id;
   req.body.users = req.user._id;
  
@@ -26,6 +26,17 @@ leagueRouter.post('/api/league', bearerAuth, jsonParser, function(req, res, next
     .then( myLeague => {
       league = myLeague;
       return new MessageBoard({ leagueID: league._id }).save();
+    })
+    .then( () => {
+      return new ScoreBoard({ leagueID: league._id, userID: req.user._id }).save();
+    })
+    .then( () => {
+      return Profile.findOne({ userID: req.user._id })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( profile => {
+          profile.leagues.push(league._id);
+          return profile.save();
+        });
     })
     .then( () => res.json(league))
     .catch(next);

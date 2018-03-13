@@ -6,6 +6,7 @@ const debug = require('debug')('sportsapp:group-router');
 const createError = require('http-errors');
 
 const Group = require('../../model/league/group.js');
+const Profile = require('../../model/user/profile.js');
 const MessageBoard = require('../../model/league/messageBoard.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
@@ -23,6 +24,14 @@ groupRouter.post('/api/group', bearerAuth, jsonParser, function(req, res, next) 
     .then( myGroup => {
       group = myGroup;
       return new MessageBoard({ groupID: group._id }).save();
+    })
+    .then( () => {
+      return Profile.findOne({ userID: req.user._id })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( profile => {
+          profile.groups.push(group._id);
+          return profile.save();
+        });
     })
     .then( () => res.json(group))
     .catch(next);
