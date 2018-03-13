@@ -30,20 +30,10 @@ commentRouter.get('/api/comment/:commentId', bearerAuth, function(req, res, next
     .catch(next);
 });
 
-commentRouter.put('/api/comment/:commentId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/comment:commentId');
+commentRouter.get('/api/comments', bearerAuth, function(req, res, next) {
+  debug('GET: /api/comments');
 
-  if (!req.body) return next(createError(400, 'expected a request body'));
-  Comment.findByIdAndUpdate(req.params.commentId, req.body, {new: true})
-    .then( comment => res.json(comment))
-    .catch(next);
-});
-
-
-commentRouter.delete('/api/comment/:commentId', bearerAuth, function(req, res, next) {
-  debug('DELETE: /api/comment/:commentId');
-
-  Comment.findByIdAndRemove(req.params.commentId)
-    .then( () => res.status(204).send())
+  Comment.find()
+    .then(comments => res.json(comments))
     .catch(next);
 });
