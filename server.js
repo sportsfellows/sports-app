@@ -7,8 +7,6 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 
-const commentRouter = require('./routes/league/comment-router.js');
-const messageBoardRouter = require('./routes/league/messageBoard-router.js');
 const leagueRouter = require('./routes/league/league-router.js');
 const groupRouter = require('./routes/league/group-router.js');
 const scoreBoardRouter = require('./routes/league/scoreBoard-router.js');
@@ -18,6 +16,8 @@ const sportingEventsRouter = require('./routes/sportingEvent/sportingEvent-route
 const teamRouter = require('./routes/sportingEvent/team-router.js');
 const authRouter = require('./routes/user/auth-router.js');
 const profileRouter = require('./routes/user/profile-router.js');
+const messageBoardRouter = require('./routes/league/messageBoard-router.js');
+const commentRouter = require('./routes/league/comment-router.js');
 const errors = require('./lib/error-middleware.js');
 dotenv.load();
 

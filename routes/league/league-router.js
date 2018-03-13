@@ -6,16 +6,39 @@ const debug = require('debug')('sportsapp:league-router');
 const createError = require('http-errors');
 
 const League = require('../../model/league/league.js');
+const MessageBoard = require('../../model/league/messageBoard.js');
+const ScoreBoard = require('../../model/league/scoreBoard.js');
+// const User = require('../../model/user/user.js');
+const Profile = require('../../model/user/profile.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const leagueRouter = module.exports = Router();
 
+// http POST :3000/api/league 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjYWZmYTg1ZDlkZTM4YmM1ZTA5YjJhN2EyZWUyMzBiNWY0Y2ViM2UxYzM5MjE2YzNmMTUwNzUyZTVlMWUzMzMiLCJpYXQiOjE1MjA5MDQxNjB9.yhuxsiOaYoPtdCtYgGm8RHBjeQNfOIbSjbzCMSjIuQQ' leagueName='a' privacy='a' sportingEventID='5aa72ffd589c3d4ce00ed2aa' poolSize=0 scoring='regular'
 leagueRouter.post('/api/league', bearerAuth, jsonParser, function(req, res, next) {
   debug(`POST: /api/league`);
 
-  if (!req.body.leagueName || !req.body.sportingEventID || !req.body.owner || !req.body.scoring || !req.body.poolSize || !req.body.privacy) return next(createError(400, 'expected a request body  leagueName, sportingeventID, owner, scoring, poolSize and privacy'));
-  new League(req.body).save()
-    .then (league => res.json(league))
+  if (!req.body.leagueName || !req.body.sportingEventID || !req.body.scoring || !req.body.poolSize || !req.body.privacy) return next(createError(400, 'expected a request body  leagueName, sportingeventID, owner, scoring, poolSize and privacy'));
+  req.body.owner = req.user._id;
+  req.body.users = req.user._id;
+ 
+  let league = new League(req.body).save()
+    .then( myLeague => {
+      league = myLeague;
+      return new MessageBoard({ leagueID: league._id }).save();
+    })
+    .then( () => {
+      return new ScoreBoard({ leagueID: league._id, userID: req.user._id }).save();
+    })
+    .then( () => {
+      return Profile.findOne({ userID: req.user._id })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( profile => {
+          profile.leagues.push(league._id);
+          return profile.save();
+        });
+    })
+    .then( () => res.json(league))
     .catch(next);
 });
 

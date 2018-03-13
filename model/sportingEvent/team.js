@@ -10,7 +10,7 @@ const teamSchema = mongoose.Schema({
   wins: {type: Number, default: 0 },
   losses: {type: Number, default: 0 },
   pretournamentRecord: {type: String},
-  tags: { type: String },
+  tags: [{type: String }],
 });
 
 module.exports = mongoose.model('team', teamSchema);
