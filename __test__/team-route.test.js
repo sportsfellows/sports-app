@@ -2,38 +2,35 @@
 
 const request = require('superagent');
 const Team = require('../model/sportingEvent/team.js');
-const url = 'http://localhost:3000';
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
 
 require('jest');
-require('../server.js');
+
+const url = 'http://localhost:3000';
 
 const exampleTeam = {
   teamName: 'example team name',
   content: 'example content',
 };
 
-describe('Team Router', () => {
-  describe('POST: /api/team', () => {
-    describe('with a valid body teamName and sportingEventID', () => {
-      afterEach( done => {
-        if (this.tempTeam) {
-          Team.tempTeam(this.tempTeam.id)
-            .then( () => done())
-            .catch( err => done(err));
-        }
-      });
+describe('Team Router', function() {
+  beforeAll( done => {
+    serverToggle.serverOn(server, done);
+  });
+  afterAll( done => {
+    serverToggle.serverOff(server, done);
+  });
 
-      it('should return a team', done => {
-        request.post(`${url}/api/team`)
-          .send(exampleTeam)
-          .end((err, res) => {
-            if (err) return done(err);
-            expect(res.status).toEqual(400);
-            expect(res.body.name).toEqual(exampleTeam.name);
-            expect(res.body.content).toEqual(exampleTeam.content);
-            this.tempTeam = res.body;
+  describe('GET: /api/team/:teamId', function() {
+    describe('with a valid id', function() {
+      beforeEach( done => {
+        Team.createTeam(exampleTeam)
+          .then( team => {
+            this.tempTeam = team;
             done();
-          });
+          })
+          .catch( err => done(err));
       });
     });
 
