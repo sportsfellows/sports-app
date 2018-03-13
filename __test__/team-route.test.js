@@ -18,78 +18,54 @@ describe('Team Router', function() {
       afterEach( done => {
         if (this.tempTeam) {
           Team.deleteTeam(this.tempTeam.id)
-          .then( () => done())
-          .catch( err => done(err));
+            .then( () => done())
+            .catch( err => done(err));
         }
       });
 
       it('should return a team', done => {
         request.post(`${url}/api/team`)
-        .send(exampleTeam)
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).toEqual(400);
-          expect(res.body.name).toEqual(exampleTeam.name);
-          expect(res.body.content).toEqual(exampleTeam.content);
-          this.tempTeam = res.body;
-          done();
-        });
-      });
-    });
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  describe('GET: /api/team', function() {
-    describe('with a valid id', function() {
-      beforeEach( done => {
-        Team.createTeam(exampleTeam)
-          .then( team => {
-            this.tempTeam = team;
+          .send(exampleTeam)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(400);
+            expect(res.body.name).toEqual(exampleTeam.name);
+            expect(res.body.content).toEqual(exampleTeam.content);
+            this.tempTeam = res.body;
             done();
           });
-          .catch( err => done(err))
       });
+    });
 
-      afterAll( done => {
-        Team.deleteTeam(this.tempTeam.id)
-        .then( () => done())
-        .catch( err => done(err))
-      });
+    describe('DELETE: /api/team/:teamId', function() {
+      describe('with teamId deleted', function() {
+        beforeEach( done => {
+          Team.createTeam(exampleTeam)
+            .then( team => {
+              this.tempTeam = team;
+              done();
+            })
+            .catch( err => done(err));
+        });
 
-      it('should return a team', done => {
-        request.get(`${url}/api/team/${this.tempTeam.id}`)
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).toEqual(200);
-          expect(res.body.id).toEqual(this.tempTeam.id);
-          expect(res.body.name).toEqual(this.tempTeam.name);
-          expect(res.body.content).toEqual(this.tempTeam.content);
-          done();
+        afterAll( done => {
+          Team.deleteTeam(this.tempTeam.id)
+            .then( () => done())
+            .catch( err => done(err));
+        });
+
+        it('should return teamId deleted', done => {
+          request.delete(`${url}/api/team/${this.tempTeam.id}`)
+            .end((err, res) => {
+              if (err) return done(err);
+              expect(res.status).toEqual(204);
+              expect(res.body.id).toEqual(null);
+              expect(res.body.name).toEqual(null);
+              expect(res.body.content).toEqual(null);
+              done();
+            });
         });
       });
-
-      describe('with an invalid id', function() {
-        it('should respond with a 4')
-      })
     });
   });
 });
