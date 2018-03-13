@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 
 const scoreBoardSchema = mongoose.Schema({
-  profileID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'profile' },
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
   leagueID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'league' },
   score: { type: Number, default: 0 },
 });
