@@ -12,12 +12,12 @@ const exampleTeam = {
   content: 'example content',
 };
 
-describe('Team Router', function() {
-  describe('POST: /api/team', function() {
-    describe('with a valid body teamName and sportingEventID', function() {
+describe('Team Router', () => {
+  describe('POST: /api/team', () => {
+    describe('with a valid body teamName and sportingEventID', () => {
       afterEach( done => {
         if (this.tempTeam) {
-          Team.deleteTeam(this.tempTeam.id)
+          Team.tempTeam(this.tempTeam.id)
             .then( () => done())
             .catch( err => done(err));
         }
@@ -37,15 +37,17 @@ describe('Team Router', function() {
       });
     });
 
-    describe('DELETE: /api/team/:teamId', function() {
-      describe('with teamId deleted', function() {
+    describe('DELETE: /api/team/:teamId', () => {
+      describe('with teamId deleted', () => {
         beforeEach( done => {
-          Team.createTeam(exampleTeam)
-            .then( team => {
-              this.tempTeam = team;
-              done();
-            })
-            .catch( err => done(err));
+          if (this.createTeam) {
+            Team.createTeam(exampleTeam)
+              .then( team => {
+                this.tempTeam = team;
+                done();
+              })
+              .catch( err => done(err));
+          }
         });
 
         afterAll( done => {
