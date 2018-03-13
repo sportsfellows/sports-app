@@ -30,19 +30,14 @@ sportingEventRouter.get('/api/sportingevent/:sportingEventId', bearerAuth, funct
 sportingEventRouter.put('/api/sportingevent/:sportingEventId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/sportingEvent:sportingEventId');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO SPORTING EVENT ID
-
+  if (!req.body) return next(createError(400, 'expected a request body'));
   SportingEvent.findByIdAndUpdate(req.params.sportingEventId, req.body, {new: true})
     .then( sportingEvent => res.json(sportingEvent))
     .catch(next);
 });
 
-
 sportingEventRouter.delete('/api/sportingevent/:sportingEventId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/sportingEvent/:sportingEventId');
-
-  // TO DO: CREATE 400 ERROR IF NO SPORTING EVENT ID
 
   SportingEvent.findByIdAndRemove(req.params.sportingEventId)
     .then( () => res.status(204).send())
