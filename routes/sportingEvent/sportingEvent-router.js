@@ -10,6 +10,7 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const sportingEventRouter = module.exports = Router();
 
+// http POST :3000/api/sportingEvent 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjYWZmYTg1ZDlkZTM4YmM1ZTA5YjJhN2EyZWUyMzBiNWY0Y2ViM2UxYzM5MjE2YzNmMTUwNzUyZTVlMWUzMzMiLCJpYXQiOjE1MjA5MDQxNjB9.yhuxsiOaYoPtdCtYgGm8RHBjeQNfOIbSjbzCMSjIuQQ' sportingEventName='a' desc='a'
 sportingEventRouter.post('/api/sportingevent', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/sportingEvent');
 
@@ -27,24 +28,10 @@ sportingEventRouter.get('/api/sportingevent/:sportingEventId', bearerAuth, funct
     .catch(next);
 });
 
-sportingEventRouter.put('/api/sportingevent/:sportingEventId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/sportingEvent:sportingEventId');
+sportingEventRouter.get('/api/sportingevents', bearerAuth, function(req, res, next) {
+  debug('GET: /api/sportingevents');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO SPORTING EVENT ID
-
-  SportingEvent.findByIdAndUpdate(req.params.sportingEventId, req.body, {new: true})
-    .then( sportingEvent => res.json(sportingEvent))
-    .catch(next);
-});
-
-
-sportingEventRouter.delete('/api/sportingevent/:sportingEventId', bearerAuth, function(req, res, next) {
-  debug('DELETE: /api/sportingEvent/:sportingEventId');
-
-  // TO DO: CREATE 400 ERROR IF NO SPORTING EVENT ID
-
-  SportingEvent.findByIdAndRemove(req.params.sportingEventId)
-    .then( () => res.status(204).send())
+  SportingEvent.find()
+    .then(sportingEvents => res.json(sportingEvents))
     .catch(next);
 });

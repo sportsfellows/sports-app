@@ -6,16 +6,19 @@ const debug = require('debug')('sportsapp:comment-router');
 const createError = require('http-errors');
 
 const Comment = require('../../model/league/comment.js');
+const MessageBoard = require('../../model/league/messageBoard.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const commentRouter = module.exports = Router();
 
-commentRouter.post('/api/comment', bearerAuth, jsonParser, function(req, res, next) {
-  debug('POST: /api/comment');
+commentRouter.post('/api/messageboard/:messageBoardId/comment', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/messageboard/:messageBoardId/comment'); 
 
-  if (!req.body.userID || !req.body.messageBoardID || req.body.content) return next(createError(400, 'expected a request body userID, messageBoardID and content'));
-  new Comment(req.body).save()
-    .then( comment => res.json(comment))
+  if (!req.body.content) return next(createError(400, 'expected a request body userID and content'));
+  req.body.userID = req.user._id;
+
+  MessageBoard.findByIdAndAddComment(req.params.messageBoardId, req.body)
+    .then ( comment => res.json(comment))
     .catch(next);
 });
 
@@ -27,24 +30,10 @@ commentRouter.get('/api/comment/:commentId', bearerAuth, function(req, res, next
     .catch(next);
 });
 
-commentRouter.put('/api/comment/:commentId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/comment:commentId');
+commentRouter.get('/api/comments', bearerAuth, function(req, res, next) {
+  debug('GET: /api/comments');
 
-  // TO DO: CREATE 400 ERROR IF NO REQ BODY
-  // TO DO: CREATE 400 ERROR IF NO COMMENT ID
-
-  Comment.findByIdAndUpdate(req.params.commentId, req.body, {new: true})
-    .then( comment => res.json(comment))
-    .catch(next);
-});
-
-
-commentRouter.delete('/api/comment/:commentId', bearerAuth, function(req, res, next) {
-  debug('DELETE: /api/comment/:commentId');
-
-  // TO DO: CREATE 400 ERROR IF NO COMMENT ID
-
-  Comment.findByIdAndRemove(req.params.commentId)
-    .then( () => res.status(204).send())
+  Comment.find()
+    .then(comments => res.json(comments))
     .catch(next);
 });

@@ -1,14 +1,15 @@
 'use strict';
 
 const mongoose = require('mongoose');
-// const debug = require('debug')('sportsapp:profile');
-// const createError = require('http-errors');
+const debug = require('debug')('sportsapp:profile');
+const createError = require('http-errors');
 // const User = require('./user.js');
 // const League = require('../league/league.js');
 // const Group = require('../league/group.js');
 
 const profileSchema = mongoose.Schema({
-  userID: { type: mongoose.Schema.Types.ObjectId, required: true },
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
+  username: {type: String, required: true },
   image: { type: String },
   country: { type: String, uppercase: true },
   state: { type: String, uppercase: true },
@@ -19,7 +20,27 @@ const profileSchema = mongoose.Schema({
   lastLogin: { type: Date, default: Date.now },
   leagues: [{type: mongoose.Schema.Types.ObjectId, ref: 'league'}],
   groups: [{type: mongoose.Schema.Types.ObjectId, ref: 'group'}],
-  tags: {type: String },
+  tags: [{type: String }],
 });
 
-module.exports = mongoose.model('profile', profileSchema);
+const Profile = module.exports = mongoose.model('profile', profileSchema);
+
+Profile.findByuserIDAndAddLeague = function(uid, lid) {
+  debug('findByuserIDAndAddLeague');
+  return Profile.findOne({ userID: uid })
+    .catch( err => Promise.reject(createError(404, err.message)))
+    .then( profile => {
+      profile.leagues.push(lid);
+      return profile.save();
+    });
+};
+// .then( menu => {
+//   entree.menuID = menu._id;
+//   this.tempMenu = menu;
+//   return new Entree(entree).save();
+// })
+// .then( entree => {
+//   this.tempMenu.entrees.push(entree._id);
+//   this.tempEntree = entree;
+//   return this.tempMenu.save();
+// })

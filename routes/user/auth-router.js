@@ -5,11 +5,12 @@ const debug = require('debug')('sportsapp:auth-router');
 const createError = require('http-errors');
 const Router = require('express').Router;
 const basicAuth = require('../../lib/basic-auth-middleware.js');
-// const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 const User = require('../../model/user/user.js');
+const Profile = require('../../model/user/profile.js');
 
 const authRouter = module.exports = Router();
 
+// http POST :3000/api/signup username=briguy999 email=brianbixby0@gmail.com password=password1
 authRouter.post('/api/signup', jsonParser, function(req, res, next) {
   debug('POST: /api/signup');
   if (!req.body.username || !req.body.email || !req.body.password) return next(createError(400, 'expected a request body username, email and password'));
@@ -20,7 +21,11 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
   let user = new User(req.body);
   user.generatePasswordHash(password)
     .then( user => user.save())
-    .then( user => user.generateToken())
+    .then( myUser => {
+      user = myUser;
+      return new Profile({userID: user._id, username: user.username}).save();
+    })
+    .then( () => user.generateToken())
     .then( token => res.send(token))
     .catch(next);
 });
@@ -34,18 +39,3 @@ authRouter.get('/api/signin', basicAuth, function(req, res, next) {
     .then( token => res.send(token))
     .catch(next);
 });
-
-// authRouter.put('/api/signin', bearerAuth, jsonParser, function(req, res, next) {
-//   debug('PUT: /api/signin');
-
-//   let user = req.body;
-//   console.log(user);
-//   if(req.body.password) {
-//     user.generatePasswordHash(user.password);
-//   }
-
-//   User.findByIdAndUpdate(req.user._id, user, {new: true})
-//     .then( user => user.generateToken())
-//     .then( token => res.send(token))
-//     .catch(next);
-// });
