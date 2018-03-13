@@ -10,14 +10,14 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const messageBoardRouter = module.exports = Router();
 
-messageBoardRouter.post('/api/messageboard', bearerAuth, jsonParser, function(req, res, next) {
-  debug('POST: /api/messageboard');
+// messageBoardRouter.post('/api/messageboard', bearerAuth, jsonParser, function(req, res, next) {
+//   debug('POST: /api/messageboard');
 
-  if (!req.body.leagueID && !req.body.groupID ) return next(createError(400, 'expected a request body leagueID or groupID'));
-  new MessageBoard(req.body).save()
-    .then( messageBoard => res.json(messageBoard))
-    .catch(next);
-});
+//   if (!req.body.leagueID && !req.body.groupID ) return next(createError(400, 'expected a request body leagueID or groupID'));
+//   new MessageBoard(req.body).save()
+//     .then( messageBoard => res.json(messageBoard))
+//     .catch(next);
+// });
 
 messageBoardRouter.get('/api/messageboard/:messageBoardId', bearerAuth, function(req, res, next) {
   debug('GET: /api/messageboard/:messageBoardId');
