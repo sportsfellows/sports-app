@@ -28,19 +28,10 @@ sportingEventRouter.get('/api/sportingevent/:sportingEventId', bearerAuth, funct
     .catch(next);
 });
 
-sportingEventRouter.put('/api/sportingevent/:sportingEventId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/sportingEvent:sportingEventId');
+sportingEventRouter.get('/api/sportingevents', bearerAuth, function(req, res, next) {
+  debug('GET: /api/sportingevents');
 
-  if (!req.body) return next(createError(400, 'expected a request body'));
-  SportingEvent.findByIdAndUpdate(req.params.sportingEventId, req.body, {new: true})
-    .then( sportingEvent => res.json(sportingEvent))
-    .catch(next);
-});
-
-sportingEventRouter.delete('/api/sportingevent/:sportingEventId', bearerAuth, function(req, res, next) {
-  debug('DELETE: /api/sportingEvent/:sportingEventId');
-
-  SportingEvent.findByIdAndRemove(req.params.sportingEventId)
-    .then( () => res.status(204).send())
+  SportingEvent.find()
+    .then(sportingEvents => res.json(sportingEvents))
     .catch(next);
 });

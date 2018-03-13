@@ -45,6 +45,14 @@ groupRouter.get('/api/group/:groupId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+groupRouter.get('/api/groups', bearerAuth, function(req, res, next) {
+  debug('GET: /api/groups');
+
+  Group.find()
+    .then(groups => res.json(groups))
+    .catch(next);
+});
+
 groupRouter.put('/api/group/:groupId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/group/:groupId');
 
