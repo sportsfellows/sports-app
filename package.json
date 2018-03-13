@@ -21,6 +21,7 @@
     "del": "^3.0.0",
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
+    "faker": "^4.1.0",
     "http-errors": "^1.6.2",
     "istanbul": "^0.4.5",
     "jsonwebtoken": "^8.2.0",
@@ -35,7 +36,7 @@
   },
   "scripts": {
     "test": "DEBUG='sportsapp*' jest -i --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "coverage": "DEBUG='sportsapp*' jest --coverage",
+    "test-team": "DEBUG='sportsapp*' jest -i --coverage team-route.test.js",
     "start": "DEBUG='sportsapp*' node server.js"
   },
   "repository": {
