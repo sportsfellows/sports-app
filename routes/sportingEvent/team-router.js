@@ -10,10 +10,11 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const teamRouter = module.exports = Router();
 
-teamRouter.post('/api/team', bearerAuth, jsonParser, function(req, res, next) {
+teamRouter.post('/api/sportingevent/:sportingeventId/team', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/team');
 
-  if (!req.body.teamName || !req.body.sportingEventID) return next(createError(400, 'expected a request body teamName and sportingEventID'));
+  if (!req.body.teamName) return next(createError(400, 'expected a request body teamName'));
+  req.body.sportingEventID = req.params.sportingeventId;
   new Team(req.body).save()
     .then( team => res.json(team))
     .catch(next);
@@ -27,19 +28,19 @@ teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+teamRouter.get('/api/teams', bearerAuth, function(req, res, next) {
+  debug('GET: /api/teams');
+
+  Team.find()
+    .then(teams => res.json(teams))
+    .catch(next);
+});
+
 teamRouter.put('/api/team/:teamId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/team:teamId');
 
   if (!req.body) return next(createError(400, 'expected a request body'));
   Team.findByIdAndUpdate(req.params.teamId, req.body, {new:true})
     .then( team => res.json(team))
-    .catch(next);
-});
-
-teamRouter.delete('/api/team/:teamId', bearerAuth, function(req, res, next) {
-  debug('DELETE: /api/team/:teamId');
-
-  Team.findByIdAndRemove(req.params.teamId)
-    .then(() => res.status(204).send())
     .catch(next);
 });
