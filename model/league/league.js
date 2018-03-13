@@ -16,7 +16,7 @@ const leagueSchema = mongoose.Schema({
   createdOn: { type: Date, default: Date.now },
   size: { type: Number, default: 0 },
   paidUsers: [{type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
-  tags: { type: String },
+  tags: [{type: String }],
 });
 
 module.exports = mongoose.model('league', leagueSchema);

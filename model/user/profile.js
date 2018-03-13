@@ -20,7 +20,7 @@ const profileSchema = mongoose.Schema({
   lastLogin: { type: Date, default: Date.now },
   leagues: [{type: mongoose.Schema.Types.ObjectId, ref: 'league'}],
   groups: [{type: mongoose.Schema.Types.ObjectId, ref: 'group'}],
-  tags: {type: String },
+  tags: [{type: String }],
 });
 
 module.exports = mongoose.model('profile', profileSchema);

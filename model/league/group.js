@@ -12,7 +12,7 @@ const groupSchema = mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
   password: { type: String },
   users: [{type: mongoose.Schema.Types.ObjectId, ref: 'user'}],
-  tags: { type: String },  
+  tags: [{type: String }], 
 });
 
 module.exports = mongoose.model('group', groupSchema);

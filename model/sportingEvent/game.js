@@ -12,7 +12,7 @@ const gameSchema = mongoose.Schema ({
   status: { type: String, default: 'scheduled' },
   winner: { type: mongoose.Schema.Types.ObjectId, ref: 'team' },
   sportingEventID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'sportingEvent' },
-  tags: { type: String },
+  tags: [{type: String }],
 });
 
 module.exports = mongoose.model('gameSchema', gameSchema);

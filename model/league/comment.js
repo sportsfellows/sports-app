@@ -7,7 +7,7 @@ const commentSchema = mongoose.Schema({
   messageBoardID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'messageBoard' },
   content: { type: String, required: true },
   createdOn: { type: Date, default: Date.now },
-  tags: { type: String },
+  tags: [{type: String }],
 });
 
 module.exports = mongoose.model('comment', commentSchema);
