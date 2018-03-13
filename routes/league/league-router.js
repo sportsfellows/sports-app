@@ -6,13 +6,10 @@ const debug = require('debug')('sportsapp:league-router');
 const createError = require('http-errors');
 
 const League = require('../../model/league/league.js');
-<<<<<<< HEAD
-=======
 const MessageBoard = require('../../model/league/messageBoard.js');
 const ScoreBoard = require('../../model/league/scoreBoard.js');
 // const User = require('../../model/user/user.js');
 const Profile = require('../../model/user/profile.js');
->>>>>>> bb276802e072a8381ba790ca6995b6768c559baa
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const leagueRouter = module.exports = Router();
