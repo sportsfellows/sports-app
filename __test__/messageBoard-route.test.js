@@ -12,9 +12,9 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mock-data.js'); // eslint-disable-line
+const { exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment } = require('./lib/mock-data.js'); // eslint-disable-line
 
-describe('Message Board Routes', function() {
+describe('Message Board Routes', function () {
   beforeAll(done => {
     serverToggle.serverOn(server, done);
   });
@@ -47,7 +47,7 @@ describe('Message Board Routes', function() {
   });
 
   beforeEach(done => {
-    MessageBoard.findOne({ groupID: this.tempGroup._id})
+    MessageBoard.findOne({ groupID: this.tempGroup._id })
       .then(messageBoard => {
         this.tempMessageBoard = messageBoard;
       })
@@ -77,6 +77,19 @@ describe('Message Board Routes', function() {
           })
           .end((err, res) => {
             expect(res.status).toEqual(200);
+            done();
+          });
+      });
+    });
+
+    describe('with an invalid token', () => {
+      it('should return a 401 error', done => {
+        request.get(`${url}/api/messageboard/${this.tempMessageBoard._id}`)
+          .set({
+            Authorization: `Bearer `,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
             done();
           });
       });
