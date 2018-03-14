@@ -42,7 +42,7 @@ app.use(commentRouter);
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
-  fakeUser.create();
+  fakeUser.create().then(console.log);
   debug(`cf madness is running on: ${PORT}`);
 });
 
