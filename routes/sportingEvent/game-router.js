@@ -69,10 +69,10 @@ gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, n
     .catch(next);
 });
 
-League.find({ sportingEventID: req.params.sportingeventId })
-  //     .then( leagues => {
-  //       leagues.forEach(league => {
-  //         // leagueObjArr.push({ leagueID: league._id, userIDS: league.users, gameID: game._id, gameTime: game.dateTime })
-  //         leagueObjArr.push({ leagueID: league._id, userIDS: league.users })
-  //       })return leagueObjArr.push({ leagues._id, users: leagues.users})
-  //     })
+// League.find({ sportingEventID: req.params.sportingeventId })
+//     .then( leagues => {
+//       leagues.forEach(league => {
+//         // leagueObjArr.push({ leagueID: league._id, userIDS: league.users, gameID: game._id, gameTime: game.dateTime })
+//         leagueObjArr.push({ leagueID: league._id, userIDS: league.users })
+//       })return leagueObjArr.push({ leagues._id, users: leagues.users})
+//     })
