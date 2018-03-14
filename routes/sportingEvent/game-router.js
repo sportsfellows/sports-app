@@ -5,9 +5,10 @@ const jsonParser = require('body-parser').json();
 const debug = require('debug')('sportsapp:game-router');
 const createError = require('http-errors');
 
+const Team = require('../../model/sportingEvent/team.js');
 const Game = require('../../model/sportingEvent/game.js');
-// const League = require('../../model/league/league.js');
-// const UserPick = require('../../model/league/userPick.js');
+const ScoreBoard = require('../../model/league/scoreBoard.js');
+const UserPick = require('../../model/league/userPick.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const gameRouter = module.exports = Router();
@@ -55,6 +56,23 @@ gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, n
 
   if (!req.body) return next(createError(400, 'expected a request body'));
   Game.findByIdAndUpdate(req.params.gameId, req.body, {new: true})
-    .then( game => res.json(game))
+    .then( game => {
+      if (!req.body.winner) res.json(game);
+      UserPick.find({ gameID: req.params.gameId })
+        .then( userPicks => {
+          userPicks.forEach(userPick => {
+            return (userPick.pick === game.winner ? userPick.correct = true : userPick.correct = false);
+          });
+        })
+        .then()
+    })
     .catch(next);
 });
+
+League.find({ sportingEventID: req.params.sportingeventId })
+  //     .then( leagues => {
+  //       leagues.forEach(league => {
+  //         // leagueObjArr.push({ leagueID: league._id, userIDS: league.users, gameID: game._id, gameTime: game.dateTime })
+  //         leagueObjArr.push({ leagueID: league._id, userIDS: league.users })
+  //       })return leagueObjArr.push({ leagues._id, users: leagues.users})
+  //     })
