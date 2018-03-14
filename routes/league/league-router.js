@@ -164,6 +164,6 @@ leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next
       // return Promise.all(profileUpdates);
       league.remove();
     })
-    .then(() => res.send('success'))
+    .then(() => res.status(204).send())
     .catch(next);
 });
