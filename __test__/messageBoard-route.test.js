@@ -41,7 +41,6 @@ describe('Message Board Routes', function () {
     new Group(exampleGroup).save()
       .then(group => {
         this.tempGroup = group;
-        console.log('tempgroup', this.tempGroup);
         done();
       })
       .catch(done);
