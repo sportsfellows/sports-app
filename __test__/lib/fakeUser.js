@@ -12,16 +12,11 @@ userMockFactory.create = () => {
     password: faker.internet.password(),
   };
 
-  const user = new User(mock.request);
-  console.log(user)
-  return user.generatePasswordHash(mock.user.password);
-
+  return User.create(mock.request)
     .then(user => {
       mock.user = user;
-     
+      return user.createToken();
     })
-    .then(user => user.save())
-    .then((user ) => user.generateToken())
     .then(token => {
       mock.token = token;
       return User.findById(mock.user._id);
@@ -29,6 +24,9 @@ userMockFactory.create = () => {
     .then(user => {
       mock.user = user;
       return mock;
-    });
+    })
+    .catch(console.log);
 };
+
+userMockFactory.remove = () => User.remove({});
 
