@@ -1,29 +1,40 @@
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
-## Project 1: Asset Management
+## Project: CF Madness (sports bracket app)
 
-I added additional functionality to my 2 resource API, I have incorporated Amazon S3 so users can upload images to Amazon S3 and my database savesa  URL pointing to the site.
+
+
 
 ## Tech/frameworks/packages
 
 - node 
 - MongoDB
+- travis
+- heroku
+- github
 - npm
 - node packages
   - Production
+    - aws-sdk
     - bcrypt
     - bluebird
-    - body-parser
+    - body-parser 
     - cors
-    - debug
-    - dotenv
-    - eslint
-    - express
-    - http-errors
-    - jsonwebtoken
-    - mongoose
+    - coveralls
+    - crypto 
+    - debug 
+    - del 
+    - dotenv 
+    - express 
+    - faker 
+    - http-errors 
+    - istanbul 
+    - jsonwebtoken 
+    - mongoose 
     - morgan
+    - multer 
   - Dev
+    - eslint
     - jest
     - superagent
 
@@ -32,127 +43,6 @@ I added additional functionality to my 2 resource API, I have incorporated Amazo
 ![Demo](./public/img/erd.png)
 https://www.lucidchart.com/documents/view/ccfd14a4-7127-4097-8bf9-ca0d567cc323/0
 MONGODB_URI='mongodb://heroku_5s3dhwdr:vm0d8l4q47rb9psbn1o247o2in@ds263138.mlab.com:63138/heroku_5s3dhwdr'
-
-## Models
-
-user model (
-  _id <type>,
-  username <type>,
-  email <type>,
-  password <type>,
-  findHash <type>
-);
-
-sportingEvent model (
-  _id <type>,
-  sportingEventName <type>,
-  desc <type>,
-  createdOn <type>,
-  tags <type>
-);
-
-game model (
-  _id <type>,
-  homeTeam <type>,
-  awayTeam <type>,
-  weight <type>,
-  winner <type>,
-  homeScore <type>,
-  awayScore <type>,
-  date <type>,
-  status <type>,
-  tags <type>
-);
-
-team model (
-  _id <type>,
-  teamName <type>,
-  sportingEventID <type>,
-  createdOn <type>,
-  seed <type>,
-  record <type>,
-  pretournamentRecord <type>,
-  tags <type>
-);
-
-league model (
-  _id <type>,
-  leagueName <type>,
-  sportingEventID <type>,
-  owner <type>,
-  scoring <type>,
-  poolSize <type>,
-  privacy <type>,
-  password <type>,
-  winner <type>,
-  status <type>,
-  users <type>,
-  createdOn <type>,
-  size <type>,
-  paidUsers <type>,
-  tags <type>
-);
-
-scoreboard model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  score <type>
-);
-
-group model (
-  _id <type>,
-  groupName <type>,
-  privacy <type>,
-  size <type>,
-  motto <type>,
-  createdOn <type>,
-  image <type>,
-  owner <type>,
-  password <type>,
-  users <type>,
-  tags <type>
-);
-
-profile model (
-  _id <type>,
-  image <type>,
-  country <type>,
-  state <type>,
-  birthDate <type>,
-  accountBalance <type>,
-  status <type>,
-  createdOn <type>,
-  lastLogin <type>,
-  leagues <type>,
-  groups <type>,
-  userID <type>,
-  tags <type>
-);
-
-comment model (
-  _id <type>,
-  userID <type>,
-  content <type>,
-  createdOn <type>,
-  messageBoardID <type>,
-  tags <type>
-);
-
-messageBoard model (
-  _id <type>,
-  leagueID <type>,
-  groupID <type>,
-  tags <type>
-);
-
-userPick model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  gameID <type>,
-  pick <type>
-);
 
 
 ## How to use?

@@ -31,7 +31,7 @@ userPickRouter.get('/api/userpicks', bearerAuth, function(req, res, next) {
 userPickRouter.post('/api/league/:leagueId/userpick', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/league/:leagueId/userpick');
 
-  if (!req.body.pick || !req.body.gameID || req.body.gameTime ) return next(createError(400, 'expected a request body, gameID, pick and gametime'));
+  if (!req.body.pick || !req.body.gameID || !req.body.gameTime ) return next(createError(400, 'expected a request body, gameID, pick and gametime'));
 
   req.body.userID = req.user._id;
   req.body.leagueID = req.params.leagueId;
