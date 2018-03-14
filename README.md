@@ -72,7 +72,6 @@ As an existing user you can login to your profile, which will authenticate you w
 ```
 http -a newusername:newpassword :3000/api/signin
 http -a <username>:<password> :3000/api/signin
-
 ```
 Throws an error if any of the requested properties that are not created for you are missing.
 
@@ -120,7 +119,6 @@ This will return an object of your sporting event, like the example below:
     "sportingEventName": "baseball", 
     "tags": []
 }
-
 ```
 ### `Game Routes`
 #### GET: `/api/games`
@@ -181,7 +179,7 @@ run `npm run tests` to check tests.
 1. The List model should update and return the updated list along with a 200 status code if there are no errors.
 2. The List model should respond with a 400 status code if there is an invalid request body.
 3. The List model should respond with a 404 status code if a request is made with an id that is not found.
-4. The List model should respond with a 401 status code if there is no json web token provided.
+4. The List model should respond with a 401 status code if there is no json web token provided. -->
 
 ## Contribute
 
@@ -191,6 +189,14 @@ You can totally contribute to this project if you want. Fork the repo, make some
 
 Initial codebase created by Code Fellows.
 
+Bessie Arino
+
+Brian Bixby
+
+Greg Nordeng
+
+Ken Unterseher
+
 ## License
 
-MIT. Use it up! -->
+MIT. Use it up!
