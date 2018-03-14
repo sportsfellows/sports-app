@@ -1,29 +1,43 @@
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
-## Project 1: Asset Management
+## Project: CF Madness (sports bracket app)
 
-I added additional functionality to my 2 resource API, I have incorporated Amazon S3 so users can upload images to Amazon S3 and my database savesa  URL pointing to the site.
+CF Madness is an application allows users to compete against their friends by choosing winners for real world sports games. 
+
+You are able to create and manage your own leagues and will have a personal scoreboard for each participant. Each league will also have its own message board that will allow you to communicate with those in your league. Each league also has the option to be private or public.
+
+If you are not participating in a league or would like to communicate with those outside of your league, you can also create a group. Like a league, each group has its own message board so users can communicate with each other.
 
 ## Tech/frameworks/packages
 
 - node 
 - MongoDB
+- travis
+- heroku
+- github
 - npm
 - node packages
   - Production
+    - aws-sdk
     - bcrypt
     - bluebird
-    - body-parser
+    - body-parser 
     - cors
-    - debug
-    - dotenv
-    - eslint
-    - express
-    - http-errors
-    - jsonwebtoken
-    - mongoose
+    - coveralls
+    - crypto 
+    - debug 
+    - del 
+    - dotenv 
+    - express 
+    - faker 
+    - http-errors 
+    - istanbul 
+    - jsonwebtoken 
+    - mongoose 
     - morgan
+    - multer 
   - Dev
+    - eslint
     - jest
     - superagent
 
@@ -32,127 +46,6 @@ I added additional functionality to my 2 resource API, I have incorporated Amazo
 ![Demo](./public/img/erd.png)
 https://www.lucidchart.com/documents/view/ccfd14a4-7127-4097-8bf9-ca0d567cc323/0
 MONGODB_URI='mongodb://heroku_5s3dhwdr:vm0d8l4q47rb9psbn1o247o2in@ds263138.mlab.com:63138/heroku_5s3dhwdr'
-
-## Models
-
-user model (
-  _id <type>,
-  username <type>,
-  email <type>,
-  password <type>,
-  findHash <type>
-);
-
-sportingEvent model (
-  _id <type>,
-  sportingEventName <type>,
-  desc <type>,
-  createdOn <type>,
-  tags <type>
-);
-
-game model (
-  _id <type>,
-  homeTeam <type>,
-  awayTeam <type>,
-  weight <type>,
-  winner <type>,
-  homeScore <type>,
-  awayScore <type>,
-  date <type>,
-  status <type>,
-  tags <type>
-);
-
-team model (
-  _id <type>,
-  teamName <type>,
-  sportingEventID <type>,
-  createdOn <type>,
-  seed <type>,
-  record <type>,
-  pretournamentRecord <type>,
-  tags <type>
-);
-
-league model (
-  _id <type>,
-  leagueName <type>,
-  sportingEventID <type>,
-  owner <type>,
-  scoring <type>,
-  poolSize <type>,
-  privacy <type>,
-  password <type>,
-  winner <type>,
-  status <type>,
-  users <type>,
-  createdOn <type>,
-  size <type>,
-  paidUsers <type>,
-  tags <type>
-);
-
-scoreboard model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  score <type>
-);
-
-group model (
-  _id <type>,
-  groupName <type>,
-  privacy <type>,
-  size <type>,
-  motto <type>,
-  createdOn <type>,
-  image <type>,
-  owner <type>,
-  password <type>,
-  users <type>,
-  tags <type>
-);
-
-profile model (
-  _id <type>,
-  image <type>,
-  country <type>,
-  state <type>,
-  birthDate <type>,
-  accountBalance <type>,
-  status <type>,
-  createdOn <type>,
-  lastLogin <type>,
-  leagues <type>,
-  groups <type>,
-  userID <type>,
-  tags <type>
-);
-
-comment model (
-  _id <type>,
-  userID <type>,
-  content <type>,
-  createdOn <type>,
-  messageBoardID <type>,
-  tags <type>
-);
-
-messageBoard model (
-  _id <type>,
-  leagueID <type>,
-  groupID <type>,
-  tags <type>
-);
-
-userPick model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  gameID <type>,
-  pick <type>
-);
 
 
 ## How to use?
@@ -164,62 +57,90 @@ Make POST/GET/DELETE/PUT requests to the server and your local MongoDB.
 
 ## Routes
 
-#### `POST /api/signup && /api/list`
+### `Auth/User Routes`
+#### POST: `/api/signup`
 
-Create a new  user with the properties `username`, `email`, `password` and `findHash` which is created for you. Or create a new list with the properties `name`, `desc`, and `created` along with `userID` which are created for you.
+Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
 
 ```
-http POST :3000/api/signup username=briguy999 email=brianbixby0@gmail.com password=password1
-
-http POST :3000/api/list name='my cool list' desc='this list is so cool'
+http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
+http POST :3000/api/signup username=<username> email=<email> password=<password>
 ```
+#### GET: `/api/signin`
+As an existing user you can login to your profile, which will authenticate you with a json web token and allow you to make requests to our API.
 
+```
+http -a newusername:newpassword :3000/api/signin
+http -a <username>:<password> :3000/api/signin
+
+```
 Throws an error if any of the requested properties that are not created for you are missing.
 
-The User model will return a json web token and the list model will return a new list if there are no errors.
+The User model will return a json web token if there are no errors.
 
-#### `GET /api/signin && /api/list/<list id>  && /api/lists`
+### `Profile Routes`
+#### GET: `/api/profile/<profile id>`
+text and stuff go here
+#### PUT: `/api/profile/<profile id>`
+text and stuff go here
 
-Retrieve the json web token for a created user, or retrieve a single list or all lists for an authenticated user.
+### `Sporting Event Routes`
+#### POST: `/api/sportingevent`
 
-```
-http -a <username>:<password> :3000/api/signin
-http -a <username>:<password> :3000/api/list/<list id>
-http -a <username>:<password> :3000/api/lists
-```
-
-Throws an error if the route can't be found, the list id is invalid or the use is not authenticated.
-
-#### `DELETE /api/list/<list id>`
-
-Deletes a specific list as requested by the <list id>.
+Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically and the `tags` property is available for any extra information that a user may want to add.
 
 ```
-http -a <username>:<password> DELETE :3000/api/list/<list id>
+http POST :3000/api/sportingevent 'Authorization:Bearer <token>' sportingEventName='<event name>' desc='<description>'
+```
+After a successful POST, you receive an object of the new sporting event you created, like the example below:
+```
+{
+    "__v": 0, 
+    "_id": "5aa9acbe42358a6e7b6a6450", 
+    "createdOn": "2018-03-14T23:14:06.602Z", 
+    "desc": "some text and stuff", 
+    "sportingEventName": "baseball", 
+    "tags": []
+}
 ```
 
-If successful, a 204 status is returned.
-
-Throws an error if the request parameter (id) is missing or the user is not authenticated.
-
-
-#### `PUT /api/list/<list id>`
-
-Updates a Jlist with the properties `name`, `desc`, `created` and `userID` from your MongoDB as requested by the <list id>.
+#### GET: `/api/sportingevent/<sporting event id>`
 
 ```
-http -a <username>:<password> PUT :3000/api/list/<list id> name='new list name'
+http GET :3000/api/sportingevent/<sporting event id> 'Authorization:Bearer <token>'
 ```
 
-If successful, the list is returned with a 200 status.
+This will return an object of your sporting event, like the example below:
+```
+{
+    "__v": 0, 
+    "_id": "5aa9acbe42358a6e7b6a6450", 
+    "createdOn": "2018-03-14T23:14:06.602Z", 
+    "desc": "some text and stuff", 
+    "sportingEventName": "baseball", 
+    "tags": []
+}
 
-If a request is made with a list id that is not found, a 404 status is returned.
+```
+### `Game Routes`
+#### GET: `/api/games`
+text and stuff go here
+#### GET: `/api/game/<game id>`
+text and stuff go here
+#### PUT: `/api/game/<game id>`
+text and stuff go here
 
-If a request is made with no list id a 400 status is returned.
+### `Team Routes`
+#### POST: `/api/sportingevent/:sportingeventId/team`
+text and stuff go here
+#### GET: `/api/teams`
+text and stuff go here
+#### GET: `/api/team/<team id>`
+text and stuff go here
+#### PUT: `/api/team/<team id>`
+text and stuff go here
 
-If a request is made with out an authenticated user a 401 status is returned.
-
-## Tests
+<!-- ## Tests
 
 run `npm run tests` to check tests.
 
@@ -262,4 +183,4 @@ Initial codebase created by Code Fellows.
 
 ## License
 
-MIT. Use it up!
+MIT. Use it up! -->
