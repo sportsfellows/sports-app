@@ -12,7 +12,7 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-const { exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment } = require('./lib/mock-data.js'); // eslint-disable-line
+const { exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment } = require('./lib/mockData.js'); // eslint-disable-line
 
 describe('Message Board Routes', function () {
   beforeAll(done => {

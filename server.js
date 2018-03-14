@@ -4,6 +4,7 @@ const express = require('express');
 const debug = require('debug')('sportsapp:server');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const morgan = require('morgan');
 const cors = require('cors');
 
