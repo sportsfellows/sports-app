@@ -14,7 +14,7 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const leagueRouter = module.exports = Router();
 
-// http POST :3000/api/league 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjYWZmYTg1ZDlkZTM4YmM1ZTA5YjJhN2EyZWUyMzBiNWY0Y2ViM2UxYzM5MjE2YzNmMTUwNzUyZTVlMWUzMzMiLCJpYXQiOjE1MjA5MDQxNjB9.yhuxsiOaYoPtdCtYgGm8RHBjeQNfOIbSjbzCMSjIuQQ' leagueName='a' privacy='a' sportingEventID='5aa72ffd589c3d4ce00ed2aa' poolSize=0 scoring='regular'
+// http POST :3000/api/sportingevent/5aa72ffd589c3d4ce00ed2aa/league 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjZjNjNTExYTIxZGUxNmUxZTM5MjBkZDNiNGI4NGZmOTJlZTZkMDA0OWRjMTMyOWZmMzkwYzNhZGUwYmYwZmMiLCJpYXQiOjE1MjA5OTQxODV9.ZdivKHeGH9rDklclxKal3u2GylQeDJiaor4f2bsWcpA' leagueName='aaaaaaaaa' privacy='a' poolSize=0 scoring='regular'
 leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, jsonParser, function(req, res, next) {
   debug(`POST: /api/sportingevent/:sportingeventId/league`);
 
@@ -45,7 +45,7 @@ leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, json
     .catch(next);
 });
 
-// http PUT :3000/api/league/5aa757d3c73ef35216478a19/adduser 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImIyMTM5ODllMTI5NmQ3YTYwNzk2ZDgxMmY1MDczYTljY2E4ZjU0MDE0OWVlOGI1MjkyYzZlNzRjZDE3MDg3MTUiLCJpYXQiOjE1MjA5ODI0NzN9.G3_nsq7jr6mXIHYjQ8Bb9a66evVsEFAgl5aZ_iYH_gM'
+// http PUT :3000/api/league/5aa757d3c73ef35216478a19/adduser 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjFjZjdjNDQwYTFkMmVhYTU3YTE1YmFmZDBmODA0NzFjZGFmNmUxY2FkZGVhYTA4YzE5M2E2NzkyM2JmMzY2ZDQiLCJpYXQiOjE1MjA5ODU0MjJ9.kdf9mPwEf8ROhg7iWfc8O-QxUXtK89D_-EL3goD0sWk'
 leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/league/:leagueId/adduser');
 
@@ -76,7 +76,7 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
     .catch(next);
 });
 
-// http PUT :3000/api/league/5aa757d3c73ef35216478a19/removeuser 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiMmI3ZWRlNGIwNDY5YTVmNTcyZmY2NTI0MzQ5ZjU1ZDU5MWViOGRhMzU2Y2I1NmE3NTgwYWFmNzU1ZThlMmIiLCJpYXQiOjE1MjA5ODM2Njh9.v3KWzv-317crAoomp9exe3YojuQKH-QA8vcD9ubIj8Q'
+// http PUT :3000/api/league/5aa757d3c73ef35216478a19/removeuser 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjFjZjdjNDQwYTFkMmVhYTU3YTE1YmFmZDBmODA0NzFjZGFmNmUxY2FkZGVhYTA4YzE5M2E2NzkyM2JmMzY2ZDQiLCJpYXQiOjE1MjA5ODU0MjJ9.kdf9mPwEf8ROhg7iWfc8O-QxUXtK89D_-EL3goD0sWk'
 leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/league/:leagueId/removeuser');
 
@@ -103,6 +103,20 @@ leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, fun
           returnObj.profileLeagues;
           res.json(returnObj);
         });
+    })
+    .catch(next);
+});
+
+// http PUT :3000/api/league/5aa887b2d44b366965f91909 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjZjNjNTExYTIxZGUxNmUxZTM5MjBkZDNiNGI4NGZmOTJlZTZkMDA0OWRjMTMyOWZmMzkwYzNhZGUwYmYwZmMiLCJpYXQiOjE1MjA5OTQxODV9.ZdivKHeGH9rDklclxKal3u2GylQeDJiaor4f2bsWcpA'
+leagueRouter.put('/api/league/:leagueId', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT: /api/league/:leagueId');
+
+  if (!req.body) return next(createError(400, 'expected a request body'));
+  return League.findById(req.params.leagueId)
+    .then( league => {
+      if(league.owner.toString() !== req.user._id.toString()) return next(createError(403, 'forbidden access'));
+      League.findByIdAndUpdate(req.params.leagueId, req.body, {new: true})
+        .then( league => res.json(league));
     })
     .catch(next);
 });
