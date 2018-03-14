@@ -131,13 +131,23 @@ text and stuff go here
 text and stuff go here
 
 ### `Team Routes`
-#### POST: `/api/sportingevent/:sportingeventId/team`
+#### POST: `/api/sportingevent/<sporting event id>/team`
 text and stuff go here
 #### GET: `/api/teams`
 text and stuff go here
 #### GET: `/api/team/<team id>`
 text and stuff go here
 #### PUT: `/api/team/<team id>`
+text and stuff go here
+
+### `User Pick Routes`
+#### POST: `/api/league/<league id>/userpick`
+text and stuff go here
+#### GET: `/api/userpicks`
+text and stuff go here
+#### GET: `/api/userpick/<user pick id>`
+text and stuff go here
+#### PUT: `/api/userpick/<user pick id>`
 text and stuff go here
 
 <!-- ## Tests
