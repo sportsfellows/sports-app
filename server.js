@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 
+const fakeUser = require('./__test__/lib/fakeUser.js');
 const leagueRouter = require('./routes/league/league-router.js');
 const groupRouter = require('./routes/league/group-router.js');
 const scoreBoardRouter = require('./routes/league/scoreBoard-router.js');
@@ -41,7 +42,10 @@ app.use(commentRouter);
 app.use(errors);
 
 const server = module.exports = app.listen(PORT, () => {
+  fakeUser.create().then(console.log);
   debug(`cf madness is running on: ${PORT}`);
 });
+
+
 
 server.isRunning = true;
