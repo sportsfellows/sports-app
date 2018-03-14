@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 const MessageBoard = require('./messageBoard.js');
 const Comment = require('./comment.js');
-const ScoreBoard = require('./scoreBoard.js');
+const ScoreBoard = require('./scoreboard.js');
 const UserPick = require('./userPick.js');
 
 const leagueSchema = mongoose.Schema({
