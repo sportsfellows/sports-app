@@ -9,7 +9,7 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mock-data.js');
+const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mockData.js');
 
 describe('Auth routes', function() {
   beforeAll( done => {
