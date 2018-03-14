@@ -2,11 +2,11 @@
 
 const faker = require('faker');
 
-let exampleUser = {
-  username: faker.internet.userName(),
-  email: faker.internet.email(),
-  password: faker.internet.password(),
-};
+// let exampleUser = {
+//   username: faker.internet.userName(),
+//   email: faker.internet.email(),
+//   password: faker.internet.password(),
+// };
 
 let exampleProfile = {
   image: faker.random.image(),
