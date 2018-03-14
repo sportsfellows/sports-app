@@ -5,6 +5,7 @@ const Team = require('../model/sportingEvent/team.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
 
+
 require('jest');
 
 const url = 'http://localhost:3000';
