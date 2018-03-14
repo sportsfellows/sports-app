@@ -7,7 +7,7 @@ const createError = require('http-errors');
 
 const League = require('../../model/league/league.js');
 const MessageBoard = require('../../model/league/messageBoard.js');
-const ScoreBoard = require('../../model/league/scoreboard.js');
+const ScoreBoard = require('../../model/league/scoreBoard.js');
 const UserPick = require('../../model/league/userPick.js');
 const Profile = require('../../model/user/profile.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
