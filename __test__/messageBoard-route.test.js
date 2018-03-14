@@ -1,19 +1,18 @@
 'use strict';
 
 const request = require('superagent');
-const serverToggle = require('../lib/server-toggle.js');
-const server = require('../server.js');
-
 const User = require('../model/user/user.js');
 const Profile = require('../model/user/profile.js');
 const Group = require('../model/league/group.js');
+const MessageBoard = require('../model/league/messageBoard.js');
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
 
 require('jest');
+
 const url = 'http://localhost:3000';
 
-const exampleUser = { username: 'exampleuser', password: '1234', email: 'exampleuser@test.com' };
-const exampleProfile = { image: 'exampleImage', country: 'USA', state: 'WA', birthdate: 12121987, tags: 'celebrity', leagues: [], groups: [] };
-const exampleGroup = { groupName: 'examplename', privacy: 'public', size: 2, motto: 'example motto', image: 'example image url', tags: 'washington state university', users: [] };
+const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mock-data.js'); // eslint-disable-line
 
 describe('Message Board Routes', function() {
   beforeAll(done => {
@@ -47,6 +46,14 @@ describe('Message Board Routes', function() {
       .catch(done);
   });
 
+  beforeEach(done => {
+    MessageBoard.findOne({ groupID: this.tempGroup._id})
+      .then(messageBoard => {
+        this.tempMessageBoard = messageBoard;
+      })
+      .catch(done);
+  });
+
   afterAll(done => {
     serverToggle.serverOff(server, done);
   });
@@ -65,7 +72,9 @@ describe('Message Board Routes', function() {
     describe('with valid messageBoardId', () => {
       it('should give 200 response code', done => {
         request.get(`${url}/api/messageboard/${this.tempMessageBoard._id}`)
-          .auth('something needs to be here') // need to fix this
+          .set({
+            Authorization: `Bearer ${this.tempToken}`,
+          })
           .end((err, res) => {
             expect(res.status).toEqual(200);
             done();
