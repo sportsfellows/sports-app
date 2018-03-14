@@ -14,7 +14,7 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const leagueRouter = module.exports = Router();
 
-// http POST :3000/api/sportingevent/5aa72ffd589c3d4ce00ed2aa/league 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjZjNjNTExYTIxZGUxNmUxZTM5MjBkZDNiNGI4NGZmOTJlZTZkMDA0OWRjMTMyOWZmMzkwYzNhZGUwYmYwZmMiLCJpYXQiOjE1MjA5OTQxODV9.ZdivKHeGH9rDklclxKal3u2GylQeDJiaor4f2bsWcpA' leagueName='aaaaaaaaa' privacy='a' poolSize=0 scoring='regular'
+// http POST :3000/api/sportingevent/5aa72ffd589c3d4ce00ed2aa/league 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjZjNjNTExYTIxZGUxNmUxZTM5MjBkZDNiNGI4NGZmOTJlZTZkMDA0OWRjMTMyOWZmMzkwYzNhZGUwYmYwZmMiLCJpYXQiOjE1MjA5OTQxODV9.ZdivKHeGH9rDklclxKal3u2GylQeDJiaor4f2bsWcpA' leagueName='aaaawfaaaaa' privacy='a' poolSize=0 scoring='regular'
 leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, jsonParser, function(req, res, next) {
   debug(`POST: /api/sportingevent/:sportingeventId/league`);
 
@@ -147,18 +147,10 @@ leagueRouter.get('/api/leagues', bearerAuth, function(req, res, next) {
 // http DELETE :3000/api/league/5aa757d3c73ef35216478a19 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjBlOGUzNDZiMWMzYzllNzM0YjJhMzE4ZjMwMDA5NWNjZTFkNGQyNjA2OGM2ZTJhMzI4N2M1Y2MzZjFjMDI2M2IiLCJpYXQiOjE1MjA5OTY0OTh9.oicba8S1vhkLI4JLjn0ZZXa68cf-zoAQ6Noq9H6zTs0'
 leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/league/:leagueId');
-  // incorporate promis.all
   return League.findById(req.params.leagueId)
     .then( league => {
       if(league.owner.toString() !== req.user._id.toString()) return next(createError(403, 'forbidden access'));
       let profileUpdates = [];
-      // league.users.forEach(function(luser) {
-      //   Profile.findOne({ userID: luser })
-      //     .then( user => {
-      //       user.leagues.pull(req.params.leagueId);
-      //       return user.save();
-      //     });
-      // });
       league.users.forEach(function(luser) {
         profileUpdates.push(
           Profile.findOne({ userID: luser })

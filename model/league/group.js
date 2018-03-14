@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const MessageBoard = require('./messageBoard.js');
 const Comment = require('./comment.js');
 

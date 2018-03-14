@@ -102,24 +102,18 @@ groupRouter.delete('/api/group/:groupId', bearerAuth, function(req, res, next) {
   return Group.findById(req.params.groupId)
     .then( group => {
       if(group.owner.toString() !== req.user._id.toString()) return next(createError(403, 'forbidden access'));
-      // let profileUpdates = [];
-      group.users.forEach(function(guser) {
-        Profile.findOne({ userID: guser })
-          .then( user => {
-            user.groups.pull(req.params.groupId);
-            return user.save();
-          });
+      let profileUpdates = [];
+      group.users.forEach(function(luser) {
+        profileUpdates.push(
+          Profile.findOne({ userID: luser })
+            .then( user => {
+              user.groups.pull(req.params.groupId);
+              return user.save();
+            }));
       });
-      // group.users.forEach(function(luser) {
-      //   profileUpdates.push(
-      //     Profile.findOne({ userID: luser })
-      //       .then( user => {
-      //         user.groups.pull(req.params.groupId);
-      //         return user.save();
-      //       }));
-      // });
-      // return Promise.all(profileUpdates);
-      group.remove();
+      return Promise.all(profileUpdates)
+        .then( () => group.remove())
+        .catch(next);
     })
     .then(() => res.status(204).send())
     .catch(next);
