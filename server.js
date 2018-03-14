@@ -10,7 +10,7 @@ const cors = require('cors');
 
 const leagueRouter = require('./routes/league/league-router.js');
 const groupRouter = require('./routes/league/group-router.js');
-const scoreBoardRouter = require('./routes/league/scoreboard-router.js');
+const scoreBoardRouter = require('./routes/league/scoreBoard-router.js');
 const userPickRouter = require('./routes/league/userPick-router.js');
 const gameRouter = require('./routes/sportingEvent/game-router.js');
 const sportingEventsRouter = require('./routes/sportingEvent/sportingEvent-router.js');
