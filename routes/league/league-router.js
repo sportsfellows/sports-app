@@ -54,36 +54,58 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
       league.users.push(req.user._id);
       return league.save();
     })
-    .then( () => {
+    .then( (league) => {
+      let scoreboard = { leagueID: league._id, userID: req.user._id };
+      if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
+      return new ScoreBoard(scoreboard).save()
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( (scoreBoard) => {
+          return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
+        });
+    })
+    .then( returnObj => {
       return Profile.findOne({ userID: req.user._id })
         .catch( err => Promise.reject(createError(404, err.message)))
         .then( profile => {
           profile.leagues.push(req.params.leagueId);
-          return profile.save();
+          profile.save();
+          returnObj.profileLeagues;
+          res.json(returnObj);
         });
     })
-    .then( () => res.json(req.params.leagueId))
     .catch(next);
 });
 
-// leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, function(req, res, next) {
-//   debug('PUT: /api/league/:leagueId/adduser');
+// http PUT :3000/api/league/5aa757d3c73ef35216478a19/removeuser 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiMmI3ZWRlNGIwNDY5YTVmNTcyZmY2NTI0MzQ5ZjU1ZDU5MWViOGRhMzU2Y2I1NmE3NTgwYWFmNzU1ZThlMmIiLCJpYXQiOjE1MjA5ODM2Njh9.v3KWzv-317crAoomp9exe3YojuQKH-QA8vcD9ubIj8Q'
+leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT: /api/league/:leagueId/removeuser');
 
-//   return Profile.findOne({ userID: req.user._id })
-//     .catch( err => Promise.reject(createError(404, err.message)))
-//     .then( profile => {
-//       profile.leagues.push(req.params.leagueId);
-//       return profile.save();
-//     })
-//     .then( () => {
-//       return League.findById(req.params.leagueId)
-//         .then( league => {
-//           league.users.push(req.user._id);
-//           return league.save();
-//         });
-//     })
-//     .catch(next);
-// });
+  return League.findById(req.params.leagueId)
+    .then( league => {
+      league.users.pull(req.user._id);
+      return league.save();
+    })
+    .then( (league) => {
+      let scoreboard = { leagueID: league._id, userID: req.user._id };
+      if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
+      return ScoreBoard.findOneAndRemove({ userID: req.user._id, leagueID: req.params.leagueId })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( () => {
+          return { scoreBoardResStatus: 204, leagueUsers: league.users };
+        });
+    })
+    .then( returnObj => {
+      return Profile.findOne({ userID: req.user._id })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( profile => {
+          profile.leagues.pull(req.params.leagueId);
+          profile.save();
+          returnObj.profileLeagues;
+          res.json(returnObj);
+        });
+    })
+    .catch(next);
+});
 
 leagueRouter.get('/api/league/:leagueId', bearerAuth, function(req, res, next) {
   debug('GET: /api/league/:leagueId');
