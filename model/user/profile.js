@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const debug = require('debug')('sportsapp:profile');
 const createError = require('http-errors');
 // const User = require('./user.js');
@@ -34,13 +35,3 @@ Profile.findByuserIDAndAddLeague = function(uid, lid) {
       return profile.save();
     });
 };
-// .then( menu => {
-//   entree.menuID = menu._id;
-//   this.tempMenu = menu;
-//   return new Entree(entree).save();
-// })
-// .then( entree => {
-//   this.tempMenu.entrees.push(entree._id);
-//   this.tempEntree = entree;
-//   return this.tempMenu.save();
-// })
