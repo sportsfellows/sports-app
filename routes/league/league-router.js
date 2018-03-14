@@ -8,7 +8,7 @@ const createError = require('http-errors');
 const League = require('../../model/league/league.js');
 const MessageBoard = require('../../model/league/messageBoard.js');
 const ScoreBoard = require('../../model/league/scoreBoard.js');
-// const User = require('../../model/user/user.js');
+const UserPick = require('../../model/league/userPick.js');
 const Profile = require('../../model/user/profile.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
@@ -85,9 +85,7 @@ leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, fun
       league.users.pull(req.user._id);
       return league.save();
     })
-    .then( (league) => {
-      let scoreboard = { leagueID: league._id, userID: req.user._id };
-      if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
+    .then( league => {
       return ScoreBoard.findOneAndRemove({ userID: req.user._id, leagueID: req.params.leagueId })
         .catch( err => Promise.reject(createError(404, err.message)))
         .then( () => {
@@ -95,13 +93,21 @@ leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, fun
         });
     })
     .then( returnObj => {
+      return UserPick.remove({ userID: req.user._id, leagueID: req.params.leagueId }).exec()
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( () => {
+          returnObj.scoreBoardResStatus = 204;
+          return returnObj;
+        });
+    })
+    .then( finalReturnObj => {
       return Profile.findOne({ userID: req.user._id })
         .catch( err => Promise.reject(createError(404, err.message)))
         .then( profile => {
           profile.leagues.pull(req.params.leagueId);
           profile.save();
-          returnObj.profileLeagues = profile.leagues;
-          res.json(returnObj);
+          finalReturnObj.profileLeagues = profile.leagues;
+          res.json(finalReturnObj);
         });
     })
     .catch(next);
@@ -145,24 +151,25 @@ leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next
   return League.findById(req.params.leagueId)
     .then( league => {
       if(league.owner.toString() !== req.user._id.toString()) return next(createError(403, 'forbidden access'));
-      // let profileUpdates = [];
-      league.users.forEach(function(luser) {
-        Profile.findOne({ userID: luser })
-          .then( user => {
-            user.leagues.pull(req.params.leagueId);
-            return user.save();
-          });
-      });
+      let profileUpdates = [];
       // league.users.forEach(function(luser) {
-      //   profileUpdates.push(
-      //     Profile.findOne({ userID: luser })
-      //       .then( user => {
-      //         user.leagues.pull(req.params.leagueId);
-      //         return user.save();
-      //       }));
+      //   Profile.findOne({ userID: luser })
+      //     .then( user => {
+      //       user.leagues.pull(req.params.leagueId);
+      //       return user.save();
+      //     });
       // });
-      // return Promise.all(profileUpdates);
-      league.remove();
+      league.users.forEach(function(luser) {
+        profileUpdates.push(
+          Profile.findOne({ userID: luser })
+            .then( user => {
+              user.leagues.pull(req.params.leagueId);
+              return user.save();
+            }));
+      });
+      return Promise.all(profileUpdates)
+        .then( () => league.remove())
+        .catch(next);
     })
     .then(() => res.status(204).send())
     .catch(next);

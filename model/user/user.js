@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const createError = require('http-errors');
 const Promise = require('bluebird');
 const debug = require('debug')('sportsapp:user');

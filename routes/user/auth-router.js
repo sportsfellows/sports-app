@@ -10,7 +10,7 @@ const Profile = require('../../model/user/profile.js');
 
 const authRouter = module.exports = Router();
 
-// 
+// http POST :3000/api/signup username=briguy999 email=brianbixby0@gmail.com password=password1
 authRouter.post('/api/signup', jsonParser, function(req, res, next) {
   debug('POST: /api/signup');
   if (!req.body.username || !req.body.email || !req.body.password) return next(createError(400, 'expected a request body username, email and password'));
