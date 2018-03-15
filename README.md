@@ -141,14 +141,16 @@ You will receive an object for that specific game.
 #### PUT: `/api/game/<game id>`
 This will allow you to make changes to a specific game.
 ```
-and stuff goes here
+http PUT :3000/api/game/<game id> 'Authorization:Bearer <token>' homeTeam='hometeam' awayTeam='awayteam' dateTime='datetime' weight='weight' homeScore='homescore' awayScore='awayscore' status='status' winner='winner' loser='loser' sportingEventID='sportingeventid' tags='tags'
 ```
+
+You will receive the updated object of the game you just modified.
 
 ### Team Routes
 #### POST: `/api/sportingevent/<sporting event id>/team`
-text and stuff go here
+You can create a new team with properties `teamName`, `sportingEventID`, `createdOn` which can also be automatically generated, `seed`, `wins`, `losses`, `pretournamentRecord`, and `tags`. Values that are required are `teamName` and `sportingEventId`.
 ```
-and stuff goes here
+http POST :3000/api/sportingevent/<sportingeventid>/team 'Authorization:Bearer <token>' teamName='team name'
 ```
 #### GET: `/api/teams`
 text and stuff go here
