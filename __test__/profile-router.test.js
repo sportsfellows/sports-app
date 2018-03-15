@@ -30,7 +30,7 @@ describe('Profile routes', function() {
       })
       .then( user => {
         this.tempUser = user;
-        console.log('this.tempUser: ', this.tempUser)
+        console.log('this.tempUser: ', this.tempUser);
         return user.generateToken();
       })
       .then( token => {
@@ -39,7 +39,7 @@ describe('Profile routes', function() {
       })
       .catch(done);
   });
-  return new Profile({userID: user._id, username: user.username}).save();
+  // return new Profile({userID: user._id, username: user.username}).save();
   afterEach( done => {
     Promise.all([
       User.remove({}),
@@ -51,8 +51,6 @@ describe('Profile routes', function() {
 
   describe('GET: /api/signup', function() {
     describe('with a valid body', function() {
-
-
       it('should return a token', done => { 
         request.post(`${url}/api/signup`)
           .send(exampleUser)
@@ -63,7 +61,6 @@ describe('Profile routes', function() {
             done();
           });
       });
-
       it('should return a 400 error, no body', done => {
         request.post(`${url}/api/signup`)
           .send()
@@ -75,6 +72,6 @@ describe('Profile routes', function() {
             done();
           });
       });
-  
     });
   });
+});

@@ -1,21 +1,28 @@
-// 'use strict';
+'use strict';
 
-// const request = require('superagent');
-// const User = require('../model/user/user.js');
-// const serverToggle = require('../lib/server-toggle.js');
-// const server = require('../server.js');
+'use strict';
 
-// require('jest');
+const request = require('superagent');
+const fakeUser  = require('./lib/fakeUser.js');
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
 
-// const url = 'http://localhost:3000';
+require('jest');
 
-// const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mockData.js'); // eslint-disable-line
+const url = 'http://localhost:3000';
 
-// describe('Userpick routes', function() {
-//   beforeAll( done => {
-//     serverToggle.serverOn(server, done);
-//   });
-//   afterAll( done => {
-//     serverToggle.serverOff(server, done);
-//   });
-// });
+describe('User Pick routes', function() {
+  beforeAll(done => {
+    serverToggle.serverOn(server, done);
+  });
+  afterAll(done => {
+    serverToggle.serverOff(server, done);
+  });
+  afterEach( done => {
+    Promise.all([
+      // User.remove({}),
+    ])
+      .then( () => done())
+      .catch(done);
+  });
+});

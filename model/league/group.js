@@ -18,6 +18,7 @@ const groupSchema = mongoose.Schema({
   tags: [{type: String }], 
 });
 
+
 groupSchema.pre('remove', function(next) {
   MessageBoard.findOne({ groupID: this._id })
     .then( messageBoard => {
@@ -29,3 +30,4 @@ groupSchema.pre('remove', function(next) {
 });
 
 module.exports = mongoose.model('group', groupSchema);
+
