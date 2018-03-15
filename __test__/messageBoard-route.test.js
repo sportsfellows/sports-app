@@ -15,8 +15,6 @@ const url = 'http://localhost:3000';
 let exampleGroup = {
   groupName: faker.company.companyName(),
   privacy: 'public',
-  owner: this.mock.profile._id,
-  users: [this.mock.profile._id],
 };
 
 describe('Message Board Routes', function () {
@@ -26,6 +24,7 @@ describe('Message Board Routes', function () {
   afterAll(done => {
     serverToggle.serverOff(server, done);
   });
+
   beforeEach( () => {
     return fakeProfile.create()
       .then( mock => {
@@ -33,7 +32,10 @@ describe('Message Board Routes', function () {
         return this.mock.profile = this.mock.profile._rejectionHandler0;
       });
   }); 
+
   beforeEach(done => {
+    exampleGroup.owner = this.mock.profile._id;
+    exampleGroup.users = [this.mock.profile._id];
 
     new Group(exampleGroup).save()
       .then(group => {
@@ -42,8 +44,9 @@ describe('Message Board Routes', function () {
       })
       .catch(done);
   });
+
   beforeEach(done => {
-    MessageBoard.findOne({ groupID: this.tempGroup._id })
+    MessageBoard.findOne({ groupID: Object(`${this.tempGroup._id}`) })
       .then(messageBoard => {
         this.tempMessageBoard = messageBoard;
       })
