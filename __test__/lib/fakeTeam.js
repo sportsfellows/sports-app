@@ -23,6 +23,6 @@ teamMockFactory.create = () => {
       return mock;
     })
     .catch(console.log);
-};    
+};
 
 teamMockFactory.remove = () => Team.remove({});
