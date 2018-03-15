@@ -14,6 +14,7 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const leagueRouter = module.exports = Router();
 
+
 // http POST :3000/api/sportingevent/5aa72ffd589c3d4ce00ed2aa/league 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdjZjNjNTExYTIxZGUxNmUxZTM5MjBkZDNiNGI4NGZmOTJlZTZkMDA0OWRjMTMyOWZmMzkwYzNhZGUwYmYwZmMiLCJpYXQiOjE1MjA5OTQxODV9.ZdivKHeGH9rDklclxKal3u2GylQeDJiaor4f2bsWcpA' leagueName='aaaawfaaaaa' privacy='a' poolSize=0 scoring='regular'
 leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, jsonParser, function(req, res, next) {
   debug(`POST: /api/sportingevent/:sportingeventId/league`);
