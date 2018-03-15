@@ -9,7 +9,7 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mockData.js');
+const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mockData.js'); // eslint-disable-line
 
 describe('Auth routes', function() {
   beforeAll( done => {
