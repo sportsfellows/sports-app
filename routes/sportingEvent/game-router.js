@@ -52,6 +52,7 @@ gameRouter.get('/api/games', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+// http PUT :3000/api/game/5aaa8ae6f2db6d1315d2934a 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiZTQzODQwMTBiZmJjN2I2NDJiNTlkZTM1ZjgxMDE3NDhlMTA3MDJmNmU3NmExZWEzOGJmN2M3ZWY2NDUyODUiLCJpYXQiOjE1MjExMjU4Njd9.4p5DqkayofQHjCbHYzSDr8FPexGFcdtJCsM8gTc3maU' gameID='5aaa8ae6f2db6d1315d2934a' winner='5aa8c322091555739d8cb12c' loser='5aa8c340091555739d8cb12d' homeScore=50 awayScore=40 status='played'
 gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/game:gameId');
 
@@ -82,7 +83,7 @@ gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, n
         .then( userPicks => {
           let scoreBoard2Update = [];
           userPicks.forEach(function(userPick) {
-            if(userPick.pick == game.winner) {
+            if(userPick.pick.toString() == game.winner.toString()) {
               userPick.correct = true;
               userPick.save();
               scoreBoard2Update.push(
@@ -96,9 +97,12 @@ gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, n
               userPick.correct = false;
               return userPick.save();
             }
+            return Promise.all(scoreBoard2Update)
+              .catch(next);
           });
         });
     })
+    .then(() => res.send('success'))
     .catch(next);
 });
 

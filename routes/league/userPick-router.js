@@ -27,7 +27,7 @@ userPickRouter.get('/api/userpicks', bearerAuth, function(req, res, next) {
     .then(userPicks => res.json(userPicks))
     .catch(next);
 });
-
+// http POST :3000/api/league/5aaa8a2af2db6d1315d29347/userpick 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiZTQzODQwMTBiZmJjN2I2NDJiNTlkZTM1ZjgxMDE3NDhlMTA3MDJmNmU3NmExZWEzOGJmN2M3ZWY2NDUyODUiLCJpYXQiOjE1MjExMjU4Njd9.4p5DqkayofQHjCbHYzSDr8FPexGFcdtJCsM8gTc3maU' gameID='5aaa8ae6f2db6d1315d2934a' pick='5aa8c322091555739d8cb12c' gameTime='2018-03-16 23:37:52-0700'
 userPickRouter.post('/api/league/:leagueId/userpick', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/league/:leagueId/userpick');
 
