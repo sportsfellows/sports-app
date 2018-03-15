@@ -62,7 +62,7 @@ describe('SportingEvent routes', function() {
           expect(res.status).toEqual(200);
           expect(res.body.sportingEventName).toEqual(exampleSportingEvent.sportingEventName);
           expect(res.body.desc).toEqual(exampleSportingEvent.desc);
-          expect(res.body.tags).toEqual(exampleSportingEvent.tags);
+          expect(res.body.tags).toEqual([exampleSportingEvent.tags]);
           expect(res.body.createdOn).toEqual('2016-01-01T00:00:00.000Z');
           done();
         });

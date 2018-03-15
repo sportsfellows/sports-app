@@ -87,7 +87,7 @@ The User model will return a json web token if there are no errors.
 #### PUT: `/api/profile/<profile id>`
 text and stuff go here
 
-### `Sporting Event Routes`
+### Sporting Event Routes
 #### POST: `/api/sportingevent`
 
 Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically and the `tags` property is available for any extra information that a user may want to add.
@@ -126,26 +126,31 @@ This will return an object of your sporting event, like the example below:
 ```
 ### Game Routes
 #### GET: `/api/games`
-text and stuff go here
+This will allow you to get all games.
 ```
-and stuff goes here
+http :3000/api/games 'Authorization:Bearer <token>'
 ```
+
+This will return an array of objects.
 #### GET: `/api/game/<game id>`
-text and stuff go here
+This will return a specific game.
 ```
-and stuff goes here
+http :3000/api/game/<game id> 'Authorization: Bearer <token>'
 ```
+You will receive an object for that specific game.
 #### PUT: `/api/game/<game id>`
-text and stuff go here
+This will allow you to make changes to a specific game.
 ```
-and stuff goes here
+http PUT :3000/api/game/<game id> 'Authorization:Bearer <token>' homeTeam='hometeam' awayTeam='awayteam' dateTime='datetime' weight='weight' homeScore='homescore' awayScore='awayscore' status='status' winner='winner' loser='loser' sportingEventID='sportingeventid' tags='tags'
 ```
+
+You will receive the updated object of the game you just modified.
 
 ### Team Routes
 #### POST: `/api/sportingevent/<sporting event id>/team`
-text and stuff go here
+You can create a new team with properties `teamName`, `sportingEventID`, `createdOn` which can also be automatically generated, `seed`, `wins`, `losses`, `pretournamentRecord`, and `tags`. Values that are required are `teamName` and `sportingEventId`.
 ```
-and stuff goes here
+http POST :3000/api/sportingevent/<sportingeventid>/team 'Authorization:Bearer <token>' teamName='team name'
 ```
 #### GET: `/api/teams`
 text and stuff go here
@@ -300,38 +305,9 @@ text and stuff go here
 and stuff goes here
 ```
 
-<!-- ## Tests
+## Tests
 
-run `npm run tests` to check tests.
-
-#### POST
-
-1. The User model should create and return s json web token and a 200 status code if there is no error.
-2. The List model should create and return a new list.
-3. Both should respond with a 400 status code if there is no request body.
-4. The List model should respond with a 401 status code if there is no json web token provided.
-
-#### GET
-
-1. The User model should return a user's json web token and a 200 status code if there is no error.
-2. The list model should return a user's list and a 200 status code if there is no error.
-3. The List model should respond with a 401 status code if there is no json web token provided
-4. should respond with a 404 status code if a request is made with an id that is not found.
-5. The List model should respond with a 200 status code and all lists if there is no parameter (id).
-
-#### DELETE
-
-1. The List model should return a 204 status code if there are no errors.
-2. The List model should respond with a 400 status code if there is no parameter (id).
-3. The List model should respond with a 404 status code if a request is made with an id that is not found.
-4. The List model should respond with a 401 status code if there is no json web token provided.
-
-#### PUT
-
-1. The List model should update and return the updated list along with a 200 status code if there are no errors.
-2. The List model should respond with a 400 status code if there is an invalid request body.
-3. The List model should respond with a 404 status code if a request is made with an id that is not found.
-4. The List model should respond with a 401 status code if there is no json web token provided. -->
+Tests are ran by using the jest testing suite. To run tests, first you must download and copy this repo and run `npm i` in the root directory to install all application dependancies. Run `npm run tests` in the root directory of the application in your terminal to check tests.
 
 ## Contribute
 
