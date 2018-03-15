@@ -55,8 +55,7 @@ Run `npm run start` from terminal to start the server. Open a new tab in termina
 
 ## Routes
 
-
-### `Auth/User Routes`
+### Auth/User Routes
 #### POST: `/api/signup`
 Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
 
@@ -74,7 +73,7 @@ Throws an error if any of the requested properties that are not created for you 
 
 The User model will return a json web token if there are no errors and create a profile model for the newly instantiated user to add more detailed information to.
 
-### `Profile Routes`
+### Profile Routes
 #### GET: `/api/profile/<profile id>`
 Retrieve your user profile and update your information for other users to see.
 
@@ -125,7 +124,7 @@ This will return an object of your sporting event, like the example below:
     "tags": []
 }
 ```
-### `Game Routes`
+### Game Routes
 #### GET: `/api/games`
 text and stuff go here
 #### GET: `/api/game/<game id>`
@@ -133,7 +132,7 @@ text and stuff go here
 #### PUT: `/api/game/<game id>`
 text and stuff go here
 
-### `Team Routes`
+### Team Routes
 #### POST: `/api/sportingevent/<sporting event id>/team`
 text and stuff go here
 #### GET: `/api/teams`
@@ -143,7 +142,7 @@ text and stuff go here
 #### PUT: `/api/team/<team id>`
 text and stuff go here
 
-### `User Pick Routes`
+### User Pick Routes
 #### POST: `/api/league/<league id>/userpick`
 text and stuff go here
 #### GET: `/api/userpicks`
