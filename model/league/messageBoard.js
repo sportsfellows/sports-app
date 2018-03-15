@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 const debug = require('debug')('sportsapp:messageBoard');
 const createError = require('http-errors');
 const Comment = require('./comment.js');

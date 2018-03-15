@@ -1,29 +1,43 @@
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
-## Project 1: Asset Management
+## Project: CF Madness (sports bracket app)
 
-I added additional functionality to my 2 resource API, I have incorporated Amazon S3 so users can upload images to Amazon S3 and my database savesa  URL pointing to the site.
+CF Madness is an application allows users to compete against their friends by choosing winners for real world sports games. 
+
+You are able to create and manage your own leagues and will have a personal scoreboard for each participant. Each league will also have its own message board that will allow you to communicate with those in your league. Each league also has the option to be private or public.
+
+If you are not participating in a league or would like to communicate with those outside of your league, you can also create a group. Like a league, each group has its own message board so users can communicate with each other.
 
 ## Tech/frameworks/packages
 
 - node 
 - MongoDB
+- travis
+- heroku
+- github
 - npm
 - node packages
   - Production
+    - aws-sdk
     - bcrypt
     - bluebird
-    - body-parser
+    - body-parser 
     - cors
-    - debug
-    - dotenv
-    - eslint
-    - express
-    - http-errors
-    - jsonwebtoken
-    - mongoose
+    - coveralls
+    - crypto 
+    - debug 
+    - del 
+    - dotenv 
+    - express 
+    - faker 
+    - http-errors 
+    - istanbul 
+    - jsonwebtoken 
+    - mongoose 
     - morgan
+    - multer 
   - Dev
+    - eslint
     - jest
     - superagent
 
@@ -33,215 +47,257 @@ I added additional functionality to my 2 resource API, I have incorporated Amazo
 https://www.lucidchart.com/documents/view/ccfd14a4-7127-4097-8bf9-ca0d567cc323/0
 MONGODB_URI='mongodb://heroku_5s3dhwdr:vm0d8l4q47rb9psbn1o247o2in@ds263138.mlab.com:63138/heroku_5s3dhwdr'
 
-## Models
-
-user model (
-  _id <type>,
-  username <type>,
-  email <type>,
-  password <type>,
-  findHash <type>
-);
-
-sportingEvent model (
-  _id <type>,
-  sportingEventName <type>,
-  desc <type>,
-  createdOn <type>,
-  tags <type>
-);
-
-game model (
-  _id <type>,
-  homeTeam <type>,
-  awayTeam <type>,
-  weight <type>,
-  winner <type>,
-  homeScore <type>,
-  awayScore <type>,
-  date <type>,
-  status <type>,
-  tags <type>
-);
-
-team model (
-  _id <type>,
-  teamName <type>,
-  sportingEventID <type>,
-  createdOn <type>,
-  seed <type>,
-  record <type>,
-  pretournamentRecord <type>,
-  tags <type>
-);
-
-league model (
-  _id <type>,
-  leagueName <type>,
-  sportingEventID <type>,
-  owner <type>,
-  scoring <type>,
-  poolSize <type>,
-  privacy <type>,
-  password <type>,
-  winner <type>,
-  status <type>,
-  users <type>,
-  createdOn <type>,
-  size <type>,
-  paidUsers <type>,
-  tags <type>
-);
-
-scoreboard model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  score <type>
-);
-
-group model (
-  _id <type>,
-  groupName <type>,
-  privacy <type>,
-  size <type>,
-  motto <type>,
-  createdOn <type>,
-  image <type>,
-  owner <type>,
-  password <type>,
-  users <type>,
-  tags <type>
-);
-
-profile model (
-  _id <type>,
-  image <type>,
-  country <type>,
-  state <type>,
-  birthDate <type>,
-  accountBalance <type>,
-  status <type>,
-  createdOn <type>,
-  lastLogin <type>,
-  leagues <type>,
-  groups <type>,
-  userID <type>,
-  tags <type>
-);
-
-comment model (
-  _id <type>,
-  userID <type>,
-  content <type>,
-  createdOn <type>,
-  messageBoardID <type>,
-  tags <type>
-);
-
-messageBoard model (
-  _id <type>,
-  leagueID <type>,
-  groupID <type>,
-  tags <type>
-);
-
-userPick model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  gameID <type>,
-  pick <type>
-);
-
 
 ## How to use?
-Clone this repo, cd into `lab-brian`, run `npm install`, brew install httpie and mongodb if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
+Clone this repo, cd into the root of the project, run `npm i` from your command line to install all of our dependencies. Please make sure that you have mongodb and httpie installed on your machine, you can brew install them both if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
 
-Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell. Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
-
-Make POST/GET/DELETE/PUT requests to the server and your local MongoDB.
+Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell (for viewing the contents of your local database). Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
 
 ## Routes
 
-#### `POST /api/signup && /api/list`
-
-Create a new  user with the properties `username`, `email`, `password` and `findHash` which is created for you. Or create a new list with the properties `name`, `desc`, and `created` along with `userID` which are created for you.
-
-```
-http POST :3000/api/signup username=briguy999 email=brianbixby0@gmail.com password=password1
-
-http POST :3000/api/list name='my cool list' desc='this list is so cool'
-```
-
-Throws an error if any of the requested properties that are not created for you are missing.
-
-The User model will return a json web token and the list model will return a new list if there are no errors.
-
-#### `GET /api/signin && /api/list/<list id>  && /api/lists`
-
-Retrieve the json web token for a created user, or retrieve a single list or all lists for an authenticated user.
-
-```
-http -a <username>:<password> :3000/api/signin
-http -a <username>:<password> :3000/api/list/<list id>
-http -a <username>:<password> :3000/api/lists
-```
-
-Throws an error if the route can't be found, the list id is invalid or the use is not authenticated.
-
-#### `DELETE /api/list/<list id>`
-
-Deletes a specific list as requested by the <list id>.
-
-```
-http -a <username>:<password> DELETE :3000/api/list/<list id>
-```
-
-If successful, a 204 status is returned.
-
-Throws an error if the request parameter (id) is missing or the user is not authenticated.
-
-
-#### `PUT /api/list/<list id>`
-
-Updates a Jlist with the properties `name`, `desc`, `created` and `userID` from your MongoDB as requested by the <list id>.
-
-```
-http -a <username>:<password> PUT :3000/api/list/<list id> name='new list name'
-```
-
-If successful, the list is returned with a 200 status.
-
-If a request is made with a list id that is not found, a 404 status is returned.
-
-If a request is made with no list id a 400 status is returned.
-
-If a request is made with out an authenticated user a 401 status is returned.
-
-
-## Routes
-
-#### `Auth route to signup a user and signin /api/signup /api/signin`
-
+### Auth/User Routes
+#### POST: `/api/signup`
 Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
 
-
+```
 http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
 http POST :3000/api/signup username=<username> email=<email> password=<password>
-
+```
+#### GET: `/api/signin`
 As an existing user you can login to your profile, which will authenticate you with a json web token and allow you to make requests to our API.
+```
+http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
+http POST :3000/api/signup username=<username> email=<email> password=<password>
+```
+Throws an error if any of the requested properties that are not created for you are missing.
 
+The User model will return a json web token if there are no errors and create a profile model for the newly instantiated user to add more detailed information to.
+
+### Profile Routes
+#### GET: `/api/profile/<profile id>`
+Retrieve your user profile and update your information for other users to see.
+
+```
 http -a newusername:newpassword :3000/api/signin
 http -a <username>:<password> :3000/api/signin
+```
+Throws an error if any of the requested properties that are not created for you are missing.
 
-### `Group Routes`
-### POST: `/api/group
-Create a new group with the required properties `groupname`, and `privacy`.  `size`, `createdon` and `owner` are created for you.  Optional fields are `motto`, `password`. `tags` are for any extra information you want to add.
+The User model will return a json web token if there are no errors.
+#### PUT: `/api/profile/<profile id>`
+text and stuff go here
+
+### Sporting Event Routes
+#### POST: `/api/sportingevent`
+
+Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically and the `tags` property is available for any extra information that a user may want to add.
+
 ```
-http POST :3000/api/group 'Authorization:Bearer <token>' groupname=<group name> privacy='<privacy status>' motto='<custom motto>'
+http POST :3000/api/sportingevent 'Authorization:Bearer <token>' sportingEventName='<event name>' desc='<description>'
 ```
-After a successful POST you recieve an object of the new group you created, like the example below:
+After a successful POST, you receive an object of the new sporting event you created, like the example below:
+```
+{
+    "__v": 0, 
+    "_id": "5aa9acbe42358a6e7b6a6450", 
+    "createdOn": "2018-03-14T23:14:06.602Z", 
+    "desc": "some text and stuff", 
+    "sportingEventName": "baseball", 
+    "tags": []
+}
+```
+
+#### GET: `/api/sportingevent/<sporting event id>`
+
+```
+http GET :3000/api/sportingevent/<sporting event id> 'Authorization:Bearer <token>'
+```
+
+This will return an object of your sporting event, like the example below:
+```
+{
+    "__v": 0, 
+    "_id": "5aa9acbe42358a6e7b6a6450", 
+    "createdOn": "2018-03-14T23:14:06.602Z", 
+    "desc": "some text and stuff", 
+    "sportingEventName": "baseball", 
+    "tags": []
+}
+```
+### Game Routes
+#### GET: `/api/games`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/game/<game id>`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/game/<game id>`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### Team Routes
+#### POST: `/api/sportingevent/<sporting event id>/team`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/teams`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/team/<team id>`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/team/<team id>`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### Group Routes
+#### POST: `/api/group`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/groups`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/group/:groupId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/group/:groupId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/group/:groupId/adduser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/group/:groupId/removeuser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### DELETE: `/api/group/:groupId`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### League Routes
+#### POST: `/api/sportingevent/:sportingeventId/league`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/leagues`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/league/:leagueId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/league/:leagueId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/league/:leagueId/adduser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/league/:leagueId/removeuser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### DELETE: `/api/league/:leagueId`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### User Pick Routes
+#### POST: `/api/league/<league id>/userpick`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/userpicks`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/userpick/<user pick id>`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/userpick/<user pick id>`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### Score Board Routes
+#### GET: `/api/scoreboards`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/scoreboard/:scoreBoardId`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### Message Board Routes
+#### GET: `/api/messageboards`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/messageboard/:messageBoardId`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### Comment Routes
+#### POST: `/api/messageboard/:messageBoardId/comment`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/comments`
+text and stuff go here
+```
+and stuff goes here
+```
+and stuff goes here
+```
+
+
 ```
 
 
@@ -250,6 +306,7 @@ Update
 ### 'POST /api
 
 ## Tests
+=======
 
 run `npm run tests` to check tests.
 
@@ -280,7 +337,7 @@ run `npm run tests` to check tests.
 1. The List model should update and return the updated list along with a 200 status code if there are no errors.
 2. The List model should respond with a 400 status code if there is an invalid request body.
 3. The List model should respond with a 404 status code if a request is made with an id that is not found.
-4. The List model should respond with a 401 status code if there is no json web token provided.
+4. The List model should respond with a 401 status code if there is no json web token provided. -->
 
 ## Contribute
 
@@ -289,6 +346,14 @@ You can totally contribute to this project if you want. Fork the repo, make some
 ## Credits
 
 Initial codebase created by Code Fellows.
+
+Bessie Arino
+
+Brian Bixby
+
+Greg Nordeng
+
+Ken Unterseher
 
 ## License
 

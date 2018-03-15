@@ -17,7 +17,7 @@ let exampleProfile = {
 
 let exampleTeam = {
   teamName: faker.random.word(),
-  seed: faker.radndom.number(),
+  seed: faker.random.number(),
   pretournamentRecord: '20-10',
   tags: 'pac-12',
 };

@@ -30,6 +30,7 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
     .catch(next);
 });
 
+// http -a briguy999:password1 :3000/api/signin
 authRouter.get('/api/signin', basicAuth, function(req, res, next) {
   debug('GET: /api/signin');
  
