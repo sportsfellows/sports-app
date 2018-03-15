@@ -49,17 +49,15 @@ MONGODB_URI='mongodb://heroku_5s3dhwdr:vm0d8l4q47rb9psbn1o247o2in@ds263138.mlab.
 
 
 ## How to use?
-Clone this repo, cd into `lab-brian`, run `npm install`, brew install httpie and mongodb if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
+Clone this repo, cd into the root of the project, run `npm i` from your command line to install all of our dependencies. Please make sure that you have mongodb and httpie installed on your machine, you can brew install them both if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
 
-Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell. Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
-
-Make POST/GET/DELETE/PUT requests to the server and your local MongoDB.
+Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell (for viewing the contents of your local database). Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
 
 ## Routes
 
+
 ### `Auth/User Routes`
 #### POST: `/api/signup`
-
 Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
 
 ```
@@ -68,6 +66,17 @@ http POST :3000/api/signup username=<username> email=<email> password=<password>
 ```
 #### GET: `/api/signin`
 As an existing user you can login to your profile, which will authenticate you with a json web token and allow you to make requests to our API.
+```
+http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
+http POST :3000/api/signup username=<username> email=<email> password=<password>
+```
+Throws an error if any of the requested properties that are not created for you are missing.
+
+The User model will return a json web token if there are no errors and create a profile model for the newly instantiated user to add more detailed information to.
+
+### `Profile Routes`
+#### GET: `/api/profile/<profile id>`
+Retrieve your user profile and update your information for other users to see.
 
 ```
 http -a newusername:newpassword :3000/api/signin
@@ -76,10 +85,6 @@ http -a <username>:<password> :3000/api/signin
 Throws an error if any of the requested properties that are not created for you are missing.
 
 The User model will return a json web token if there are no errors.
-
-### `Profile Routes`
-#### GET: `/api/profile/<profile id>`
-text and stuff go here
 #### PUT: `/api/profile/<profile id>`
 text and stuff go here
 
