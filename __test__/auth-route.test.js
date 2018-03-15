@@ -26,6 +26,7 @@ describe('Auth routes', function() {
   });
   afterEach(fakeUser.remove);
 
+
   describe('POST: /api/signup', function() {
     describe('with a valid body', function() {
       it('should return a token', done => { 
