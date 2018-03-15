@@ -9,7 +9,9 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mockData.js'); // eslint-disable-line
+const {exampleUser} = require('./lib/mockData.js');
+
+// const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mockData.js');
 
 describe('Auth routes', function() {
   beforeAll( done => {
@@ -71,9 +73,9 @@ describe('Auth routes', function() {
           .catch(done);
       });
 
-      it('return a token', done => {
+      it('should return a token', done => {
         request.get(`${url}/api/signin`)
-          .auth('exampleuser', '1234')
+          .auth(exampleUser.username, exampleUser.password)
           .end((err, res) => {
             if(err) return done(err);
             expect(res.status).toEqual(200);
@@ -93,44 +95,3 @@ describe('Auth routes', function() {
     });
   });
 });
-
-// describe('PUT: /api/signin', function() {
-//   describe('with a valid body', function() {
-//     beforeEach( done => {
-//       new User(exampleUser)
-//         .generatePasswordHash(exampleUser.password)
-//         .then( user => {
-//           this.tempUser = user;
-//           return user.generateToken();
-//         })
-//         .then( token => {
-//           this.tempToken = token;
-//           done();
-//         })
-//         .catch(done);
-//     });
-//     afterEach( done => {
-//       User.remove({})
-//         .then( () => done())
-//         .catch(done);
-//     });
-
-//     it('should update and return a list with a 200 status', done => {
-//       request.put(`${url}/api/signin`)
-//         .send(updatedUser)
-//         .set({
-//           Authorization: `Bearer ${this.tempToken}`,
-//         })
-//         .end((err, res) => {
-//           if (err) return done(err);
-//           console.log(res);
-//           expect(res.status).toEqual(200);
-//           expect(res.body.username).toEqual(updatedUser.username);
-//           expect(res.body.email).toEqual(updatedUser.email);
-//           expect(res.body.userID).toEqual(this.tempUser.id.toString());
-//           done();
-//         });
-//     });
-
-//   });
-// });
