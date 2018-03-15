@@ -33,13 +33,3 @@ exports.create = function() {
 exports.remove = function() {
   return User.remove({});
 };
-
-const fakeProfile = ('./fakeProfile.js');
-const League= require('../../model/league.league.js');
-
-exports.create = function() {
-  let mock = {};
-  mock.request = {
-    
-  }
-}
