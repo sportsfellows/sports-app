@@ -5,9 +5,7 @@ const Team = require('../model/sportingEvent/team.js');
 const SportingEvent = require('../model/sportingEvent/sportingEvent.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
-const fakeUser = require('../lib/fakeUser.js');
-const fakeTeam = require('../lib/fakeTeam.js');
-const fakeSportingEvent = require('../lib/fakeSportingEvent.js');
+const fakeUser = require('./lib/fakeUser.js');
 
 require('jest');
 
