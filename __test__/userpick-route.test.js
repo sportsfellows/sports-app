@@ -1,5 +1,16 @@
 'use strict';
 
+'use strict';
+
+const request = require('superagent');
+const fakeUser  = require('./lib/fakeUser.js');
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
+
+require('jest');
+
+const url = 'http://localhost:3000';
+
 describe('User Pick routes', function() {
   beforeAll(done => {
     serverToggle.serverOn(server, done);
@@ -9,9 +20,9 @@ describe('User Pick routes', function() {
   });
   afterEach( done => {
     Promise.all([
-      User.remove({}),
-      List.remove({}),
+      // User.remove({}),
     ])
       .then( () => done())
       .catch(done);
   });
+});
