@@ -2,7 +2,6 @@
 
 const faker = require('faker');
 const Team = require('../../model/sportingEvent/team.js');
-const fakeSportingEvent = require('../fakeSportingEvent.js');
 const teamMockFactory = module.exports = {};
 
 teamMockFactory.create = () => {
@@ -25,3 +24,5 @@ teamMockFactory.create = () => {
     })
     .catch(console.log);
 };    
+
+teamMockFactory.remove = () => Team.remove({});
