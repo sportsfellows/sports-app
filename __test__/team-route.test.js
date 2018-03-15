@@ -5,7 +5,7 @@ const Team = require('../model/sportingEvent/team.js');
 const SportingEvent = require('../model/sportingEvent/sportingEvent.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
-
+const fakeUser = require('../lib/fakeUser.js');
 
 require('jest');
 
@@ -21,17 +21,17 @@ describe('SportingEvent routes', function () {
     serverToggle.serverOff(server, done);
   });
 
-  describe('GET: /api/sportingEvent/:sportingEventId && /api/sportingEvent', () => {
+  describe('GET: /api/sportingEvent/:sportingEventId', () => {
     beforeEach(done => {
       new Team(exampleTeam)
         .then(team => {
           this.tempTeam = team;
           return team();
         })
-        // .then(token => {
-        //   this.tempToken = token;
-        //   done();
-        // })
+        .then(token => {
+          this.tempToken = token;
+          done();
+        })
         .catch(done);
     });
 

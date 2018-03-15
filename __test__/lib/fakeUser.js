@@ -12,42 +12,23 @@ userMockFactory.create = () => {
     password: faker.internet.password(),
   };
 
-  const user = new User(mock.request);
-  console.log(user);
 
-  return user.generatePasswordHash(mock.user.password)
-    .then(user => {
+  let user = new User(mock.request);
+  return user.generatePasswordHash(mock.request.password)
+    .then( user => user.save())
+    .then( user => {
       mock.user = user;
-      return user.password();
-
-      //     return Company.create(mock.request.companyName, mock.request.password, mock.request.email, mock.request.phoneNumber, mock.request.website)
-      //       .then(company => {
-      //         mock.company = company;
-      //         return company.createToken();
-      //       })
-      //       .then(token => {
-      //         mock.token = token;
-      //         return Company.findById(mock.company._id);
-      //       })
-      //       .then(company => {
-      //         mock.company = company;
-      //         return mock;
-      //       })
-      //       .catch(console.log);
-      //   };
-
-      // companyMockFactory.remove = () => Company.remove({});
-     
+      return user;
     })
-    .then(user => user.save())
-    .then((user ) => user.generateToken())
-    .then(token => {
+    .then( user => user.generateToken())
+    .then( token => {
       mock.token = token;
-      return User.findById(mock.user._id);
+      return mock;    
     })
-    .then(user => {
-      mock.user = user;
-      return mock;
-    });
-};
+    .catch(console.log);
+};    
+ 
+      
+  
+userMockFactory.remove = () => User.remove({});
 

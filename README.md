@@ -1,29 +1,40 @@
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
-## Project 1: Asset Management
+## Project: CF Madness (sports bracket app)
 
-I added additional functionality to my 2 resource API, I have incorporated Amazon S3 so users can upload images to Amazon S3 and my database savesa  URL pointing to the site.
+
+
 
 ## Tech/frameworks/packages
 
 - node 
 - MongoDB
+- travis
+- heroku
+- github
 - npm
 - node packages
   - Production
+    - aws-sdk
     - bcrypt
     - bluebird
-    - body-parser
+    - body-parser 
     - cors
-    - debug
-    - dotenv
-    - eslint
-    - express
-    - http-errors
-    - jsonwebtoken
-    - mongoose
+    - coveralls
+    - crypto 
+    - debug 
+    - del 
+    - dotenv 
+    - express 
+    - faker 
+    - http-errors 
+    - istanbul 
+    - jsonwebtoken 
+    - mongoose 
     - morgan
+    - multer 
   - Dev
+    - eslint
     - jest
     - superagent
 
@@ -33,154 +44,39 @@ I added additional functionality to my 2 resource API, I have incorporated Amazo
 https://www.lucidchart.com/documents/view/ccfd14a4-7127-4097-8bf9-ca0d567cc323/0
 MONGODB_URI='mongodb://heroku_5s3dhwdr:vm0d8l4q47rb9psbn1o247o2in@ds263138.mlab.com:63138/heroku_5s3dhwdr'
 
-## Models
-
-user model (
-  _id <type>,
-  username <type>,
-  email <type>,
-  password <type>,
-  findHash <type>
-);
-
-sportingEvent model (
-  _id <type>,
-  sportingEventName <type>,
-  desc <type>,
-  createdOn <type>,
-  tags <type>
-);
-
-game model (
-  _id <type>,
-  homeTeam <type>,
-  awayTeam <type>,
-  weight <type>,
-  winner <type>,
-  homeScore <type>,
-  awayScore <type>,
-  date <type>,
-  status <type>,
-  tags <type>
-);
-
-team model (
-  _id <type>,
-  teamName <type>,
-  sportingEventID <type>,
-  createdOn <type>,
-  seed <type>,
-  record <type>,
-  pretournamentRecord <type>,
-  tags <type>
-);
-
-league model (
-  _id <type>,
-  leagueName <type>,
-  sportingEventID <type>,
-  owner <type>,
-  scoring <type>,
-  poolSize <type>,
-  privacy <type>,
-  password <type>,
-  winner <type>,
-  status <type>,
-  users <type>,
-  createdOn <type>,
-  size <type>,
-  paidUsers <type>,
-  tags <type>
-);
-
-scoreboard model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  score <type>
-);
-
-group model (
-  _id <type>,
-  groupName <type>,
-  privacy <type>,
-  size <type>,
-  motto <type>,
-  createdOn <type>,
-  image <type>,
-  owner <type>,
-  password <type>,
-  users <type>,
-  tags <type>
-);
-
-profile model (
-  _id <type>,
-  image <type>,
-  country <type>,
-  state <type>,
-  birthDate <type>,
-  accountBalance <type>,
-  status <type>,
-  createdOn <type>,
-  lastLogin <type>,
-  leagues <type>,
-  groups <type>,
-  userID <type>,
-  tags <type>
-);
-
-comment model (
-  _id <type>,
-  userID <type>,
-  content <type>,
-  createdOn <type>,
-  messageBoardID <type>,
-  tags <type>
-);
-
-messageBoard model (
-  _id <type>,
-  leagueID <type>,
-  groupID <type>,
-  tags <type>
-);
-
-userPick model (
-  _id <type>,
-  userID <type>,
-  leagueID <type>,
-  gameID <type>,
-  pick <type>
-);
-
 
 ## How to use?
-Clone this repo, cd into `lab-brian`, run `npm install`, brew install httpie and mongodb if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
+Clone this repo, cd into the root of the project, run `npm i` from your command line to install all of our dependencies. Please make sure that you have mongodb and httpie installed on your machine, you can brew install them both if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
 
-Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell. Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
-
-Make POST/GET/DELETE/PUT requests to the server and your local MongoDB.
+Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell (for viewing the contents of your local database). Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
 
 ## Routes
 
-#### `POST /api/signup && /api/list`
+#### `Auth route to signup a user and signin /api/signup /api/signin`
 
-Create a new  user with the properties `username`, `email`, `password` and `findHash` which is created for you. Or create a new list with the properties `name`, `desc`, and `created` along with `userID` which are created for you.
+Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
 
 ```
-http POST :3000/api/signup username=briguy999 email=brianbixby0@gmail.com password=password1
 
-http POST :3000/api/list name='my cool list' desc='this list is so cool'
+http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
+http POST :3000/api/signup username=<username> email=<email> password=<password>
+```
+
+As an existing user you can login to your profile, which will authenticate you with a json web token and allow you to make requests to our API.
+
+```
+http -a newusername:newpassword :3000/api/signin
+http -a <username>:<password> :3000/api/signin
+
 ```
 
 Throws an error if any of the requested properties that are not created for you are missing.
 
-The User model will return a json web token and the list model will return a new list if there are no errors.
+The User model will return a json web token if there are no errors and create a profile model for the newly instantiated user to add more detailed information to.
 
-#### `GET /api/signin && /api/list/<list id>  && /api/lists`
+#### `Profile Route: /api/profile/:profileId && /api/profile/:profileId`
 
-Retrieve the json web token for a created user, or retrieve a single list or all lists for an authenticated user.
+Retrieve your user profile and update your information for other users to see.
 
 ```
 http -a <username>:<password> :3000/api/signin
