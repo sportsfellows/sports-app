@@ -6,16 +6,19 @@ const debug = require('debug')('sportsapp:comment-router');
 const createError = require('http-errors');
 
 const Comment = require('../../model/league/comment.js');
+const MessageBoard = require('../../model/league/messageBoard.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const commentRouter = module.exports = Router();
+// http POST :3000/api/messageboard/5aa8a33d28c5b66e00edac47/comment 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImJlOGJhYzg4MDNmMGY2MGVkYjRhYjc3N2UzYzVmMGE1ZWQxN2Q3ODhmNTJlNTM4NDU0ODJiMDI3NWYzYjYyNGYiLCJpYXQiOjE1MjEwMDEzMTJ9.O9beI1JAgSCKVHFSq1dxpQTIasE-YSf3WXYhXw1K2r8' content='my content'
+commentRouter.post('/api/messageboard/:messageBoardId/comment', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/messageboard/:messageBoardId/comment'); 
 
-commentRouter.post('/api/comment', bearerAuth, jsonParser, function(req, res, next) {
-  debug('POST: /api/comment');
+  if (!req.body.content) return next(createError(400, 'expected a request body userID and content'));
+  req.body.userID = req.user._id;
 
-  if (!req.body.userID || !req.body.messageBoardID || !req.body.content) return next(createError(400, 'expected a request body userID, messageBoardID and content'));
-  new Comment(req.body).save()
-    .then( comment => res.json(comment))
+  MessageBoard.findByIdAndAddComment(req.params.messageBoardId, req.body)
+    .then ( comment => res.json(comment))
     .catch(next);
 });
 
@@ -27,20 +30,10 @@ commentRouter.get('/api/comment/:commentId', bearerAuth, function(req, res, next
     .catch(next);
 });
 
-commentRouter.put('/api/comment/:commentId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/comment:commentId');
+commentRouter.get('/api/comments', bearerAuth, function(req, res, next) {
+  debug('GET: /api/comments');
 
-  if (!req.body) return next(createError(400, 'expected a request body'));
-  Comment.findByIdAndUpdate(req.params.commentId, req.body, {new: true})
-    .then( comment => res.json(comment))
-    .catch(next);
-});
-
-
-commentRouter.delete('/api/comment/:commentId', bearerAuth, function(req, res, next) {
-  debug('DELETE: /api/comment/:commentId');
-
-  Comment.findByIdAndRemove(req.params.commentId)
-    .then( () => res.status(204).send())
+  Comment.find()
+    .then(comments => res.json(comments))
     .catch(next);
 });

@@ -30,12 +30,12 @@
   },
   "devDependencies": {
     "eslint": "^4.18.2",
+    "faker": "^4.1.0",
     "jest": "^22.4.2",
     "superagent": "^3.8.2"
   },
   "scripts": {
-    "test": "DEBUG='sportsapp*' jest -i --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "coverage": "DEBUG='sportsapp*' jest --coverage",
+    "test": "DEBUG='sportsapp*' jest -i --verbose --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "start": "DEBUG='sportsapp*' node server.js"
   },
   "repository": {
