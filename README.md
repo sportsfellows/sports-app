@@ -87,7 +87,7 @@ The User model will return a json web token if there are no errors.
 #### PUT: `/api/profile/<profile id>`
 text and stuff go here
 
-### `Sporting Event Routes`
+### Sporting Event Routes
 #### POST: `/api/sportingevent`
 
 Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically and the `tags` property is available for any extra information that a user may want to add.
