@@ -2,6 +2,7 @@
 
 const request = require('superagent');
 const User = require('../model/user/user.js');
+const fakeUser  = require('./lib/fakeUser.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
 
@@ -9,7 +10,7 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-const {exampleUser, exampleProfile, exampleTeam, exampleSportingEvent, exampleGame, exampleLeague, exampleGroup, exampleComment} = require('./lib/mock-data.js');
+const mockUser = fakeUser.userMockFactory();
 
 describe('Auth routes', function() {
   beforeAll( done => {
@@ -29,7 +30,7 @@ describe('Auth routes', function() {
 
       it('should return a token', done => { 
         request.post(`${url}/api/signup`)
-          .send(exampleUser)
+          .send(mockUser)
           .end((err, res) => {
             if (err) return done(err);
             expect(res.status).toEqual(200);
