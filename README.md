@@ -219,6 +219,36 @@ If a request is made with no list id a 400 status is returned.
 
 If a request is made with out an authenticated user a 401 status is returned.
 
+
+## Routes
+
+#### `Auth route to signup a user and signin /api/signup /api/signin`
+
+Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
+
+
+http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
+http POST :3000/api/signup username=<username> email=<email> password=<password>
+
+As an existing user you can login to your profile, which will authenticate you with a json web token and allow you to make requests to our API.
+
+http -a newusername:newpassword :3000/api/signin
+http -a <username>:<password> :3000/api/signin
+
+### `Group Routes`
+### POST: `/api/group
+Create a new group with the required properties `groupname`, and `privacy`.  `size`, `createdon` and `owner` are created for you.  Optional fields are `motto`, `password`. `tags` are for any extra information you want to add.
+```
+http POST :3000/api/group 'Authorization:Bearer <token>' groupname=<group name> privacy='<privacy status>' motto='<custom motto>'
+```
+After a successful POST you recieve an object of the new group you created, like the example below:
+```
+
+
+Update 
+
+### 'POST /api
+
 ## Tests
 
 run `npm run tests` to check tests.
