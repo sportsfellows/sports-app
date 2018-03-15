@@ -2,9 +2,10 @@
 
 const faker = require('faker');
 const Team = require('../../model/sportingEvent/team.js');
-const teamMockFactory = module.exports = {};
 
-teamMockFactory.create = () => {
+module.exports = exports = {};
+
+exports.create = () => {
   let mock = {};
   mock.request = {
     teamName: faker.internet.firstName(),
@@ -19,4 +20,6 @@ teamMockFactory.create = () => {
     .catch(console.log);
 };
 
-teamMockFactory.remove = () => Team.remove({});
+exports.remove  = function() {
+  return Team.remove({});
+};

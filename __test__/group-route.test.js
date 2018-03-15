@@ -1,7 +1,8 @@
 // 'use strict';
 
 // const request = require('superagent');
-// const User = require('../model/user/user.js');
+// const fakeUser = require('./lib/fakeUser.js');
+// const fakeGroup= require('./lib/fakeGroup.js');
 // const serverToggle = require('../lib/server-toggle.js');
 // const server = require('../server.js');
 

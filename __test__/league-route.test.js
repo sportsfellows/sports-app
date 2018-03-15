@@ -1,31 +1,63 @@
-// 'use strict';
+'use strict';
 
-// const request = require('superagent');
-// const serverToggle = require('../lib/server-toggle.js');
-// const server = require('../server.js');
+const request = require('superagent');
+const faker = require('faker');
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
 
-// const User = require('../model/user/user.js');
-// const League = require('../model/league/league.js');
+const fakeProfile = require('./lib/fakeProfile.js');
+const fakeLeague = require('./lib/fakeLeague.js');
 
-// require('jest');
-// const url = 'http://localhost:3000';
+require('jest');
 
-// const exampleLeague = { leagueName: 'test league', scoring: 'some scoring', poolSize: 5, privacy: 'yes' };
+const url = 'http://localhost:3000';
+
+const exampleLeague = { 
+  leagueName: faker.company.companyName(), 
+  scoring: 'some scoring',
+  poolSize: faker.random.number(), 
+  privacy: 'public' };
 
 
-// describe('League routes', function() {
-//   beforeAll(done => {
-//     serverToggle.serverOn(server, done);
-//   });
-//   afterAll(done => {
-//     serverToggle.serverOff(server, done);
-//   });
-//   afterEach( done => {
-//     Promise.all([
-//       User.remove({}),
-//       League.remove({}),
-//     ])
-//       .then( () => done())
-//       .catch(done);
-//   });
-// });
+describe('League routes', function() {
+  beforeAll(done => {
+    serverToggle.serverOn(server, done);
+  });
+  afterAll(done => {
+    serverToggle.serverOff(server, done);
+  });
+  
+  beforeEach( () => {
+    return fakeProfile.create()
+      .then( mock => {
+        console.log(mock);  
+        return this.mock = mock;
+      });
+  });
+  afterEach( done => {
+    Promise.all([
+      fakeProfile.remove(),
+      fakeLeague.remove(),
+    ])
+      .then( () => done())
+      .catch(done);
+  });
+  it('should post and return a league', done => {
+    request.post(`${url}/api/league`)
+      .send(exampleLeague)
+      .set({
+        Authorization: `Bearer ${this.mock.token}`, 
+      })
+      .end((err, res) => {
+        console.log('kajdhdlsadlsaaslkdjsalkjd', this.profile);
+        if (err) return done(err);
+        expect(res.status).toEqual(200);
+        expect(res.body.leagueName).toEqual(exampleLeague.leagueName);
+        expect(res.body.scoring).toEqual('some scoring');
+        expect(res.body.poolSize).toEqual(exampleLeague.poolSize);
+        expect(res.body.privacy).toEqual(exampleLeague.privacy);
+        done();
+      });
+  });
+
+});
