@@ -2,8 +2,11 @@
 
 ## Project: CF Madness (sports bracket app)
 
+CF Madness is an application allows users to compete against their friends by choosing winners for real world sports games. 
 
+You are able to create and manage your own leagues and will have a personal scoreboard for each participant. Each league will also have its own message board that will allow you to communicate with those in your league. Each league also has the option to be private or public.
 
+If you are not participating in a league or would like to communicate with those outside of your league, you can also create a group. Like a league, each group has its own message board so users can communicate with each other.
 
 ## Tech/frameworks/packages
 
@@ -52,70 +55,104 @@ Run `npm run start` from terminal to start the server. Open a new tab in termina
 
 ## Routes
 
-#### `Auth route to signup a user and signin /api/signup /api/signin`
-
+### Auth/User Routes
+#### POST: `/api/signup`
 Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
 
 ```
-
 http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
 http POST :3000/api/signup username=<username> email=<email> password=<password>
 ```
-
+#### GET: `/api/signin`
 As an existing user you can login to your profile, which will authenticate you with a json web token and allow you to make requests to our API.
-
 ```
-http -a newusername:newpassword :3000/api/signin
-http -a <username>:<password> :3000/api/signin
-
+http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
+http POST :3000/api/signup username=<username> email=<email> password=<password>
 ```
-
 Throws an error if any of the requested properties that are not created for you are missing.
 
 The User model will return a json web token if there are no errors and create a profile model for the newly instantiated user to add more detailed information to.
 
-#### `Profile Route: /api/profile/:profileId && /api/profile/:profileId`
-
+### Profile Routes
+#### GET: `/api/profile/<profile id>`
 Retrieve your user profile and update your information for other users to see.
 
 ```
+http -a newusername:newpassword :3000/api/signin
 http -a <username>:<password> :3000/api/signin
-http -a <username>:<password> :3000/api/list/<list id>
-http -a <username>:<password> :3000/api/lists
 ```
+Throws an error if any of the requested properties that are not created for you are missing.
 
-Throws an error if the route can't be found, the list id is invalid or the use is not authenticated.
+The User model will return a json web token if there are no errors.
+#### PUT: `/api/profile/<profile id>`
+text and stuff go here
 
-#### `DELETE /api/list/<list id>`
+### Sporting Event Routes
+#### POST: `/api/sportingevent`
 
-Deletes a specific list as requested by the <list id>.
-
-```
-http -a <username>:<password> DELETE :3000/api/list/<list id>
-```
-
-If successful, a 204 status is returned.
-
-Throws an error if the request parameter (id) is missing or the user is not authenticated.
-
-
-#### `PUT /api/list/<list id>`
-
-Updates a Jlist with the properties `name`, `desc`, `created` and `userID` from your MongoDB as requested by the <list id>.
+Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically and the `tags` property is available for any extra information that a user may want to add.
 
 ```
-http -a <username>:<password> PUT :3000/api/list/<list id> name='new list name'
+http POST :3000/api/sportingevent 'Authorization:Bearer <token>' sportingEventName='<event name>' desc='<description>'
+```
+After a successful POST, you receive an object of the new sporting event you created, like the example below:
+```
+{
+    "__v": 0, 
+    "_id": "5aa9acbe42358a6e7b6a6450", 
+    "createdOn": "2018-03-14T23:14:06.602Z", 
+    "desc": "some text and stuff", 
+    "sportingEventName": "baseball", 
+    "tags": []
+}
 ```
 
-If successful, the list is returned with a 200 status.
+#### GET: `/api/sportingevent/<sporting event id>`
 
-If a request is made with a list id that is not found, a 404 status is returned.
+```
+http GET :3000/api/sportingevent/<sporting event id> 'Authorization:Bearer <token>'
+```
 
-If a request is made with no list id a 400 status is returned.
+This will return an object of your sporting event, like the example below:
+```
+{
+    "__v": 0, 
+    "_id": "5aa9acbe42358a6e7b6a6450", 
+    "createdOn": "2018-03-14T23:14:06.602Z", 
+    "desc": "some text and stuff", 
+    "sportingEventName": "baseball", 
+    "tags": []
+}
+```
+### Game Routes
+#### GET: `/api/games`
+text and stuff go here
+#### GET: `/api/game/<game id>`
+text and stuff go here
+#### PUT: `/api/game/<game id>`
+text and stuff go here
 
-If a request is made with out an authenticated user a 401 status is returned.
+### Team Routes
+#### POST: `/api/sportingevent/<sporting event id>/team`
+text and stuff go here
+#### GET: `/api/teams`
+text and stuff go here
+#### GET: `/api/team/<team id>`
+text and stuff go here
+#### PUT: `/api/team/<team id>`
+text and stuff go here
 
-## Tests
+### User Pick Routes
+#### POST: `/api/league/<league id>/userpick`
+text and stuff go here
+#### GET: `/api/userpicks`
+text and stuff go here
+#### GET: `/api/userpick/<user pick id>`
+text and stuff go here
+#### PUT: `/api/userpick/<user pick id>`
+text and stuff go here
+
+<!-- ## Tests
 
 run `npm run tests` to check tests.
 
@@ -146,7 +183,7 @@ run `npm run tests` to check tests.
 1. The List model should update and return the updated list along with a 200 status code if there are no errors.
 2. The List model should respond with a 400 status code if there is an invalid request body.
 3. The List model should respond with a 404 status code if a request is made with an id that is not found.
-4. The List model should respond with a 401 status code if there is no json web token provided.
+4. The List model should respond with a 401 status code if there is no json web token provided. -->
 
 ## Contribute
 
@@ -155,6 +192,14 @@ You can totally contribute to this project if you want. Fork the repo, make some
 ## Credits
 
 Initial codebase created by Code Fellows.
+
+Bessie Arino
+
+Brian Bixby
+
+Greg Nordeng
+
+Ken Unterseher
 
 ## License
 
