@@ -98,18 +98,6 @@ describe('Profile routes', function() {
           });
       });
 
-      it('should  not update and return a 400 status for invalid req', done => {
-        request.put(`${url}/api/profile/${this.mock.profile._id}`)
-          .send()
-          .set({
-            Authorization: `Bearer ${this.mock.token}`,
-          })
-          .end((err, res) => {
-            expect(res.status).toEqual(400);
-            done();
-          });
-      });
-
       it('should  not update and return a 401 status', done => {
         request.put(`${url}/api/profile/${this.mock.profile._id}`)
           .send(updatedProfile)
