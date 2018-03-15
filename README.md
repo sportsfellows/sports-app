@@ -127,30 +127,178 @@ This will return an object of your sporting event, like the example below:
 ### Game Routes
 #### GET: `/api/games`
 text and stuff go here
+```
+and stuff goes here
+```
 #### GET: `/api/game/<game id>`
 text and stuff go here
+```
+and stuff goes here
+```
 #### PUT: `/api/game/<game id>`
 text and stuff go here
+```
+and stuff goes here
+```
 
 ### Team Routes
 #### POST: `/api/sportingevent/<sporting event id>/team`
 text and stuff go here
+```
+and stuff goes here
+```
 #### GET: `/api/teams`
 text and stuff go here
+```
+and stuff goes here
+```
 #### GET: `/api/team/<team id>`
 text and stuff go here
+```
+and stuff goes here
+```
 #### PUT: `/api/team/<team id>`
 text and stuff go here
+```
+and stuff goes here
+```
+
+### Group Routes
+#### POST: `/api/group`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/groups`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/group/:groupId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/group/:groupId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/group/:groupId/adduser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/group/:groupId/removeuser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### DELETE: `/api/group/:groupId`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### League Routes
+#### POST: `/api/sportingevent/:sportingeventId/league`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/leagues`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/league/:leagueId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/league/:leagueId`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/league/:leagueId/adduser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### PUT: `/api/league/:leagueId/removeuser`
+text and stuff go here
+```
+and stuff goes here
+```
+#### DELETE: `/api/league/:leagueId`
+text and stuff go here
+```
+and stuff goes here
+```
 
 ### User Pick Routes
 #### POST: `/api/league/<league id>/userpick`
 text and stuff go here
+```
+and stuff goes here
+```
 #### GET: `/api/userpicks`
 text and stuff go here
+```
+and stuff goes here
+```
 #### GET: `/api/userpick/<user pick id>`
 text and stuff go here
+```
+and stuff goes here
+```
 #### PUT: `/api/userpick/<user pick id>`
 text and stuff go here
+```
+and stuff goes here
+```
+
+### Score Board Routes
+#### GET: `/api/scoreboards`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/scoreboard/:scoreBoardId`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### Message Board Routes
+#### GET: `/api/messageboards`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/messageboard/:messageBoardId`
+text and stuff go here
+```
+and stuff goes here
+```
+
+### Comment Routes
+#### POST: `/api/messageboard/:messageBoardId/comment`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/comments`
+text and stuff go here
+```
+and stuff goes here
+```
+#### GET: `/api/comment/:commentId`
+text and stuff go here
+```
+and stuff goes here
+```
 
 <!-- ## Tests
 
