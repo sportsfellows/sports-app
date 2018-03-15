@@ -9,13 +9,11 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-
 const testUser = {
   username: 'testUserName',
   email: 'testEmail',
   password: 'testPassword',
 };
-
 
 describe('Auth routes', function() {
   beforeAll( done => {

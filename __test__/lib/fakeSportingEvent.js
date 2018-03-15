@@ -2,18 +2,28 @@
 
 const faker = require('faker');
 const SportingEvent = require('../../model/sportingEvent/sportingEvent.js');
-const sportingEventMockFactory = module.exports = {};
 
-sportingEventMockFactory.create = () => {
+module.exports = exports = {};
+
+exports.create = function() {
   let mock = {};
   mock.request = {
-    sportingEventName: faker.internet.firstName(),
-    desc: faker.random.catch_phrase_noun(),
+    sportingEventName: 'ncaa march madness',
+    desc: faker.lorem.sentence(),
+    tags: faker.random.word(),
   };
 
-  let sportingEvent = new SportingEvent(mock.request);
-  return sportingEvent.save()
-    .catch(console.log);
-};  
 
-sportingEventMockFactory.remove = () => SportingEvent.remove({});
+  return new SportingEvent(mock.request)
+    .then(sportingEvent => sportingEvent.save())
+    .then(sportingEvent => {
+      mock.sportingEvent = sportingEvent;
+      return mock;
+    })
+    .catch(console.log);
+};
+
+exports.remove = function() {
+  return SportingEvent.remove({});
+};
+ 
