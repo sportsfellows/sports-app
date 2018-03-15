@@ -294,13 +294,19 @@ text and stuff go here
 ```
 and stuff goes here
 ```
-#### GET: `/api/comment/:commentId`
-text and stuff go here
-```
 and stuff goes here
 ```
 
-<!-- ## Tests
+
+```
+
+
+Update 
+
+### 'POST /api
+
+## Tests
+=======
 
 run `npm run tests` to check tests.
 
