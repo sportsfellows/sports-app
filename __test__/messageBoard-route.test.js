@@ -70,10 +70,7 @@ describe('Message Board Routes', function () {
           })
           .end((err, res) => {
             expect(res.status).toEqual(200);
-            expect(res.body.groupName).toEqual(exampleGroup.groupName);
-            expect(res.body.privacy).toEqual(exampleGroup.privacy);
-            expect(res.body.owner).toEqual(exampleGroup.owner);
-            expect(res.body.users).toEqual(exampleGroup.users);
+            expect(res.body._id).toEqual(this.tempGroup._id);
             done();
           });
       });
