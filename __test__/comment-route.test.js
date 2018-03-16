@@ -144,63 +144,78 @@ describe('Comment routes', function() {
     });
   });
 
-  // describe('GET: /api/comment/:commentId && api/comments', () => {
-  //   beforeEach( done => {
-  //     return new Comment({ userID: this.mock.profile.userID, messageBoardID: this.messageBoard._id, content: 'example content' }).save()
-  //       .then( comment => {
-  //         this.comment = comment;
-  //         console.log('comment: ', comment);
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
+  describe('GET: /api/comment/:commentId && api/comments', () => {
+    beforeEach( done => {
+      return new Comment({ userID: this.mock.profile.userID, messageBoardID: this.messageBoard._id, content: 'example content' }).save()
+        .then( commentz => {
+          this.comment = commentz;
+          console.log('comment: ', commentz);
+          done();
+        })
+        .catch(done);
+    });
 
-// it('should return a 401 when no token is provided', done => {
-//   request.get(`${url}/api/scoreboard/${this.scoreBoard._id}`)
-//     .set({
-//       Authorization: 'Bearer',
-//     })
-//     .end((err, res) => {
-//       expect(res.status).toEqual(401);
-//       done();
-//     });
-// });
+    it('should return a comment and a 200 status', done => {
+      request.get(`${url}/api/comment/${this.comment._id}`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
+        .end((err, res) => {
+          if(err) return done(err);
+          expect(res.status).toEqual(200);
+          expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
+          expect(res.body.messageBoardID.toString()).toEqual(this.messageBoard._id.toString());
+          expect(res.body.content).toEqual('example content');
+          done();
+        });
+    });
 
-// it('should return a 404 for a valid req with a scoreboard id not found', done => {
-//   request.get(`${url}/api/scoreboard/wqefgewgweg`)
-//     .set({
-//       Authorization: `Bearer ${this.mock.token}`,
-//     })
-//     .end((err, res) => {
-//       expect(res.status).toEqual(404);
-//       done();
-//     });
-// });
+    it('should return a 401 when no token is provided', done => {
+      request.get(`${url}/api/comment/${this.comment._id}`)
+        .set({
+          Authorization: `Bearer`,
+        })
+        .end((err, res) => {
+          expect(res.status).toEqual(401);
+          done();
+        });
+    });
 
-// it('should return all lists and a 200 status', done => {
-//   request.get(`${url}/api/scoreboards`)
-//     .set({
-//       Authorization: `Bearer ${this.mock.token}`,
-//     })
-//     .end((err, res) => {
-//       if(err) return done(err);
-//       expect(res.status).toEqual(200);
-//       expect(res.status).toEqual(200);
-//       expect(res.body[0].userID.toString()).toEqual(this.mock.profile.userID.toString());
-//       expect(res.body[0].leagueID.toString()).toEqual(this.league._id.toString());
-//       expect(res.body[0].score).toEqual(0);
-//       done();
-//     });
-// });
+    it('should return a 404 for a valid req with a comment id not found', done => {
+      request.get(`${url}/api/comment/erghreh`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
+        .end((err, res) => {
+          expect(res.status).toEqual(404);
+          done();
+        });
+    });
 
-// it('should return a 401 when no token is provided', done => {
-//   request.get(`${url}/api/scoreboards`)
-//     .set({
-//       Authorization: 'Bearer',
-//     })
-//     .end((err, res) => {
-//       expect(res.status).toEqual(401);
-//       done();
-//     });
-// });
+    it('should return all lists and a 200 status', done => {
+      request.get(`${url}/api/comments`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
+        .end((err, res) => {
+          if(err) return done(err);
+          expect(res.status).toEqual(200);
+          expect(res.body[0].userID.toString()).toEqual(this.mock.profile.userID.toString());
+          expect(res.body[0].messageBoardID.toString()).toEqual(this.messageBoard._id.toString());
+          expect(res.body[0].content).toEqual('example content');
+          done();
+        });
+    });
+
+    it('should return a 401 when no token is provided', done => {
+      request.get(`${url}/api/comments`)
+        .set({
+          Authorization: 'Bearer',
+        })
+        .end((err, res) => {
+          expect(res.status).toEqual(401);
+          done();
+        });
+    });
+  });
 });
