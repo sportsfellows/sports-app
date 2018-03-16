@@ -40,11 +40,11 @@ describe('MessageBoard routes', function() {
       })
       .catch(done);
   });
-  beforeEach( done => {
+  beforeEach(done => {
     exampleLeague.sportingEventID = this.sportingEvent._id;
     exampleLeague.owner = this.mock.profile.userID;
     return new League(exampleLeague).save()
-      .then( myLeague => {
+      .then(myLeague => {
         this.league = myLeague;
         done();
       })
