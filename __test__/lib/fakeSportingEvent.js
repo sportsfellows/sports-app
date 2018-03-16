@@ -12,16 +12,17 @@ sportingEventMockFactory.create = () => {
     sportingEventName: faker.random.word(),
     desc: faker.random.word(),
   };
-  return new SportingEvent(mock.request)
-    .then(sportingEvent => sportingEvent.save())
+
+  return new SportingEvent(mock.request).save()
     .then(sportingEvent => {
       mock.sportingEvent = sportingEvent;
+      mock.request.SportingEventID = sportingEvent._id;
       return mock;
     })
     .catch(console.log);
 };
 
-exports.remove = function() {
+sportingEventMockFactory.remove = function() {
   return SportingEvent.remove({});
 };
  

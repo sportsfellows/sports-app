@@ -17,14 +17,11 @@ leagueMockFactory.create = function() {
     privacy: 'public',
   };
 
-  // let user = new User(mock.requestUser);
-  // return user.generatePasswordHash(mock.requestUser.password)
-  //   .then(user => user.save())
+
   return sportingEventMockFactory.create()
-    .then( se => se.save())
     .then(sportingEvent => {
       mock.sportingEvent = sportingEvent;
-      mock.leagueRequest.sportingEventID = sportingEvent._id;
+      mock.leagueRequest.sportingEventID = sportingEvent.ID;
       
       return fakeUser.create();
     })
@@ -37,6 +34,7 @@ leagueMockFactory.create = function() {
     })
     .then(league => {
       mock.league = league;
+      console.log(mock);
       return mock;
     });
 };

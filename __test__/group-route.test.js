@@ -209,7 +209,7 @@ describe('Group Routes', function () {
     });
 
     describe('with valid body and no token', () => {
-      it('should give 200 status', done => {
+      it('should give 401 status', done => {
         request.put(`${url}/api/group/${this.tempGroup._id}`)
           .set({
             Authorization: `Bearer `,
@@ -296,3 +296,4 @@ describe('Group Routes', function () {
     });
   });
 });
+
