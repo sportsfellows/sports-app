@@ -1,13 +1,12 @@
-'use strict';
+use strict';
 
 const request = require('superagent');
-const faker = require('faker');
-const fakeTeam = require('./lib/fakeTeam.js');
-const Game = require('../model/sportingEvent/game.js');
+const fakeProfile = require('./lib/fakeProfile.js');
+const SportingEvent = require('../model/sportingEvent/sportingEvent.js');
 const Team = require('../model/sportingEvent/team.js');
+const Game = require('../model/sportingEvent/game.js');
+const ScoreBoard = require('../model/league/scoreBoard.js');
 const League = require('../model/league/league.js');
-const Profile = require('../model/user/profile.js');
-const User = require('../model/user/user.js');
 const UserPick = require('../model/league/userPick.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
@@ -16,259 +15,271 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
-let exampleGame = {
-  groupName: faker.company.companyName(),
-  privacy: 'public',
-  dateTime: faker.date.future(),
-};
+const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated desc', tags: 'updated tag' };
+const exampleLeague = { leagueName: 'example league name', scoring: 'regular', poolSize: 0, privacy: 'private'}; 
 
-let exampleLeague = {
-  leagueName: faker.company.companyName(),
-  scoring: 'something 1',
-  poolSize: 7,
-  privacy: 'public',
-};
+describe('UserPick routes', function() {
+ beforeAll( done => {
+ serverToggle.serverOn(server, done);
+ });
+ afterAll( done => {
+ serverToggle.serverOff(server, done);
+ });
+ beforeEach( done => {
+ return fakeProfile.create()
+ .then( mock => {
+ this.mock = mock;
+ this.mock.profile = this.mock.profile._rejectionHandler0;
+ done();
+ })
+ .catch(done);
+ });
+ beforeEach( done => {
+ return new SportingEvent(updatedSportingEvent).save()
+ .then( sportingEve => {
+ console.log('sportingeve ', sportingEve);
+ this.sportingEvent = sportingEve;
+ done();
+ })
+ .catch(done);
+ });
+ beforeEach( done => {
+ exampleLeague.sportingEventID = this.sportingEvent._id;
+ exampleLeague.owner = this.mock.profile.userID;
+ return new League(exampleLeague).save()
+ .then( myLeague => {
+ console.log('myLeague: ', myLeague);
+ this.league = myLeague;
+ done();
+ })
+ .catch(done);
+ });
+ beforeEach( done => {
+ return new ScoreBoard({ userID: this.mock.profile.userID, leagueID: this.league._id }).save()
+ .then( sBoard => {
+ this.scoreBoard = sBoard;
+ console.log('sboard: ', sBoard);
+ done();
+ })
+ .catch(done);
+ });
+ beforeEach( done => {
+ return new Team({ teamName: 'team1', sportingEventID: this.sportingEvent._id }).save()
+ .then( team1 => {
+ this.team1 = team1;
+ console.log('team1: ', team1);
+ done();
+ })
+ .catch(done);
+ });
+ beforeEach( done => {
+ return new Team({ teamName: 'team2', sportingEventID: this.sportingEvent._id }).save()
+ .then( team2 => {
+ this.team2 = team2;
+ console.log('team2: ', team2);
+ done();
+ })
+ .catch(done);
+ });
+ beforeEach( done => {
+ return new Game({ sportingEventID: this.sportingEvent._id, dateTime: Date.now(), homeTeam: this.team1._id, awayTeam: this.team2._id }).save()
+ .then( game => {
+ this.game = game;
+ console.log('game: ', game);
+ done();
+ })
+ .catch(done);
+ });
+ afterEach( done => {
+ Promise.all([
+ fakeProfile.remove,
+ SportingEvent.remove({}),
+ League.remove({}),
+ ScoreBoard.remove({}),
+ UserPick.remove({}),
+ Team.remove({}),
+ Game.remove({}),
+ ])
+ .then( () => done())
+ .catch(done);
+ });
+ afterEach( () => {
+ delete exampleLeague.sportingEventID;
+ delete exampleLeague.owner;
+ });
 
-let exampleUserPick = {
-  gameTime: faker.date.future(),
-};
+ describe('POST: /api/league/:leagueId/userpick', () => {
+ it('should return a scoreboard and a 200 status', done => {
+ request.post(`${url}/api/league/${this.league._id}/userpick`)
+ .send({ userID: this.mock.profile.userID, leagueID: this.league._id, gameID: this.game._id, pick: this.team1._id, gameTime: Date.now() })
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ if(err) return done(err);
+ expect(res.status).toEqual(200);
+ expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
+ expect(res.body.leagueID.toString()).toEqual(this.league._id.toString());
+ expect(res.body.gameID.toString()).toEqual(this.game._id.toString());
+ expect(res.body.pick.toString()).toEqual(this.team1._id.toString());
+ done();
+ });
+ });
 
-describe('User Pick Routes', function () {
-  beforeAll(done => {
-    serverToggle.serverOn(server, done);
-  });
-  afterAll(done => {
-    serverToggle.serverOff(server, done);
-  });
+ it('should return 404 for route not found', done => {
+ request.post(`${url}/api/league/${this.league._id}/userpi`)
+ .send({ userID: this.mock.profile.userID, leagueID: this.league._id, gameID: this.game._id, pick: this.team1._id, gameTime: Date.now() })
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(404);
+ done();
+ });
+ });
 
-  beforeEach(() => {
-    return fakeTeam.create()
-      .then(mock => {
-        this.homeMock = mock;
-      });
-  });
+ it('should return a 401 error, no token', done => {
+ request.post(`${url}/api/league/${this.league._id}/userpick`)
+ .send({ userID: this.mock.profile.userID, leagueID: this.league._id, gameID: this.game._id, pick: this.team1._id, gameTime: Date.now() })
+ .set({
+ Authorization: `Bearer`,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(401);
+ done();
+ });
+ });
 
-  beforeEach(() => {
-    return fakeTeam.create()
-      .then(mock => {
-        this.awayMock = mock;
-      });
-  });
+ it('should return a 400 error, no body', done => {
+ request.post(`${url}/api/league/${this.league._id}/userpick`)
+ .send()
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(400);
+ done();
+ });
+ });
+ });
 
-  beforeEach(done => {
-    exampleGame.homeTeam = this.homeMock.team._id;
-    exampleGame.awayTeam = this.awayMock.team._id;
-    exampleGame.sportingEventID = this.homeMock.sportingEvent._id;
+ describe('GET: /api/userpick/:userPickId && api/userpicks', () => {
+ beforeEach( done => {
+ return new UserPick({ userID: this.mock.profile.userID, leagueID: this.league._id, gameID: this.game._id, pick: this.team1._id, gameTime: Date.now() }).save()
+ .then( userPick => {
+ this.userPick = userPick;
+ console.log('userPick: ', userPick);
+ done();
+ })
+ .catch(done);
+ });
 
-    new Game(exampleGame).save()
-      .then(game => {
-        this.tempGame = game;
-        done();
-      })
-      .catch(done);
-  });
+ it('should return a userpick and a 200 status', done => {
+ request.get(`${url}/api/userpick/${this.userPick._id}`)
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ if(err) return done(err);
+ expect(res.status).toEqual(200);
+ expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
+ expect(res.body.leagueID.toString()).toEqual(this.league._id.toString());
+ expect(res.body.gameID.toString()).toEqual(this.game._id.toString());
+ expect(res.body.pick.toString()).toEqual(this.team1._id.toString());
+ done();
+ });
+ });
 
-  beforeEach(done => {
-    exampleLeague.owner = this.homeMock.user._id;
-    exampleLeague.sportingEventID = this.homeMock.sportingEvent._id;
+ it('should return a 401 when no token is provided', done => {
+ request.get(`${url}/api/userpick/${this.userPick._id}`)
+ .set({
+ Authorization: `Bearer`,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(401);
+ done();
+ });
+ });
 
-    new League(exampleLeague).save()
-      .then(game => {
-        this.tempLeague = game;
-        done();
-      })
-      .catch(done);
-  });
+ it('should return a 404 for a valid req with a userpick id not found', done => {
+ request.get(`${url}/api/userpick/ewgewgewghewh`)
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(404);
+ done();
+ });
+ });
 
-  beforeEach(done => {
-    exampleUserPick.userID = this.homeMock.team._id;
-    exampleUserPick.leagueID = this.tempLeague._id;
-    exampleUserPick.gameID = this.tempGame._id;
-    exampleUserPick.pick = this.homeMock.team._id;
+ it('should return all lists and a 200 status', done => {
+ request.get(`${url}/api/userpicks`)
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ if(err) return done(err);
+ expect(res.status).toEqual(200);
+ expect(res.body[0].userID.toString()).toEqual(this.mock.profile.userID.toString());
+ expect(res.body[0].leagueID.toString()).toEqual(this.league._id.toString());
+ expect(res.body[0].gameID.toString()).toEqual(this.game._id.toString());
+ expect(res.body[0].pick.toString()).toEqual(this.team1._id.toString());
+ done();
+ });
+ });
 
-    new UserPick(exampleUserPick).save()
-      .then(userPick => {
-        this.tempUserPick = userPick;
-        done();
-      })
-      .catch(done);
-  });
+ it('should return a 401 when no token is provided', done => {
+ request.get(`${url}/api/userpicks`)
+ .set({
+ Authorization: `Bearer`,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(401);
+ done();
+ });
+ });
 
-  afterEach(done => {
-    Promise.all([
-      fakeTeam.remove,
-      Game.remove({}),
-      Team.remove({}),
-      League.remove({}),
-      Profile.remove({}),
-      User.remove({}),
-    ])
-      .then(() => done())
-      .catch(done);
-  });
-
-  describe('GET: /api/userpick/:userPickId', () => {
-    describe('with valid token', () => {
-      it('should give 200 status', done => {
-        console.log('tempUserPick', this.tempUserPick);
-        request.get(`${url}/api/userpick/${this.tempUserPick._id}`)
-          .set({
-            Authorization: `Bearer ${this.homeMock.token}`,
-          })
-          .end((err, res) => {
-            expect(res.status).toEqual(200);
-            done();
-          });
-      });
-    });
-  });
-
-  describe('POST: /api/league/:leagueId/userpick', () => {
-    describe('with body and valid token', () => {
-      it('should give 200 status', done => {
-        console.log('tempUserPick', this.tempUserPick);
-        request.post(`${url}/api/userpicks`)
-          .set({
-            Authorization: `Bearer ${this.homeMock.token}`,
-          })
-          .send(exampleUserPick)
-          .end((err, res) => {
-            expect(res.status).toEqual(200);
-            done();
-          });
-      });
-    });
-  });
-
-  // describe('GET: /api/game/:gameId', () => {
-  //   describe('with valid id and token', () => {
-  //     it('should give 200 status', done => {
-  //       request.get(`${url}/api/game/${this.tempGame._id}`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(200);
-  //           expect(res.body.homeTeam).toEqual(this.homeMock.team._id.toString());
-  //           expect(res.body.awayTeam).toEqual(this.awayMock.team._id.toString());
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with valid id and no token', () => {
-  //     it('should give 401 status', done => {
-  //       request.get(`${url}/api/game/${this.tempGame._id}`)
-  //         .set({
-  //           Authorization: `Bearer `,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(401);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with valid id and no token', () => {
-  //     it('should give 404 status', done => {
-  //       request.get(`${url}/api/game/123456`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(404);
-  //           done();
-  //         });
-  //     });
-  //   });
-  // });
-
-  // describe('POST: /api/game', () => {
-  //   describe('with valid token and body', () => {
-  //     it('should return 200 status', done => {
-  //       request.post(`${url}/api/sportingevent/${this.homeMock.sportingEvent._id}/game`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .send(exampleGame)
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(200);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with no token and valid body', () => {
-  //     it('should return 401 status', done => {
-  //       request.post(`${url}/api/sportingevent/${this.homeMock.sportingEvent._id}/game`)
-  //         .set({
-  //           Authorization: `Bearer `,
-  //         })
-  //         .send(exampleGame)
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(401);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with valid token and no body', () => {
-  //     it('should return 200 status', done => {
-  //       request.post(`${url}/api/sportingevent/${this.homeMock.sportingEvent._id}/game`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(400);
-  //           done();
-  //         });
-  //     });
-  //   });
-  // });
-
-  // describe('PUT: /api/game/:gameId', () => {
-  //   describe('with valid body and token', () => {
-  //     it('should give 200 status', done => {
-  //       request.put(`${url}/api/game/${this.tempGame._id}`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .send({status: 'ended'})
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(200);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with valid body and no token', () => {
-  //     it('should give 401 status', done => {
-  //       request.put(`${url}/api/game/${this.tempGame._id}`)
-  //         .set({
-  //           Authorization: `Bearer `,
-  //         })
-  //         .send({status: 'ended'})
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(401);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with invalid id and token', () => {
-  //     it('should give 404 status', done => {
-  //       request.put(`${url}/api/game/123456`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .send({status: 'ended'})
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(404);
-  //           done();
-  //         });
-  //     });
-  //   });
-  // });
-
-
+ describe('PUT: /api/list/:listId && /api/list', () => {
+ it('should update and return a userpick with a 200 status', done => {
+ request.put(`${url}/api/userpick/${this.userPick._id}`)
+ .send({ pick: this.team2._id})
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ if (err) return done(err);
+ expect(res.status).toEqual(200);
+ expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
+ expect(res.body.leagueID.toString()).toEqual(this.league._id.toString());
+ expect(res.body.gameID.toString()).toEqual(this.game._id.toString());
+ expect(res.body.pick.toString()).toEqual(this.team2._id.toString());
+ done();
+ });
+ });
+ 
+ it('should not update and return a 401 status', done => {
+ request.put(`${url}/api/userpick/${this.userPick._id}`)
+ .send({ pick: this.team2._id})
+ .set({
+ Authorization: `Bearer `,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(401);
+ done();
+ });
+ });
+ 
+ it('should not update and return a 404 status for userpick not found', done => {
+ request.put(`${url}/api/userpick/wegegewgw`)
+ .send({ pick: this.team2._id})
+ .set({
+ Authorization: `Bearer ${this.mock.token}`,
+ })
+ .end((err, res) => {
+ expect(res.status).toEqual(404);
+ done();
+ });
+ });
+ });
+ });
 });
