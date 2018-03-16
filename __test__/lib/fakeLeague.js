@@ -30,7 +30,6 @@ leagueMockFactory.create = function() {
     })
     .then(mockObject => {
       mock.token = mockObject.token;
-      console.log(mock.token);
       mock.user = mockObject.user;
       mock.leagueRequest.owner = mockObject.user._id;
 
@@ -44,6 +43,6 @@ leagueMockFactory.create = function() {
 
 leagueMockFactory.remove = () => Promise.all([
   League.remove({}),
-  sportingEventMockFactory.remove({}),
+  sportingEventMockFactory.remove(),
   fakeUser.remove(),
 ]);

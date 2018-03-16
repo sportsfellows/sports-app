@@ -29,6 +29,7 @@ describe('League routes', function() {
   beforeEach( () => {
     return fakeLeague.create()
       .then( mock => {
+        console.log(mock);
         return this.mock = mock;
       });
   });
