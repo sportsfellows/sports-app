@@ -4,6 +4,7 @@ const faker = require('faker');
 const Team = require('../../model/sportingEvent/team.js');
 const sportingEventMockFactory = require('./fakeSportingEvent.js');
 const fakeUser = require('./fakeUser.js');
+
 const teamMockFactory = module.exports = {};
 
 // creates a mock team with a team name, seed, record
@@ -31,6 +32,7 @@ teamMockFactory.create = () => {
     .then(mockObject => {
       mock.token = mockObject.token;
       mock.user = mockObject.user;
+      mock.owner = mockObject._userId;
 
       return mock;
     });
