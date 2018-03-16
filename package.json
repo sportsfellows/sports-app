@@ -41,6 +41,7 @@
     "test-sportingEvent": "DEBUG='sportsapp*' jest -i --coverage __test__/sportingEvent-route.test.js",
     "test-auth": "DEBUG='sportsapp*' jest -i --coverage auth-route.test.js",
     "scoreboard": "DEBUG='sportsapp*' jest -i --coverage scoreBoard-route.test.js",
+    "comment": "DEBUG='sportsapp*' jest -i --coverage comment-route.test.js",
 
     "start": "DEBUG='sportsapp*' node server.js"
   },

@@ -142,4 +142,3 @@ describe('Profile routes', function() {
       });
   });
 });
-
