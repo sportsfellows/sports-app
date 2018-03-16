@@ -9,8 +9,10 @@ sportingEventMockFactory.create = () => {
   let mock = {};
   mock.request = {
 
+
     sportingEventName: faker.random.word(),
     desc: faker.random.word(),
+
   };
 
   return new SportingEvent(mock.request).save()
