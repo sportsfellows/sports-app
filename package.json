@@ -37,6 +37,7 @@
   "scripts": {
     "test": "DEBUG='sportsapp*' jest -i --verbose --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test-team": "DEBUG='sportsapp*' jest -i --coverage __test__/team-route.test.js",
+    "test-sportingEvent": "DEBUG='sportsapp*' jest -i --coverage __test__/sportingEvent-route.test.js",
     "test-auth": "DEBUG='sportsapp*' jest -i --coverage auth-route.test.js",
 
     "start": "DEBUG='sportsapp*' node server.js"
