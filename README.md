@@ -316,12 +316,21 @@ http :3000//api/scoreboard/:scoreBoardId' 'Authorization:Bearer <token>'
 #### GET: `/api/messageboards`
 A user is able to message other users in their group. Properties used are `leagueID`, `groupID`, `comments`, and `tags`.
 ```
-and stuff goes here
+http :3000//api/messageboard/messageBoardId 'Authorization:Bearer <token>'
+```
+This will return an object of your sporting event, like the example below:
+
+```
+   { leagueID: 5aaba3f0fd43a4f3b802efa3,
+      tags: [ 'example tag' ],
+      comments: [],
+      _id: 5aaba3f0fd43a4f3b802efa4,
+      __v: 0 }
 ```
 #### GET: `/api/messageboard/messageBoardId`
 Use this call to get a specific messageBoard object.
 ```
-and stuff goes here
+http :3000//api/messageboard/messageBoardId 'Authorization:Bearer <token>'
 ```
 
 ### Comment Routes
