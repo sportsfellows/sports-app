@@ -171,37 +171,37 @@ You will receive an object of the team you updated.
 
 ### Group Routes
 #### POST: `/api/group`
-text and stuff go here
+You can create a new group (friends, work friends) with the properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
 ```
 and stuff goes here
 ```
 #### GET: `/api/groups`
-text and stuff go here
+Use this call to get an array of all group objects.
 ```
 and stuff goes here
 ```
 #### GET: `/api/group/:groupId`
-text and stuff go here
+Use this call to get a specific group object.
 ```
 and stuff goes here
 ```
 #### PUT: `/api/group/:groupId`
-text and stuff go here
+Use this call to make edits to a specific group.
 ```
 and stuff goes here
 ```
 #### PUT: `/api/group/:groupId/adduser`
-text and stuff go here
+Use this call to make edits adding a group user.
 ```
 and stuff goes here
 ```
 #### PUT: `/api/group/:groupId/removeuser`
-text and stuff go here
+Use this call to make edits to remove a group user.
 ```
 and stuff goes here
 ```
 #### DELETE: `/api/group/:groupId`
-text and stuff go here
+Use this call to delete a specific group.
 ```
 and stuff goes here
 ```
