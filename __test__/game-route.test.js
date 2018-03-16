@@ -4,6 +4,10 @@ const request = require('superagent');
 const faker = require('faker');
 const fakeTeam = require('./lib/fakeTeam.js');
 const Game = require('../model/sportingEvent/game.js');
+const Team = require('../model/sportingEvent/team.js');
+const League = require('../model/league/league.js');
+const Profile = require('../model/user/profile.js');
+const User = require('../model/user/user.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
 
@@ -56,6 +60,10 @@ describe('Game Routes', function () {
     Promise.all([
       fakeTeam.remove,
       Game.remove({}),
+      Team.remove({}),
+      League.remove({}),
+      Profile.remove({}),
+      User.remove({}),
     ])
       .then(() => done())
       .catch(done);
