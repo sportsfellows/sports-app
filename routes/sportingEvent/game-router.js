@@ -23,17 +23,6 @@ gameRouter.post('/api/sportingevent/:sportingeventId/game', bearerAuth, jsonPars
   new Game(req.body).save()
     .then( game => res.json(game))
     .catch(next);
-  // .then( newGame => game = newGame)
-  // .then( () => {
-  //   let leagueObjArr = [];
-  //   League.find({ sportingEventID: req.params.sportingeventId })
-  //     .then( leagues => {
-  //       leagues.forEach(league => {
-  //         // leagueObjArr.push({ leagueID: league._id, userIDS: league.users, gameID: game._id, gameTime: game.dateTime })
-  //         leagueObjArr.push({ leagueID: league._id, userIDS: league.users })
-  //       })return leagueObjArr.push({ leagues._id, users: leagues.users})
-  //     })
-  // })
 });
 
 gameRouter.get('/api/game/:gameId', bearerAuth, function(req, res, next) {
@@ -105,11 +94,3 @@ gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, n
     .then(() => res.send('success'))
     .catch(next);
 });
-
-// League.find({ sportingEventID: req.params.sportingeventId })
-//     .then( leagues => {
-//       leagues.forEach(league => {
-//         // leagueObjArr.push({ leagueID: league._id, userIDS: league.users, gameID: game._id, gameTime: game.dateTime })
-//         leagueObjArr.push({ leagueID: league._id, userIDS: league.users })
-//       })return leagueObjArr.push({ leagues._id, users: leagues.users})
-//     })

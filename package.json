@@ -44,6 +44,7 @@
     "scoreboard": "DEBUG='sportsapp*' jest -i --coverage scoreBoard-route.test.js",
     "comment": "DEBUG='sportsapp*' jest -i --coverage comment-route.test.js",
     "userpick": "DEBUG='sportsapp*' jest -i --coverage userpick-route.test.js",
+    "messageboard": "DEBUG='sportsapp*' jest -i --coverage messageBoard-route.test.js",
     "start": "DEBUG='sportsapp*' node server.js"
   },
   "repository": {

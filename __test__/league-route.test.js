@@ -18,7 +18,7 @@ let exampleLeague = {
   privacy: 'public',
 };
 
-describe('Game Routes', function () {
+describe('League Routes', function () {
   beforeAll(done => {
     serverToggle.serverOn(server, done);
   });

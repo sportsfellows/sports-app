@@ -14,7 +14,7 @@ const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated
 const exampleSportingEvent = { sportingEventName: 'example name', desc: 'example desc', tags: 'example tag' };
 const exampleSportingEvent2 = { desc: 'example desc', tags: 'example tag' };
 
-describe('Profile routes', function() {
+describe('Sporting event routes', function() {
   beforeAll( done => {
     serverToggle.serverOn(server, done);
   });
