@@ -12,8 +12,6 @@ require('jest');
 const url = 'http://localhost:3000';
 
 const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated desc', tags: 'updated tag' };
-const exampleSportingEvent = { sportingEventName: 'example name', desc: 'example desc', tags: 'example tag' };
-const exampleSportingEvent2 = { desc: 'example desc', tags: 'example tag' };
 
 describe('Profile routes', function() {
   beforeAll( done => {
@@ -103,69 +101,117 @@ describe('Profile routes', function() {
   });
 
 
-  // describe('GET: /api/sportingevent/:sportingEventId', () => {
-  //   beforeEach( done => {
-  //     return new SportingEvent(updatedSportingEvent).save()
-  //       .then( sportingEve => {
-  //         this.sportingEvent = sportingEve;
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
+  describe('GET: /api/team/:teamId', () => {
+    beforeEach( done => {
+      return new Team({ teamName: 'Washington State', sportingEventID: this.sportingEvent._id, seed: 1, pretournamentRecord: '20-10', tags: 'PAC-12' }).save()
+        .then( team => {
+          this.team = team;
+          done();
+        })
+        .catch(done);
+    });
     
-  //   describe('with a valid body', () => {
-  //     it('should return a single sporting event', done => { 
-  //       request.get(`${url}/api/sportingevent/${this.sportingEvent._id}`)
-  //         .set({
-  //           Authorization: `Bearer ${this.mock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           if (err) return done(err);
-  //           expect(res.status).toEqual(200);
-  //           expect(res.body.sportingEventName).toEqual(updatedSportingEvent.sportingEventName);
-  //           expect(res.body.tags.toString()).toEqual(updatedSportingEvent.tags.toString());
-  //           expect(res.body.desc).toEqual(updatedSportingEvent.desc);
-  //           done();
-  //         });
-  //     });
+    describe('with a valid body', () => {
+      it('should return a single team', done => { 
+        request.get(`${url}/api/team/${this.team._id}`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body.teamName).toEqual('Washington State');
+            expect(res.body.sportingEventID.toString()).toEqual(this.sportingEvent._id.toString());
+            expect(res.body.seed).toEqual(1);
+            expect(res.body.pretournamentRecord).toEqual('20-10');
+            expect(res.body.tags.toString()).toEqual('PAC-12');
+            done();
+          });
+      });
 
-  //     it('should return a 401 when no token is provided', done => {
-  //       request.get(`${url}/api/sportingevent/${this.sportingEvent._id}`)
-  //         .set({
-  //           Authorization: 'Bearer',
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(401);
-  //           done();
-  //         });
-  //     });
+      it('should return a 401 when no token is provided', done => {
+        request.get(`${url}/api/team/${this.team._id}`)
+          .set({
+            Authorization: `Bearer `,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
 
-  //     it('should return a 404 for a valid req with a list id not found', done => {
-  //       request.get(`${url}/api/sportingevent/a979e472c577c679758e018`)
-  //         .set({
-  //           Authorization: `Bearer ${this.mock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(404);
-  //           done();
-  //         });
-  //     });
+      it('should return a 404 for a valid req with a team id not found', done => {
+        request.get(`${url}/api/team/wegewghqewh`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
 
-  //     it('should return all sporting events', done => { 
-  //       request.get(`${url}/api/sportingevents`)
-  //         .set({
-  //           Authorization: `Bearer ${this.mock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           if (err) return done(err);
-  //           expect(res.status).toEqual(200);
-  //           expect(res.body[0].sportingEventName).toEqual(updatedSportingEvent.sportingEventName);
-  //           expect(res.body[0].tags.toString()).toEqual(updatedSportingEvent.tags.toString());
-  //           expect(res.body[0].desc).toEqual(updatedSportingEvent.desc);
-  //           done();
-  //         });
-  //     });
+      it('should return all teams', done => { 
+        request.get(`${url}/api/teams`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body[0].teamName).toEqual('Washington State');
+            expect(res.body[0].sportingEventID.toString()).toEqual(this.sportingEvent._id.toString());
+            expect(res.body[0].seed).toEqual(1);
+            expect(res.body[0].pretournamentRecord).toEqual('20-10');
+            expect(res.body[0].tags.toString()).toEqual('PAC-12');
+            done();
+          });
+      });
 
+      describe('PUT: /api/team/:teamId', () => {
+        it('should update and return a teamwith a 200 status', done => {
+          request.put(`${url}/api/team/${this.team._id}`)
+            .send({ wins: 2 })
+            .set({
+              Authorization: `Bearer ${this.mock.token}`,
+            })
+            .end((err, res) => {
+              if (err) return done(err);
+              expect(res.status).toEqual(200);
+              expect(res.body.teamName).toEqual('Washington State');
+              expect(res.body.sportingEventID.toString()).toEqual(this.sportingEvent._id.toString());
+              expect(res.body.seed).toEqual(1);
+              expect(res.body.wins).toEqual(2);
+              expect(res.body.pretournamentRecord).toEqual('20-10');
+              expect(res.body.tags.toString()).toEqual('PAC-12');
+              done();
+            });
+        });
+    
+        it('should  not update and return a 401 status, no token', done => {
+          request.put(`${url}/api/team/${this.team._id}`)
+            .send({ wins: 2 })
+            .set({
+              Authorization: `Bearer `,
+            })
+            .end((err, res) => {
+              expect(res.status).toEqual(401);
+              done();
+            });
+        });
+    
+        it('should  not update and return a 404 status for userpick not found', done => {
+          request.put(`${url}/api/team/esghewher`)
+            .send({ wins: 2 })
+            .set({
+              Authorization: `Bearer ${this.mock.token}`,
+            })
+            .end((err, res) => {
+              expect(res.status).toEqual(404);
+              done();
+            });
+        });
+      });
+    });
+  });
 });
-// });
-// });
