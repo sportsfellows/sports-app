@@ -58,7 +58,6 @@ Run `npm run start` from terminal to start the server. Open a new tab in termina
 ### Auth/User Routes
 #### POST: `/api/signup`
 Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
-
 ```
 http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
 http POST :3000/api/signup username=<username> email=<email> password=<password>
@@ -171,7 +170,7 @@ You will receive an object of the team you updated.
 
 ### Group Routes
 #### POST: `/api/group`
-You can create a new group (friends, work friends) with the properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
+You can create a new group (ie family, friends, work friends) with the properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
 ```
 and stuff goes here
 ```
@@ -191,12 +190,12 @@ Use this call to make edits to a specific group.
 and stuff goes here
 ```
 #### PUT: `/api/group/:groupId/adduser`
-Use this call to make edits adding a group user.
+Use this call to make edits adding a group user to a specific group.
 ```
 and stuff goes here
 ```
 #### PUT: `/api/group/:groupId/removeuser`
-Use this call to make edits to remove a group user.
+Use this call to make edits to remove a group user from a specific group.
 ```
 and stuff goes here
 ```
@@ -208,37 +207,37 @@ and stuff goes here
 
 ### League Routes
 #### POST: `/api/sportingevent/:sportingeventId/league`
-text and stuff go here
+You can create a new league with properties `leagueName`, `sportingEventID`, `owner`, `scoring`, `poolSize`, `privacy`, `password`, `winner`, `status`, `users`, `createdOn` which can also be automatically generated, `size`, `paidUsers`, and `tags`. Values that are required are `leagueName`, `sportingEventId`, `owner`, `scoring`, `poolSize`, and `privacy`.
 ```
 and stuff goes here
 ```
 #### GET: `/api/leagues`
-text and stuff go here
+Use this call to get an array of all league objects.
 ```
 and stuff goes here
 ```
 #### GET: `/api/league/:leagueId`
-text and stuff go here
+Use this call to get a specific league object.
 ```
 and stuff goes here
 ```
 #### PUT: `/api/league/:leagueId`
-text and stuff go here
+Use this call to make edits to a specific league.
 ```
 and stuff goes here
 ```
 #### PUT: `/api/league/:leagueId/adduser`
-text and stuff go here
+Use this call to make edits adding a league user to a specific league.
 ```
 and stuff goes here
 ```
 #### PUT: `/api/league/:leagueId/removeuser`
-text and stuff go here
+Use this call to make edits removing a league user from a specific league.
 ```
 and stuff goes here
 ```
 #### DELETE: `/api/league/:leagueId`
-text and stuff go here
+Use this call to delete a specific group.
 ```
 and stuff goes here
 ```
@@ -269,12 +268,12 @@ Upon success, you will receive an object containing the user pick object that wa
 
 ### Score Board Routes
 #### GET: `/api/scoreboards`
-text and stuff go here
+A users score is updated on the scoreboard according to their picks and the winning teams. Values required are `userID`, and `leagueID`.
 ```
 and stuff goes here
 ```
 #### GET: `/api/scoreboard/:scoreBoardId`
-text and stuff go here
+Use this call to get a specific scoreBoard object.
 ```
 and stuff goes here
 ```
@@ -286,7 +285,7 @@ text and stuff go here
 and stuff goes here
 ```
 #### GET: `/api/messageboard/:messageBoardId`
-text and stuff go here
+Use this call to get a specific messageBoard object.
 ```
 and stuff goes here
 ```
@@ -298,19 +297,19 @@ text and stuff go here
 and stuff goes here
 ```
 #### GET: `/api/comments`
-text and stuff go here
+Use this call to get a comment object.
 ```
 and stuff goes here
 ```
 #### GET: `/api/comment/:commentId`
-text and stuff go here
+Use this call to get a specific comment object.
 ```
 and stuff goes here
 ```
 
 ## Tests
 
-Tests are ran by using the jest testing suite. To run tests, first you must download and copy this repo and run `npm i` in the root directory to install all application dependancies. Run `npm run tests` in the root directory of the application in your terminal to check tests.
+Tests are ran by using the jest testing suite. To run tests, first you must download and copy this repo and run `npm i` in the root directory to install all application dependancies. Run `npm run test` in the root directory of the application in your terminal to check tests.
 
 ## Contribute
 

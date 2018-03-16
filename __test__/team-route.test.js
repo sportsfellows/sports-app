@@ -95,7 +95,6 @@ describe('SportingEvent routes', function () {
   });
 
   // GET route for Team and user
-  //////////// below not passing - 
   describe('Team routes', function () {
     // beforeAll(done => {
     //   serverToggle.serverOn(server, done);
