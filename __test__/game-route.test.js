@@ -81,7 +81,7 @@ describe('Game Routes', function () {
 
   beforeEach(done => {
     request.get(`${url}/api/signin`)
-      .send(exampleUser)
+      .auth(exampleUser.username, exampleUser.password)
       .end((err, res) => {
         console.log('res body', res.body);
         done();
