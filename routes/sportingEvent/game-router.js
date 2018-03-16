@@ -54,7 +54,7 @@ gameRouter.get('/api/games', bearerAuth, function(req, res, next) {
 
 // http PUT :3000/api/game/5aaa8ae6f2db6d1315d2934a 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiZTQzODQwMTBiZmJjN2I2NDJiNTlkZTM1ZjgxMDE3NDhlMTA3MDJmNmU3NmExZWEzOGJmN2M3ZWY2NDUyODUiLCJpYXQiOjE1MjExMjU4Njd9.4p5DqkayofQHjCbHYzSDr8FPexGFcdtJCsM8gTc3maU' gameID='5aaa8ae6f2db6d1315d2934a' winner='5aa8c322091555739d8cb12c' loser='5aa8c340091555739d8cb12d' homeScore=50 awayScore=40 status='played'
 gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/game:gameId');
+  debug('PUT: /api/game/:gameId');
 
   if (!req.body) return next(createError(400, 'expected a request body'));
   let game = Game.findByIdAndUpdate(req.params.gameId, req.body, {new: true})
