@@ -214,6 +214,4 @@ describe('Game Routes', function () {
       });
     });
   });
-
-
 });

@@ -91,20 +91,9 @@ describe('Profile routes', function() {
 
 
   describe('GET: /api/sportingevent/:sportingEventId', () => {
-    // beforeEach( done => {
-    //   return new SportingEvent(updatedSportingEvent).save()
-    //     .then( sportingEve => {
-    //       console.log('sportingeve ', sportingEve);
-    //       this.sportingEvent = sportingEve;
-    //       done();
-    //     })
-    //     .catch(done);
-    // });
-
     beforeEach( done => {
       return new SportingEvent(updatedSportingEvent).save()
         .then( sportingEve => {
-          console.log('sportingeve ', sportingEve);
           this.sportingEvent = sportingEve;
           done();
         })
@@ -157,7 +146,6 @@ describe('Profile routes', function() {
           .end((err, res) => {
             if (err) return done(err);
             expect(res.status).toEqual(200);
-            console.log('res.body: ', res.body);
             expect(res.body[0].sportingEventName).toEqual(updatedSportingEvent.sportingEventName);
             expect(res.body[0].tags.toString()).toEqual(updatedSportingEvent.tags.toString());
             expect(res.body[0].desc).toEqual(updatedSportingEvent.desc);
@@ -168,59 +156,3 @@ describe('Profile routes', function() {
     });
   });
 });
-
-//   describe('PUT: /api/profile/:profileId', () => {
-//     describe('with a valid body', () => {
-//       it('should update and return a list with a 200 status', done => {
-//         request.put(`${url}/api/profile/${this.mock.profile._id}`)
-//           .send(updatedProfile)
-//           .set({
-//             Authorization: `Bearer ${this.mock.token}`,
-//           })
-//           .end((err, res) => {
-//             if (err) return done(err);
-//             expect(res.status).toEqual(200);
-//             expect(res.body.username).toEqual(updatedProfile.username);
-//             expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
-//             done();
-//           });
-//       });
-
-//       it('should  not update and return a 400 status for invalid req', done => {
-//         request.put(`${url}/api/profile/${this.mock.profile._id}`)
-//           .send()
-//           .set({
-//             Authorization: `Bearer ${this.mock.token}`,
-//           })
-//           .end((err, res) => {
-//             expect(res.status).toEqual(400);
-//             done();
-//           });
-//       });
-
-//       it('should  not update and return a 401 status', done => {
-//         request.put(`${url}/api/profile/${this.mock.profile._id}`)
-//           .send(updatedProfile)
-//           .set({
-//             Authorization: `Bearer `,
-//           })
-//           .end((err, res) => {
-//             expect(res.status).toEqual(401);
-//             done();
-//           });
-//       });
-
-//       it('should  not update and return a 404 status for user list not found', done => {
-//         request.put(`${url}/api/profile/a979e472c577c679758e018`)
-//           .send(updatedProfile)
-//           .set({
-//             Authorization: `Bearer ${this.mock.token}`,
-//           })
-//           .end((err, res) => {
-//             expect(res.status).toEqual(404);
-//             done();
-//           });
-//       });
-//     });
-//   });
-// });
