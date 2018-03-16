@@ -2,7 +2,7 @@
 
 const request = require('superagent');
 const fakeProfile  = require('./lib/fakeProfile.js');
-const fakeSportingEvent = require('./lib/fakeSportingEvent.js');
+const SportingEvent = require('../model/sportingEvent/sportingEvent.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
 
@@ -27,31 +27,23 @@ describe('Profile routes', function() {
         this.mock = mock;
         return this.mock.profile = this.mock.profile._rejectionHandler0;
       });
-    // beforeEach( () => {
-    //   return fakeSportingEvent.create()
-    //     .then( sportingEvent => {
-    //       return this.mock.sportingEvent = sportingEvent;
-    //     });
-    // });
   }); 
   afterEach( done => {
     Promise.all([
       fakeProfile.remove,
-      fakeSportingEvent.remove,
+      SportingEvent.remove({}),
     ])
       .then( () => done())
       .catch(done);
   });
 
   it('should post and return a sportingevent', done => {
-    console.log('this.mock: ', this.mock);
     request.post(`${url}/api/sportingevent`)
       .send(exampleSportingEvent)
       .set({
         Authorization: `Bearer ${this.mock.token}`,
       })
       .end((err, res) => {
-        console.log('this.mock.profile: ', this.mock.profile);
         if (err) return done(err);
         expect(res.status).toEqual(200);
         expect(res.body.sportingEventName).toEqual(exampleSportingEvent.sportingEventName);
@@ -61,102 +53,121 @@ describe('Profile routes', function() {
       });
   });
 
-  // it('should return 404 for route not found', done => {
-  //   request.post(`${url}/api/sportingevent`)
-  //     .send(exampleSportingEvent)
-  //     .set({
-  //       Authorization: `Bearer ${this.mock.token}`,
-  //     })
-  //     .end((err, res) => {
-  //       expect(res.status).toEqual(404);
-  //       done();
-  //     });
-  // });
+  it('should return 404 for route not found', done => {
+    request.post(`${url}/api/sportingeve`)
+      .send(exampleSportingEvent)
+      .set({
+        Authorization: `Bearer ${this.mock.token}`,
+      })
+      .end((err, res) => {
+        expect(res.status).toEqual(404);
+        done();
+      });
+  });
 
-  // it('should return a 401 error, no token', done => {
-  //   request.post(`${url}/api/sportingevent`)
-  //     .send(exampleSportingEvent)
-  //     .set({
-  //       Authorization: 'Bearer ',
-  //     })
-  //     .end((err, res) => {
-  //       expect(res.status).toEqual(401);
-  //       done();
-  //     });
-  // });
+  it('should return a 401 error, no token', done => {
+    request.post(`${url}/api/sportingevent`)
+      .send(exampleSportingEvent)
+      .set({
+        Authorization: 'Bearer ',
+      })
+      .end((err, res) => {
+        expect(res.status).toEqual(401);
+        done();
+      });
+  });
 
-  // it('should return a 400 error, no body', done => {
-  //   request.post(`${url}/api/sportingevent`)
-  //     .send(exampleSportingEvent)
-  //     .set({
-  //       Authorization: `Bearer ${this.mock.token}`,
-  //     })
-  //     .end((err, res) => {
-  //       expect(res.status).toEqual(400);
-  //       done();
-  //     });
-  // });
+  it('should return a 400 error, body error', done => {
+    request.post(`${url}/api/sportingevent`)
+      .send(exampleSportingEvent2)
+      .set({
+        Authorization: `Bearer ${this.mock.token}`,
+      })
+      .end((err, res) => {
+        expect(res.status).toEqual(400);
+        done();
+      });
+  });
 
-  // it('should return a 400 error, body error', done => {
-  //   request.post(`${url}/api/sportingevent`)
-  //     .send(exampleSportingEvent2)
-  //     .set({
-  //       Authorization: `Bearer ${this.mock.token}`,
-  //     })
-  //     .end((err, res) => {
-  //       expect(res.status).toEqual(400);
-  //       done();
-  //     });
-  // });
+
+  describe('GET: /api/sportingevent/:sportingEventId', () => {
+    // beforeEach( done => {
+    //   return new SportingEvent(updatedSportingEvent).save()
+    //     .then( sportingEve => {
+    //       console.log('sportingeve ', sportingEve);
+    //       this.sportingEvent = sportingEve;
+    //       done();
+    //     })
+    //     .catch(done);
+    // });
+
+    beforeEach( done => {
+      return new SportingEvent(updatedSportingEvent).save()
+        .then( sportingEve => {
+          console.log('sportingeve ', sportingEve);
+          this.sportingEvent = sportingEve;
+          done();
+        })
+        .catch(done);
+    });
+    
+    describe('with a valid body', () => {
+      it('should return a single sporting event', done => { 
+        request.get(`${url}/api/sportingevent/${this.sportingEvent._id}`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body.sportingEventName).toEqual(updatedSportingEvent.sportingEventName);
+            expect(res.body.tags.toString()).toEqual(updatedSportingEvent.tags.toString());
+            expect(res.body.desc).toEqual(updatedSportingEvent.desc);
+            done();
+          });
+      });
+
+      it('should return a 401 when no token is provided', done => {
+        request.get(`${url}/api/sportingevent/${this.sportingEvent._id}`)
+          .set({
+            Authorization: 'Bearer',
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+
+      it('should return a 404 for a valid req with a list id not found', done => {
+        request.get(`${url}/api/sportingevent/a979e472c577c679758e018`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+
+      it('should return all sporting events', done => { 
+        request.get(`${url}/api/sportingevents`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            console.log('res.body: ', res.body);
+            expect(res.body[0].sportingEventName).toEqual(updatedSportingEvent.sportingEventName);
+            expect(res.body[0].tags.toString()).toEqual(updatedSportingEvent.tags.toString());
+            expect(res.body[0].desc).toEqual(updatedSportingEvent.desc);
+            done();
+          });
+      });
+
+    });
+  });
 });
-
-//   describe('GET: /api/profile/:profileId', () => {
-//     describe('with a valid body', () => {
-//       it('should return a profile', done => { 
-//         request.get(`${url}/api/profile/${this.mock.profile._id}`)
-//           .set({
-//             Authorization: `Bearer ${this.mock.token}`,
-//           })
-//           .end((err, res) => {
-//             if (err) return done(err);
-//             expect(res.status).toEqual(200);
-//             expect(typeof res.text).toEqual('string');
-//             expect(res.body.status).toEqual(this.mock.profile.status);
-//             expect(res.body.tags.toString()).toEqual(this.mock.profile.tags.toString());
-//             expect(res.body.image).toEqual(this.mock.profile.image);
-//             expect(res.body.country).toEqual(this.mock.profile.country);
-//             expect(res.body.state).toEqual(this.mock.profile.state);
-//             expect(res.body.birthdate).toEqual(this.mock.profile.birthdate);
-//             expect(res.body._id.toString()).toEqual(this.mock.profile._id.toString());
-//             expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
-//             expect(res.body.username).toEqual(this.mock.profile.username);
-//             done();
-//           });
-//       });
-
-//       it('should return a 401 when no token is provided', done => {
-//         request.get(`${url}/api/profile/${this.mock.profile._id}`)
-//           .set({
-//             Authorization: 'Bearer',
-//           })
-//           .end((err, res) => {
-//             expect(res.status).toEqual(401);
-//             done();
-//           });
-//       });
-  
-//       it('should return a 404 for a valid req with a list id not found', done => {
-//         request.get(`${url}/api/profile/a979e472c577c679758e018`)
-//           .set({
-//             Authorization: `Bearer ${this.mock.token}`,
-//           })
-//           .end((err, res) => {
-//             expect(res.status).toEqual(404);
-//             done();
-//           });
-//       });
-//     });
-//   });
 
 //   describe('PUT: /api/profile/:profileId', () => {
 //     describe('with a valid body', () => {

@@ -31,6 +31,7 @@ exports.create = function() {
       mock.requestProfile.username = user.username;
       let profile = new Profile(mock.requestProfile).save();
       mock.profile = profile;
+      
       return user;
     })
     .then( user => {
