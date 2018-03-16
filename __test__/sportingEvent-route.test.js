@@ -91,6 +91,16 @@ describe('Profile routes', function() {
 
 
   describe('GET: /api/sportingevent/:sportingEventId', () => {
+    // beforeEach( done => {
+    //   return new SportingEvent(updatedSportingEvent).save()
+    //     .then( sportingEve => {
+    //       console.log('sportingeve ', sportingEve);
+    //       this.sportingEvent = sportingEve;
+    //       done();
+    //     })
+    //     .catch(done);
+    // });
+
     beforeEach( done => {
       return new SportingEvent(updatedSportingEvent).save()
         .then( sportingEve => {
