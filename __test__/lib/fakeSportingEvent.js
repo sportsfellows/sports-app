@@ -8,6 +8,7 @@ module.exports = exports = {};
 exports.create = function() {
   let mock = {};
   mock.request = {
+
     sportingEventName: faker.random.word(),
     desc: faker.random.word(),
   };
