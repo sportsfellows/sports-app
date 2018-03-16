@@ -12,7 +12,7 @@ const userPickRouter = module.exports = Router();
 
 
 
-userPickRouter.get('/api/userpick:userPickId', bearerAuth, function(req, res, next) {
+userPickRouter.get('/api/userpick/:userPickId', bearerAuth, function(req, res, next) {
   debug('GET: /api/userpick/:userPickId');
 
   UserPick.findById(req.params.userPickId)
