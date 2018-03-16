@@ -18,7 +18,7 @@ describe('SportingEvent routes', function () {
     serverToggle.serverOff(server, done);
   });
 
-  beforeEach( () => {
+  beforeEach(() => {
     return fakeTeam.create()
       .then(mock => {
         this.mock = mock;
@@ -39,7 +39,7 @@ describe('SportingEvent routes', function () {
         Authorization: `Bearer ${this.mock.token}`,
       })
       .send(teamRequest)
-     
+
       .end((err, res) => {
         if (err) return done(err);
         expect(res.status).toEqual(200);
@@ -63,4 +63,3 @@ describe('SportingEvent routes', function () {
       });
   });
 });
-// Don't write any code below this line

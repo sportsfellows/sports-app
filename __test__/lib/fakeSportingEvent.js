@@ -1,3 +1,4 @@
+
 'use strict';
 
 const faker = require('faker');
@@ -7,13 +8,25 @@ const sportingEventMockFactory = module.exports = {};
 sportingEventMockFactory.create = () => {
   let mock = {};
   mock.request = {
-    sportingEventName: faker.name.firstName(),
-    desc: faker.company.companyName(),
+
+
+    sportingEventName: faker.random.word(),
+    desc: faker.random.word(),
+
   };
 
-  let sportingEvent = new SportingEvent(mock.request);
-  return sportingEvent.save()
+  return new SportingEvent(mock.request).save()
+    .then(sportingEvent => {
+      mock.sportingEvent = sportingEvent;
+      mock.request.SportingEventID = sportingEvent._id;
+      return mock;
+    })
     .catch(console.log);
-};  
+};
 
-sportingEventMockFactory.remove = () => SportingEvent.remove({});
+sportingEventMockFactory.remove = function() {
+  return SportingEvent.remove({});
+};
+ 
+
+

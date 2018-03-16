@@ -84,8 +84,8 @@ groupRouter.put('/api/group/:groupId/removeuser', bearerAuth, jsonParser, functi
 // http PUT :3000/api/group/5aa8b142eb28637009a35fe3 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6Ijk3OTZmOGMzNjI2NDhhMDM0YzNkMzg1YmU4MjIyNTFkZTUyYTBmNTY4NWI5ZDM4ODg3NTNkMjUwZjljMjFhODkiLCJpYXQiOjE1MjEwMDQ3OTB9.I_xZOfe87-EQWz_vnHzHCSO26bWtarNeheEM18I_wEA'
 groupRouter.put('/api/group/:groupId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/group/:groupId');
-
-  if (!req.body) return next(createError(400, 'expected a request body'));
+  let groupProperties = req.body.groupName || req.body.privacy || req.body.size || req.body.motto || req.body.createdOn || req.body.image || req.body.owner || req.body.password || req.body.users || req.body.tags;
+  if (!groupProperties) return next(createError(400, 'expected a request body'));
   return Group.findById(req.params.groupId)
     .then( group => {
       if(group.owner.toString() !== req.user._id.toString()) return next(createError(403, 'forbidden access'));
