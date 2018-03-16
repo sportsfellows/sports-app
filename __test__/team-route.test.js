@@ -10,6 +10,7 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
+// POST route
 describe('SportingEvent routes', function () {
   beforeAll(done => {
     serverToggle.serverOn(server, done);
@@ -26,7 +27,7 @@ describe('SportingEvent routes', function () {
   });
 
   afterEach(fakeTeam.remove);
-
+  //passes
   it('should post and return a team', done => {
     const teamRequest = {
       teamName: faker.name.firstName(),
@@ -46,21 +47,86 @@ describe('SportingEvent routes', function () {
         done();
       });
   });
-
+  //passes
   it('should not return a team', done => {
-    // const teamRequest = {};
-
     request.post(`${url}/api/sportingevent/${this.mock.teamRequest.sportingEventID}/team`)
       .set({
         Authorization: `Bearer ${this.mock.token}`,
       })
       .send(null)
 
-      .end(Promise.reject)
+      .then(Promise.reject)
       .catch(res => {
         expect(res.status).toEqual(400);
         done();
       });
+  });
+
+  // GET route for Team ID and user
+
+  describe('Team routes', function () {
+    beforeAll(done => {
+      serverToggle.serverOn(server, done);
+    });
+    afterAll(done => {
+      serverToggle.serverOff(server, done);
+    });
+
+    beforeEach(() => {
+      return fakeTeam.create()
+        .then(mock => {
+          this.mock = mock;
+          console.log(this.mock.team._id);
+        });
+    });
+
+    afterEach(fakeTeam.remove);
+    //passes
+    it('should get and return a team id', done => {
+      request.get(`${url}/api/team/${this.mock.team._id}`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
+       
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).toEqual(200);
+          done();
+        });
+    });
+  });
+
+  // GET route for Team and user
+  //////////// below not passing - 
+  describe('Team routes', function () {
+    beforeAll(done => {
+      serverToggle.serverOn(server, done);
+    });
+    afterAll(done => {
+      serverToggle.serverOff(server, done);
+    });
+
+    beforeEach(() => {
+      return fakeTeam.create()
+        .then(mock => {
+          this.mock = mock;
+        });
+    });
+
+    afterEach(fakeTeam.remove);
+
+    it('should get and return a team', done => {
+      request.get(`${url}/api/team/${this.mock.team}`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
+
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.status).toEqual(200);
+          done();
+        });
+    });
   });
 });
 // Don't write any code below this line

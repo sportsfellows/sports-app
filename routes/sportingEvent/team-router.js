@@ -28,7 +28,7 @@ teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
-teamRouter.get('/api/teams', bearerAuth, function(req, res, next) {
+teamRouter.get('/api/team', bearerAuth, function(req, res, next) {
   debug('GET: /api/teams');
 
   Team.find()
