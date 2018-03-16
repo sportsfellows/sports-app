@@ -16,7 +16,7 @@ let exampleGroup = {
   privacy: 'public',
 };
 
-describe('Message Board Routes', function () {
+describe('Group Routes', function () {
   beforeAll(done => {
     serverToggle.serverOn(server, done);
   });
@@ -33,8 +33,8 @@ describe('Message Board Routes', function () {
   });
 
   beforeEach(done => {
-    exampleGroup.owner = this.mock.profile._id;
-    exampleGroup.users = [this.mock.profile._id];
+    exampleGroup.owner = this.mock.profile.userID;
+    exampleGroup.users = [this.mock.profile.userID];
 
     new Group(exampleGroup).save()
       .then(group => {
@@ -78,7 +78,7 @@ describe('Message Board Routes', function () {
           .set({
             Authorization: `Bearer ${this.mock.token}`,
           })
-          .send({})
+          .send({ group: 'something' })
           .end((err, res) => {
             expect(res.status).toEqual(400);
             done();
@@ -87,7 +87,7 @@ describe('Message Board Routes', function () {
     });
 
     describe('with valid body and no token', () => {
-      it('should give 200 status', done => {
+      it('should give 401 status', done => {
         request.post(`${url}/api/group`)
           .set({
             Authorization: `Bearer `,
@@ -118,7 +118,7 @@ describe('Message Board Routes', function () {
     });
 
     describe('with invalid token', () => {
-      it('should give 200 status', done => {
+      it('should give 401 status', done => {
         request.get(`${url}/api/groups`)
           .set({
             Authorization: `Bearer `,
@@ -162,19 +162,6 @@ describe('Message Board Routes', function () {
       });
     });
 
-    describe('with no groupId', () => {
-      it('should give an error', done => {
-        request.get(`${url}/api/group/`)
-          .set({
-            Authorization: `Bearer ${this.mock.token}`,
-          })
-          .end((err, res) => {
-            expect(res.status).toEqual(404);
-            done();
-          });
-      });
-    });
-
     describe('with no token', () => {
       it('should give an error', done => {
         request.get(`${url}/api/group/${this.tempGroup._id}`)
@@ -192,15 +179,117 @@ describe('Message Board Routes', function () {
   // PUT TESTS START HERE
 
   describe('PUT: /api/group/:groupId', () => {
-    describe('without being the owner', () => {
+    describe('with valid body and token', () => {
       it('should give 200 status', done => {
         request.put(`${url}/api/group/${this.tempGroup._id}`)
           .set({
             Authorization: `Bearer ${this.mock.token}`,
           })
-          .send({groupName:'new group name'})
+          .send({ groupName: 'new group name' })
           .end((err, res) => {
-            expect(res.status).toEqual(403);
+            expect(res.status).toEqual(200);
+            expect(res.body.groupName).toEqual('new group name');
+            done();
+          });
+      });
+    });
+
+    describe('with no body and valid token', () => {
+      it('should give 400 status', done => {
+        request.put(`${url}/api/group/${this.tempGroup._id}`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .send()
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
+            done();
+          });
+      });
+    });
+
+    describe('with valid body and no token', () => {
+      it('should give 200 status', done => {
+        request.put(`${url}/api/group/${this.tempGroup._id}`)
+          .set({
+            Authorization: `Bearer `,
+          })
+          .send({ groupName: 'new group name' })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+    });
+  });
+
+  describe('PUT: /api/group/:groupId/adduser', () => {
+    describe('with valid id and token', () => {
+      it('should give 200 status', done => {
+        request.put(`${url}/api/group/${this.tempGroup._id}/adduser`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(200);
+            done();
+          });
+      });
+    });
+  });
+
+  describe('PUT: /api/group/:groupId/removeuser', () => {
+    describe('with valid id and token', () => {
+      it('should give 200 status', done => {
+        request.put(`${url}/api/group/${this.tempGroup._id}/removeuser`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(200);
+            done();
+          });
+      });
+    });
+  });
+
+  // DELETE TESTS START HERE
+
+  describe('DELETE: /api/group/:groupId', () => {
+    describe('with valid token', () => {
+      it('should give 204 status', done => {
+        request.delete(`${url}/api/group/${this.tempGroup._id}`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(204);
+            done();
+          });
+      });
+    });
+
+    describe('with no token', () => {
+      it('should give 401 status', done => {
+        request.delete(`${url}/api/group/${this.tempGroup._id}`)
+          .set({
+            Authorization: `Bearer `,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+    });
+
+    describe('with invalid id', () => {
+      it('should give 404 status', done => {
+        request.delete(`${url}/api/group/123456`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
             done();
           });
       });
