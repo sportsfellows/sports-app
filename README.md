@@ -84,7 +84,7 @@ Throws an error if any of the requested properties that are not created for you 
 
 The User model will return a json web token if there are no errors.
 #### PUT: `/api/profile/<profile id>`
-text and stuff go here
+This will allow you to make changes to a specific profile.
 
 ### Sporting Event Routes
 #### POST: `/api/sportingevent`
@@ -292,13 +292,7 @@ and stuff goes here
 
 ### Comment Routes
 #### POST: `/api/messageboard/:messageBoardId/comment`
-
-
-  userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
-  messageBoardID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'messageBoard' },
-  content: { type: String, required: true },
-  createdOn: { type: Date, default: Date.now },
-  tags: [{type: String }],
+A user is able to comment on messages in the group. The properties used for this are `userID`, `messageBoardID`, `content`, `createdOn` which can also be automatically generated, and `tags`. Required properties are `userID`, `messageBoardID`, and `content`.
 ```
 and stuff goes here
 ```
