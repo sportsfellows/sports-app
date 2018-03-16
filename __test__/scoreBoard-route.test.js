@@ -18,7 +18,7 @@ const exampleLeague = { leagueName: 'example league name', scoring: 'regular', p
 // const exampleSportingEvent2 = { desc: 'example desc', tags: 'example tag' };
 
 
-describe('Profile routes', function() {
+describe('Scoreboard routes', function() {
   beforeAll( done => {
     serverToggle.serverOn(server, done);
   });
