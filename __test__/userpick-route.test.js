@@ -238,5 +238,48 @@ describe('UserPick routes', function() {
           done();
         });
     });
+
+    describe('PUT: /api/list/:listId && /api/list', () => {
+      it('should update and return a userpick with a 200 status', done => {
+        request.put(`${url}/api/userpick/${this.userPick._id}`)
+          .send({ pick: this.team2._id})
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
+            expect(res.body.leagueID.toString()).toEqual(this.league._id.toString());
+            expect(res.body.gameID.toString()).toEqual(this.game._id.toString());
+            expect(res.body.pick.toString()).toEqual(this.team2._id.toString());
+            done();
+          });
+      });
+  
+      it('should  not update and return a 401 status', done => {
+        request.put(`${url}/api/userpick/${this.userPick._id}`)
+          .send({ pick: this.team2._id})
+          .set({
+            Authorization: `Bearer `,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+  
+      it('should  not update and return a 404 status for userpick not found', done => {
+        request.put(`${url}/api/userpick/wegegewgw`)
+          .send({ pick: this.team2._id})
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+    });
   });
 });
