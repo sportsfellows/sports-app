@@ -4,9 +4,6 @@ const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 const debug = require('debug')('sportsapp:profile');
 const createError = require('http-errors');
-// const User = require('./user.js');
-// const League = require('../league/league.js');
-// const Group = require('../league/group.js');
 
 const profileSchema = mongoose.Schema({
   userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },

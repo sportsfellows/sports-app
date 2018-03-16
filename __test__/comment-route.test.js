@@ -38,7 +38,6 @@ describe('Comment routes', function() {
   beforeEach( done => {
     return new SportingEvent(updatedSportingEvent).save()
       .then( sportingEve => {
-        console.log('sportingeve ', sportingEve);
         this.sportingEvent = sportingEve;
         done();
       })
@@ -49,7 +48,6 @@ describe('Comment routes', function() {
     exampleLeague.owner = this.mock.profile.userID;
     return new League(exampleLeague).save()
       .then( myLeague => {
-        console.log('myLeague: ', myLeague);
         this.league = myLeague;
         done();
       })
@@ -59,7 +57,6 @@ describe('Comment routes', function() {
     return new ScoreBoard({ userID: this.mock.profile.userID, leagueID: this.league._id }).save()
       .then( sBoard => {
         this.scoreBoard = sBoard;
-        console.log('sboard: ', sBoard);
         done();
       })
       .catch(done);
@@ -68,7 +65,6 @@ describe('Comment routes', function() {
     return new MessageBoard({ leagueID: this.league._id }).save()
       .then( mBoard => {
         this.messageBoard = mBoard;
-        console.log('mboard: ', mBoard);
         done();
       })
       .catch(done);
@@ -98,7 +94,6 @@ describe('Comment routes', function() {
           Authorization: `Bearer ${this.mock.token}`,
         })
         .end((err, res) => {
-          console.log(res.body);
           if(err) return done(err);
           expect(res.status).toEqual(200);
           expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
@@ -150,7 +145,6 @@ describe('Comment routes', function() {
       return new Comment({ userID: this.mock.profile.userID, messageBoardID: this.messageBoard._id, content: 'example content' }).save()
         .then( commentz => {
           this.comment = commentz;
-          console.log('comment: ', commentz);
           done();
         })
         .catch(done);

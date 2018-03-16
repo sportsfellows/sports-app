@@ -35,7 +35,6 @@ describe('MessageBoard routes', function() {
   beforeEach( done => {
     return new SportingEvent(updatedSportingEvent).save()
       .then( sportingEve => {
-        console.log('sportingeve ', sportingEve);
         this.sportingEvent = sportingEve;
         done();
       })
@@ -46,7 +45,6 @@ describe('MessageBoard routes', function() {
     exampleLeague.owner = this.mock.profile.userID;
     return new League(exampleLeague).save()
       .then( myLeague => {
-        console.log('myLeague: ', myLeague);
         this.league = myLeague;
         done();
       })
@@ -55,7 +53,6 @@ describe('MessageBoard routes', function() {
   beforeEach( done => {
     return new Group({ groupName: 'example group', privacy: 'public', owner: this.mock.profile.userID }).save()
       .then( group => {
-        console.log('group: ', group);
         this.group = group;
         done();
       })
@@ -66,7 +63,6 @@ describe('MessageBoard routes', function() {
     exampleLeague.owner = this.mock.profile.userID;
     return new League(exampleLeague).save()
       .then( myLeague => {
-        console.log('myLeague: ', myLeague);
         this.league = myLeague;
         done();
       })
@@ -76,7 +72,6 @@ describe('MessageBoard routes', function() {
     return new MessageBoard({ leagueID: this.league._id, tags: 'example tag' }).save()
       .then( messageBoard1 => {
         this.messageBoard1 = messageBoard1;
-        console.log('messageBoard1: ', messageBoard1);
         done();
       })
       .catch(done);
@@ -85,7 +80,6 @@ describe('MessageBoard routes', function() {
     return new MessageBoard({ groupID: this.group._id, tags: 'example tag' }).save()
       .then( messageBoard2 => {
         this.messageBoard2 = messageBoard2;
-        console.log('messageBoard2: ', messageBoard2);
         done();
       })
       .catch(done);
