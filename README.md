@@ -47,19 +47,18 @@ If you are not participating in a league or would like to communicate with those
 
 ![Demo](./public/img/erd.png)
 https://www.lucidchart.com/documents/view/ccfd14a4-7127-4097-8bf9-ca0d567cc323/0
-MONGODB_URI='mongodb://heroku_5s3dhwdr:vm0d8l4q47rb9psbn1o247o2in@ds263138.mlab.com:63138/heroku_5s3dhwdr'
 
 
 ## How to use?
-Clone this repo, cd into the root of the project, run `npm i` from your command line to install all of our dependencies. Please make sure that you have mongodb and httpie installed on your machine, you can brew install them both if you do not already have them `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there is typically 1 or 2 quick things you need to do after you Brew install it. 
+Clone this repo, cd into the root of the project, run `npm i` from your command line to install all of our dependencies. Please make sure that you have mongodb and httpie installed on your machine. You can brew install them both if you do not already have them with `brew install httpie mongodb`. Please refernce the installation instructions for MongoDB `https://docs.mongodb.com/manual/administration/install-community/`, there are typically 1 or 2 quick things you need to do after you Brew install it. 
 
-Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell (for viewing the contents of your local database). Lastly, open up a final terminal tab; this is where you will be making all of your server requests, instructions and examples are below.
+Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell (for viewing the contents of your local database). Lastly, open up a final terminal tab; this is where you will be making all of your server requests. Instructions and examples are below.
 
 ## Routes
 
 ### Auth/User Routes
 #### POST: `/api/signup`
-Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
+Create a new  user with the properties `username`, `email`, `password` and `findHash`, (findHash is automatically created for you).
 ```
 http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
 http POST :3000/api/signup username=<username> email=<email> password=<password>
@@ -72,7 +71,7 @@ http POST :3000/api/signup username=<username> email=<email> password=<password>
 ```
 Throws an error if any of the requested properties that are not created for you are missing.
 
-The User model will return a json web token if there are no errors and create a profile model for the newly instantiated user to add more detailed information to.
+The User model will return a json web token if there are no errors, and create a profile model for the newly instantiated user to add more detailed information to.
 
 ### Profile Routes
 #### GET: `/api/profile/<profile id>`
@@ -91,7 +90,7 @@ This will allow you to make changes to a specific profile.
 ### Sporting Event Routes
 #### POST: `/api/sportingevent`
 
-Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically and the `tags` property is available for any extra information that a user may want to add.
+Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically, and the `tags` property is available for any extra information that a user may want to add.
 
 ```
 http POST :3000/api/sportingevent 'Authorization:Bearer <token>' sportingEventName='<event name>' desc='<description>'
@@ -137,7 +136,7 @@ You will receive the updated object of the game you just modified.
 
 ### Team Routes
 #### POST: `/api/sportingevent/<sporting event id>/team`
-You can create a new team with properties `teamName`, `sportingEventID`, `createdOn` which can also be automatically generated, `seed`, `wins`, `losses`, `pretournamentRecord`, and `tags`. Values that are required are `teamName` and `sportingEventId`.
+You can create a new team with the properties `teamName`, `sportingEventID`, `createdOn` (which can also be automatically generated), `seed`, `wins`, `losses`, `pretournamentRecord`, and `tags`. Values that are required are `teamName` and `sportingEventId`.
 ```
 http POST :3000/api/sportingevent/<sportingeventid>/team 'Authorization:Bearer <token>' teamName='team name'
 ```
@@ -160,7 +159,7 @@ You will receive an object of the team you updated.
 
 ### Group Routes
 #### POST: `/api/group`
-You can create a new group (ie. family, friends, work friends), in which to compete by choosing teams of sporting games. The properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
+You can create a new group (ie. family, friends, work friends), in which to compete with by choosing teams of sporting games. The properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
 
 ```
 http POST :3000/api/group 'Authorization:Bearer <token>' groupName=<groupname> privacy=<privacysetting>
@@ -212,7 +211,7 @@ http DELETE :3000/api/group/<groupId> 'Authorization:Bearer <token>'
 
 ### League Routes
 #### POST: `/api/sportingevent/sportingeventId/league`
-You can create a new league with properties `leagueName`, `sportingEventID`, `owner`, `scoring`, `poolSize`, `privacy`, `password`, `winner`, `status`, `users`, `createdOn` which can also be automatically generated, `size`, `paidUsers`, and `tags`. Values that are required are `leagueName`, `sportingEventId`, `owner`, `scoring`, `poolSize`, and `privacy`.
+You can create a new league with properties `leagueName`, `sportingEventID`, `owner`, `scoring`, `poolSize`, `privacy`, `password`, `winner`, `status`, `users`, `createdOn` (which can also be automatically generated), `size`, `paidUsers`, and `tags`. Values that are required are `leagueName`, `sportingEventId`, `owner`, `scoring`, `poolSize`, and `privacy`.
 ```
 http POST :3000/api/sportingevent/sportingeventId/league 'Authorization:Bearer <token>' leagueName=<leaguename> scoring=<scoring> poolSize=<poolSize> privacy=<privacysetting> password=<password> tags=<tags>
 ```
