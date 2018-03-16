@@ -1,139 +1,126 @@
 'use strict';
 
 const request = require('superagent');
+const fakeProfile  = require('./lib/fakeProfile.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
 
-const User = require('../model/user/user.js');
-const Profile = require('../model/user/profile.js');
-const Group = require('../model/league/group.js');
-const League = require('../model/league/league.js');
-const SportingEvent = require('../model/sportingEvent/sportingEvent.js');
-
 require('jest');
+
 const url = 'http://localhost:3000';
 
-const exampleUser = { username: 'exampleuser', password: '1234', email: 'exampleuser@test.com' };
-const exampleProfile = { image: 'exampleImage', country: 'USA', state: 'WA', birthdate: 12121987, tags: 'celebrity', leagues: [], groups: [] };
-const exampleGroup = { groupName: 'examplename', privacy: 'public', size: 2, motto: 'example motto', image: 'example image url', tags: 'washington state university', users: [] };
-const exampleLeague = { leagueName: 'example name', scoring: 'regular', poolSize: 0, privacy: 'public', tags: 'special', users: [] };
-const exampleSportingEvent = { sportingEventName: '2018 march madness', desc: 'example desc', tags: '2018'};
+const updatedProfile = { username: 'updatedUserName'};
 
-
-
-
-describe('Profile Routes', function() {
-  beforeAll(done => {
+describe('Profile routes', function() {
+  beforeAll( done => {
     serverToggle.serverOn(server, done);
   });
-  beforeEach(done => {
-    new SportingEvent(exampleSportingEvent).save()
-      .then( sportingEvent => {
-        this.tempSportingEvent = sportingEvent;
-        done();
-      })
-      .catch(done);
-  });
-  beforeEach( done => {
-    new User(exampleUser)
-      .generatePasswordHash(exampleUser.password)
-      .then( user => user.save())
-      .then( user => {
-        this.tempUser = user;
-        exampleProfile.userID = this.tempUser._id;
-        return user.generateToken();
-      })
-      .then( token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(done);
-  });
-  beforeEach(done => {
-    exampleGroup.owner = this.tempUser._id;
-    exampleGroup.users.push(this.tempUser._id);
-    new Group(exampleGroup).save()
-      .then( group => {
-        this.tempGroup = group;
-        done();
-      })
-      .catch(done);
-  });
-  beforeEach(done => {
-    exampleLeague.sportingEventID = this.tempSportingEvent._id;
-    exampleLeague.owner = this.tempUser._id;
-    exampleLeague.users.push(this.tempUser._id);
-    new League(exampleLeague).save()
-      .then( league => {
-        this.tempLeague = league;
-        done();
-      })
-      .catch(done);
-  });
-  afterAll(done => {
+  afterAll( done => {
     serverToggle.serverOff(server, done);
   });
+  beforeEach( () => {
+    return fakeProfile.create()
+      .then( mock => {
+        this.mock = mock;
+        return this.mock.profile = this.mock.profile._rejectionHandler0;
+      });
+  }); 
   afterEach( done => {
     Promise.all([
-      SportingEvent.remove({}),
+      fakeProfile.remove,
     ])
       .then( () => done())
       .catch(done);
   });
-  afterEach( done => {
-    Promise.all([
-      User.remove({}),
-      Profile.remove({}),
-      Group.remove({}),
-      League.remove({}),
-      SportingEvent.remove({}),
-    ])
-      .then( () => done())
-      .catch(done);
-  });
-  afterEach(done => {
-    delete exampleProfile.userID;
-    delete exampleLeague.sportingEventID;
-    delete exampleLeague.owner;
-    delete exampleLeague.users;
-    delete exampleGroup.owner;
-    delete exampleGroup.users;
-    done();
+
+  describe('GET: /api/profile/:profileId', () => {
+    describe('with a valid body', () => {
+      it('should return a profile', done => { 
+        request.get(`${url}/api/profile/${this.mock.profile._id}`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(typeof res.text).toEqual('string');
+            expect(res.body.status).toEqual(this.mock.profile.status);
+            expect(res.body.tags.toString()).toEqual(this.mock.profile.tags.toString());
+            expect(res.body.image).toEqual(this.mock.profile.image);
+            expect(res.body.country).toEqual(this.mock.profile.country);
+            expect(res.body.state).toEqual(this.mock.profile.state);
+            expect(res.body.birthdate).toEqual(this.mock.profile.birthdate);
+            expect(res.body._id.toString()).toEqual(this.mock.profile._id.toString());
+            expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
+            expect(res.body.username).toEqual(this.mock.profile.username);
+            done();
+          });
+      });
+
+      it('should return a 401 when no token is provided', done => {
+        request.get(`${url}/api/profile/${this.mock.profile._id}`)
+          .set({
+            Authorization: 'Bearer',
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+  
+      it('should return a 404 for a valid req with a list id not found', done => {
+        request.get(`${url}/api/profile/a979e472c577c679758e018`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+    });
   });
 
-  describe('POST: /api/profile', () => {
-    beforeEach( done => {
-      exampleProfile.leagues.push(this.tempLeague._id);
-      exampleProfile.groups.push(this.tempGroup._id);
-      done();
-    });
-    afterEach( done => {
-      delete exampleProfile.leagues;
-      delete exampleProfile.groups;
-      done();
-    });
-    it('should create and return a profile', done => {
-      request.post(`${url}/api/profile`)
-        .send(exampleProfile)
-        .set({
-          Authorization: `Bearer ${this.tempToken}`,
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.status).toEqual(200);
-          expect(res.body.image).toEqual(exampleProfile.image);
-          expect(res.body.country).toEqual(exampleProfile.country);
-          expect(res.body.state).toEqual(exampleProfile.state);
-          expect(res.body.birthdate).toEqual(exampleProfile.birthdate);
-          expect(res.body.tags).toEqual(exampleProfile.tags);
-          // expect(res.body.leagues).toEqual(expect.arrayContaining(exampleProfile.leagues));
-          expect(res.body.leagues.toString()).toEqual(exampleProfile.leagues.toString());
-          expect(res.body.groups.toString()).toEqual(exampleProfile.groups.toString());
-          expect(res.body.userID).toEqual(this.tempUser._id.toString());
-          done();
-        });
-    });
+  describe('PUT: /api/profile/:profileId', () => {
+    describe('with a valid body', () => {
+      it('should update and return a list with a 200 status', done => {
+        request.put(`${url}/api/profile/${this.mock.profile._id}`)
+          .send(updatedProfile)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body.username).toEqual(updatedProfile.username);
+            expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
+            done();
+          });
+      });
 
+      it('should  not update and return a 401 status', done => {
+        request.put(`${url}/api/profile/${this.mock.profile._id}`)
+          .send(updatedProfile)
+          .set({
+            Authorization: `Bearer `,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+
+      it('should  not update and return a 404 status for user list not found', done => {
+        request.put(`${url}/api/profile/a979e472c577c679758e018`)
+          .send(updatedProfile)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+    });
   });
 });
-

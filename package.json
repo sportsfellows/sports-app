@@ -35,9 +35,9 @@
     "superagent": "^3.8.2"
   },
   "scripts": {
-    "test": "DEBUG='sportsapp*' jest -i --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test-team": "DEBUG='sportsapp*' jest -i --coverage team-route.test.js",
-    "start": "DEBUG='sportsapp*' node server.js"
+    "test": "DEBUG='sportsapp*' jest -i --verbose --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "messageboard": "DEBUG='sportsapp*' jest -i --coverage messageBoard-route.test.js",
+    "start": "DEBUG='sportsapp*' node server.js",
   },
   "repository": {
     "type": "git",

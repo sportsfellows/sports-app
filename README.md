@@ -58,7 +58,6 @@ Run `npm run start` from terminal to start the server. Open a new tab in termina
 ### Auth/User Routes
 #### POST: `/api/signup`
 Create a new  user with the properties `username`, `email`, `password` and `findHash` (findHash is automatically created for you).
-
 ```
 http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
 http POST :3000/api/signup username=<username> email=<email> password=<password>
@@ -85,7 +84,7 @@ Throws an error if any of the requested properties that are not created for you 
 
 The User model will return a json web token if there are no errors.
 #### PUT: `/api/profile/<profile id>`
-text and stuff go here
+This will allow you to make changes to a specific profile.
 
 ### Sporting Event Routes
 #### POST: `/api/sportingevent`
@@ -112,226 +111,249 @@ After a successful POST, you receive an object of the new sporting event you cre
 ```
 http GET :3000/api/sportingevent/<sporting event id> 'Authorization:Bearer <token>'
 ```
-
-This will return an object of your sporting event, like the example below:
-```
-{
-    "__v": 0, 
-    "_id": "5aa9acbe42358a6e7b6a6450", 
-    "createdOn": "2018-03-14T23:14:06.602Z", 
-    "desc": "some text and stuff", 
-    "sportingEventName": "baseball", 
-    "tags": []
-}
-```
 ### Game Routes
 #### GET: `/api/games`
-text and stuff go here
+This will allow you to get all games.
 ```
-and stuff goes here
+http :3000/api/games 'Authorization:Bearer <token>'
 ```
+
+This will return an array of games.
 #### GET: `/api/game/<game id>`
-text and stuff go here
+This will return a specific game.
 ```
-and stuff goes here
+http :3000/api/game/<game id> 'Authorization: Bearer <token>'
 ```
+You will receive an object for that specific game.
 #### PUT: `/api/game/<game id>`
-text and stuff go here
+This will allow you to make changes to a specific game.
 ```
-and stuff goes here
+http PUT :3000/api/game/<game id> 'Authorization:Bearer <token>' homeTeam='hometeam' awayTeam='awayteam' dateTime='datetime' weight='weight' homeScore='homescore' awayScore='awayscore' status='status' winner='winner' loser='loser' sportingEventID='sportingeventid' tags='tags'
 ```
+
+You will receive the updated object of the game you just modified.
 
 ### Team Routes
 #### POST: `/api/sportingevent/<sporting event id>/team`
-text and stuff go here
+You can create a new team with properties `teamName`, `sportingEventID`, `createdOn` which can also be automatically generated, `seed`, `wins`, `losses`, `pretournamentRecord`, and `tags`. Values that are required are `teamName` and `sportingEventId`.
 ```
-and stuff goes here
+http POST :3000/api/sportingevent/<sportingeventid>/team 'Authorization:Bearer <token>' teamName='team name'
 ```
 #### GET: `/api/teams`
-text and stuff go here
+Use this call to get an array of all team objects.
 ```
-and stuff goes here
+http :3000/api/teams 'Authorization:Bearer <token>'
 ```
 #### GET: `/api/team/<team id>`
-text and stuff go here
+Use this call to get a specific team object.
 ```
-and stuff goes here
+http :3000/api/team/<team id> 'Authorization:Bearer <token>'
 ```
 #### PUT: `/api/team/<team id>`
-text and stuff go here
+Use this call to make edits to a specific team.
 ```
-and stuff goes here
+http PUT :3000/api/team/<team id> 'Authorization:Bearer <token>' property='property value'
 ```
+You will receive an object of the team you updated.
 
 ### Group Routes
 #### POST: `/api/group`
-text and stuff go here
+You can create a new group (ie. family, friends, work friends), in which to compete by choosing teams of sporting games. The properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
+
 ```
-and stuff goes here
+http POST :3000/api/group 'Authorization:Bearer <token>' groupName=<groupname> privacy=<privacysetting>
+```
+
+This will return an object of your sporting event, like the example below:
+
+```
+{ groupName: 'Schuppe - Swaniawski',
+      privacy: 'public',
+      owner: '5aab94d02bb501e7ffecf3f8',
+      users: [ '5aab94d02bb501e7ffecf3f8' ],
+      size: 0,
+      createdOn: '2018-03-16T09:56:32.625Z',
+      tags: [],
+      _id: '5aab94d02bb501e7ffecf3fb',
+      __v: 0 }
 ```
 #### GET: `/api/groups`
-text and stuff go here
+Use this call to get an array of all group objects.
 ```
-and stuff goes here
+http :3000/api/groups/ 'Authorization:Bearer <token>'
 ```
-#### GET: `/api/group/:groupId`
-text and stuff go here
+#### GET: `/api/group/groupId`
+Use this call to get a specific group object.
 ```
-and stuff goes here
+http :3000/api/group/<groupId> 'Authorization:Bearer <token>'
 ```
-#### PUT: `/api/group/:groupId`
-text and stuff go here
+#### PUT: `/api/group/groupId`
+Use this call to make edits to a specific group.
 ```
-and stuff goes here
+http PUT :3000/api/group/<groupId> 'Authorization:Bearer <token>' property=<propertyname>
 ```
-#### PUT: `/api/group/:groupId/adduser`
-text and stuff go here
+#### PUT: `/api/group/groupId/adduser`
+Use this call to make edits adding a group user to a specific group.
 ```
-and stuff goes here
+http PUT :3000/api/group/<groupId>/adduser 'Authorization:Bearer <token>' 
 ```
-#### PUT: `/api/group/:groupId/removeuser`
-text and stuff go here
+#### PUT: `/api/group/groupId/removeuser`
+Use this call to make edits to remove a group user from a specific group.
 ```
-and stuff goes here
+http PUT :3000/api/group/<groupId>/removeuser 'Authorization:Bearer <token>'
 ```
-#### DELETE: `/api/group/:groupId`
-text and stuff go here
+#### DELETE: `/api/group/groupId`
+Use this call to delete a specific group.
 ```
-and stuff goes here
+http DELETE :3000/api/group/<groupId> 'Authorization:Bearer <token>'
 ```
 
 ### League Routes
-#### POST: `/api/sportingevent/:sportingeventId/league`
-text and stuff go here
+#### POST: `/api/sportingevent/sportingeventId/league`
+You can create a new league with properties `leagueName`, `sportingEventID`, `owner`, `scoring`, `poolSize`, `privacy`, `password`, `winner`, `status`, `users`, `createdOn` which can also be automatically generated, `size`, `paidUsers`, and `tags`. Values that are required are `leagueName`, `sportingEventId`, `owner`, `scoring`, `poolSize`, and `privacy`.
 ```
-and stuff goes here
+http POST :3000/api/sportingevent/sportingeventId/league 'Authorization:Bearer <token>' leagueName=<leaguename> scoring=<scoring> poolSize=<poolSize> privacy=<privacysetting> password=<password> tags=<tags>
+```
+This will return an object of your sporting event, like the example below:
+
+```
+  { leagueName: 'Boyer - Swaniawski',
+      scoring: 'some scoring',
+      poolSize: 67889,
+      privacy: 'public',
+      sportingEventID: 5aab98cd95a2ddeb67a18e0d,
+      owner: 5aab98cc95a2ddeb67a18e0b }
+
 ```
 #### GET: `/api/leagues`
-text and stuff go here
+Use this call to get an array of all league objects.
 ```
-and stuff goes here
+http :3000/api/leagues 'Authorization:Bearer <token>'
 ```
-#### GET: `/api/league/:leagueId`
-text and stuff go here
+#### GET: `/api/league/leagueId`
+Use this call to get a specific league object.
 ```
-and stuff goes here
+http :3000/api/leagues/leagueId 'Authorization:Bearer <token>'
 ```
-#### PUT: `/api/league/:leagueId`
-text and stuff go here
+#### PUT: `/api/league/leagueId`
+Use this call to make edits to a specific league.
 ```
-and stuff goes here
+http PUT :3000/api/leagues/leagueId 'Authorization:Bearer <token>' property=<propertyname>
 ```
-#### PUT: `/api/league/:leagueId/adduser`
-text and stuff go here
+#### PUT: `/api/league/leagueId/adduser`
+Use this call to make edits adding a league user to a specific league.
 ```
-and stuff goes here
+http PUT :3000/api/leagues/leagueId/adduser 'Authorization:Bearer <token>'
 ```
 #### PUT: `/api/league/:leagueId/removeuser`
-text and stuff go here
+Use this call to make edits removing a league user from a specific league.
 ```
-and stuff goes here
+http PUT :3000/api/leagues/leagueId/removeuser 'Authorization:Bearer <token>'
 ```
 #### DELETE: `/api/league/:leagueId`
-text and stuff go here
+Use this call to delete a specific group.
 ```
-and stuff goes here
+http DELETE :3000/api/leagues/leagueId/ 'Authorization:Bearer <token>'
 ```
 
 ### User Pick Routes
-#### POST: `/api/league/<league id>/userpick`
-text and stuff go here
+#### POST: `/api/league/leagueId/userpick`
+A user can create their pick with properties `userID` which is automatically filled in with the user who created the pick, `leagueID`, `gameID`, `pick` which is the id of the team, `correct` which is a boolean value, and `gameTime`. All properties are required except `correct` which will be changed at the end of the game.
 ```
-and stuff goes here
+http POST :3000/api/league/<league id>/userpick 'Authorization:Bearer <token>' gameID='gameID' pick='teamID' gameTime='Date'
 ```
+This will return an object of your sporting event, like the example below:
+
+```
+userPick:  { userID: 5aab9b85785570ed8c8ad31f,
+      leagueID: 5aab9b85785570ed8c8ad322,
+      gameID: 5aab9b85785570ed8c8ad326,
+      pick: 5aab9b85785570ed8c8ad324,
+      gameTime: 2018-03-16T10:25:09.675Z,
+      _id: 5aab9b85785570ed8c8ad327,
+      __v: 0 }
+
+```
+This will return with an object of the created pick.
 #### GET: `/api/userpicks`
-text and stuff go here
+With this, you will get an array of all user pick objects.
 ```
-and stuff goes here
+http :3000/api/userpicks 'Authorization:Bearer <token>'
 ```
 #### GET: `/api/userpick/<user pick id>`
-text and stuff go here
+This will give you a specific user pick object.
 ```
-and stuff goes here
+http :3000/api/userpick/<user pick id> 'Authorization:Bearer <token>'
 ```
 #### PUT: `/api/userpick/<user pick id>`
-text and stuff go here
+With this command, you can update a specific user pick.
 ```
-and stuff goes here
+http PUT :3000/api/userpick/<user pick id> 'Authorization:Bearer <token>' property=<updated value>
 ```
+Upon success, you will receive an object containing the user pick object that was modified.
 
 ### Score Board Routes
 #### GET: `/api/scoreboards`
-text and stuff go here
+A users score is updated on the scoreboard according to their picks and the winning teams. Values required are `userID`, and `leagueID`.
+
+This will return an object of your sporting event, like the example below:
+
 ```
-and stuff goes here
+sboard:  { userID: 5aab9d02440cb9eea20120c5,
+      leagueID: 5aab9d02440cb9eea20120c8,
+      score: 0,
+      _id: 5aab9d02440cb9eea20120c9,
+      __v: 0 }
+
 ```
-#### GET: `/api/scoreboard/:scoreBoardId`
-text and stuff go here
+#### GET: `/api/scoreboard/scoreBoardId`
+Use this call to get a specific scoreBoard object.
 ```
-and stuff goes here
+http :3000//api/scoreboard/:scoreBoardId' 'Authorization:Bearer <token>'
 ```
 
 ### Message Board Routes
 #### GET: `/api/messageboards`
-text and stuff go here
+A user is able to message other users in their group. Properties used are `leagueID`, `groupID`, `comments`, and `tags`.
 ```
 and stuff goes here
 ```
-#### GET: `/api/messageboard/:messageBoardId`
-text and stuff go here
+#### GET: `/api/messageboard/messageBoardId`
+Use this call to get a specific messageBoard object.
 ```
 and stuff goes here
 ```
 
 ### Comment Routes
-#### POST: `/api/messageboard/:messageBoardId/comment`
-text and stuff go here
+#### POST: `/api/messageboard/messageBoardId/comment`
+A user is able to comment on messages in the group. The properties used for this are `userID`, `messageBoardID`, `content`, `createdOn` which can also be automatically generated, and `tags`. Required properties are `userID`, `messageBoardID`, and `content`.
 ```
-and stuff goes here
+http POST :3000/api/messageboard/messageBoardId/comment 'Authorization:Bearer <token>'
+```
+This will return an object of your sporting event, like the example below:
+```
+ comment:  { userID: 5aab9f3e97974ff026d7aa71,
+      messageBoardID: 5aab9f3e97974ff026d7aa76,
+      content: 'example content',
+      createdOn: 2018-03-16T10:41:02.676Z,
+      tags: [],
+      _id: 5aab9f3e97974ff026d7aa77,
+      __v: 0 }
 ```
 #### GET: `/api/comments`
-text and stuff go here
+
 ```
-and stuff goes here
+http :3000/api/comments 'Authorization:Bearer <token>'
 ```
-#### GET: `/api/comment/:commentId`
-text and stuff go here
+#### GET: `/api/comment/commentId`
+Use this call to get a specific comment object.
 ```
-and stuff goes here
+http :3000/api/comment/commentId 'Authorization:Bearer <token>'
 ```
 
-<!-- ## Tests
+## Tests
 
-run `npm run tests` to check tests.
-
-#### POST
-
-1. The User model should create and return s json web token and a 200 status code if there is no error.
-2. The List model should create and return a new list.
-3. Both should respond with a 400 status code if there is no request body.
-4. The List model should respond with a 401 status code if there is no json web token provided.
-
-#### GET
-
-1. The User model should return a user's json web token and a 200 status code if there is no error.
-2. The list model should return a user's list and a 200 status code if there is no error.
-3. The List model should respond with a 401 status code if there is no json web token provided
-4. should respond with a 404 status code if a request is made with an id that is not found.
-5. The List model should respond with a 200 status code and all lists if there is no parameter (id).
-
-#### DELETE
-
-1. The List model should return a 204 status code if there are no errors.
-2. The List model should respond with a 400 status code if there is no parameter (id).
-3. The List model should respond with a 404 status code if a request is made with an id that is not found.
-4. The List model should respond with a 401 status code if there is no json web token provided.
-
-#### PUT
-
-1. The List model should update and return the updated list along with a 200 status code if there are no errors.
-2. The List model should respond with a 400 status code if there is an invalid request body.
-3. The List model should respond with a 404 status code if a request is made with an id that is not found.
-4. The List model should respond with a 401 status code if there is no json web token provided. -->
+Tests are ran by using the jest testing suite. To run tests, first you must download and copy this repo and run `npm i` in the root directory to install all application dependancies. Run `npm run test` in the root directory of the application in your terminal to check tests.
 
 ## Contribute
 

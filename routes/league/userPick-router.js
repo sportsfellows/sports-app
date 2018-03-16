@@ -12,7 +12,7 @@ const userPickRouter = module.exports = Router();
 
 
 
-userPickRouter.get('/api/userpick:userPickId', bearerAuth, function(req, res, next) {
+userPickRouter.get('/api/userpick/:userPickId', bearerAuth, function(req, res, next) {
   debug('GET: /api/userpick/:userPickId');
 
   UserPick.findById(req.params.userPickId)
@@ -48,11 +48,3 @@ userPickRouter.put('/api/userpick/:userPickId', bearerAuth, jsonParser, function
     .then( userPick => res.json(userPick))
     .catch(next);
 });
-
-// userPickRouter.delete('/api/userpick/:userPickId', bearerAuth, function(req, res, next) {
-//   debug('DELETE: /api/userpick/:userPickId');
-
-//   UserPick.findByIdAndRemove(req.params.userPickId)
-//     .then( () => res.status(204).send())
-//     .catch(next);
-// });
