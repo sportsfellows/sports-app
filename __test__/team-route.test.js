@@ -13,7 +13,7 @@ const url = 'http://localhost:3000';
 
 const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated desc', tags: 'updated tag' };
 
-describe('Profile routes', function() {
+describe('Team routes', function() {
   beforeAll( done => {
     serverToggle.serverOn(server, done);
   });

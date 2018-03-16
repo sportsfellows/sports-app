@@ -16,7 +16,7 @@ const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated
 const exampleLeague = { leagueName: 'example league name', scoring: 'regular', poolSize: 0, privacy: 'private'}; 
 
 
-describe('Profile routes', function() {
+describe('Scoreboard routes', function() {
   beforeAll( done => {
     serverToggle.serverOn(server, done);
   });

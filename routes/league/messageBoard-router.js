@@ -3,7 +3,6 @@
 const Router = require('express').Router;
 const debug = require('debug')('sportsapp:messageBoard-router');
 
-
 const MessageBoard = require('../../model/league/messageBoard.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
@@ -24,4 +23,3 @@ messageBoardRouter.get('/api/messageboards', bearerAuth, function(req, res, next
     .then(messageBoards => res.json(messageBoards))
     .catch(next);
 });
-
