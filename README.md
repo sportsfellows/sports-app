@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/sportsfellows/sports-app/badge.svg?branch=master)](https://coveralls.io/github/sportsfellows/sports-app?branch=master)
+
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
 ## Project: CF Madness (sports bracket app)

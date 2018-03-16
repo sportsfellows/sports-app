@@ -36,7 +36,6 @@
   },
   "scripts": {
     "test": "DEBUG='sportsapp*' jest -i --verbose --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "start": "DEBUG='sportsapp*' node server.js"
     "start": "DEBUG='sportsapp*' node server.js",
     "lint": "eslint ."
   },
