@@ -8,8 +8,8 @@ module.exports = exports = {};
 exports.create = function() {
   let mock = {};
   mock.request = {
-    sportingEventName: faker.name.firstName(),
-    desc: faker.company.catchPhraseNoun(),
+    sportingEventName: faker.random.word(),
+    desc: faker.random.word(),
   };
   return new SportingEvent(mock.request)
     .then(sportingEvent => sportingEvent.save())
@@ -24,3 +24,4 @@ exports.remove = function() {
   return SportingEvent.remove({});
 };
  
+
