@@ -46,5 +46,21 @@ describe('SportingEvent routes', function () {
         done();
       });
   });
+
+  it('should not return a team', done => {
+    // const teamRequest = {};
+
+    request.post(`${url}/api/sportingevent/${this.mock.teamRequest.sportingEventID}/team`)
+      .set({
+        Authorization: `Bearer ${this.mock.token}`,
+      })
+      .send(null)
+
+      .end(Promise.reject)
+      .catch(res => {
+        expect(res.status).toEqual(400);
+        done();
+      });
+  });
 });
 // Don't write any code below this line
