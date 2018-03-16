@@ -130,7 +130,7 @@ This will allow you to get all games.
 http :3000/api/games 'Authorization:Bearer <token>'
 ```
 
-This will return an array of objects.
+This will return an array of games.
 #### GET: `/api/game/<game id>`
 This will return a specific game.
 ```
@@ -170,7 +170,7 @@ You will receive an object of the team you updated.
 
 ### Group Routes
 #### POST: `/api/group`
-You can create a new group (ie family, friends, work friends) with the properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
+You can create a new group (ie. family, friends, work friends), in which to compete by choosing teams of sporting games. The properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
 ```
 and stuff goes here
 ```
@@ -280,7 +280,7 @@ and stuff goes here
 
 ### Message Board Routes
 #### GET: `/api/messageboards`
-text and stuff go here
+A user is able to message other users in their group. Properties used are `leagueID`, `groupID`, `comments`, and `tags`.
 ```
 and stuff goes here
 ```
@@ -292,7 +292,13 @@ and stuff goes here
 
 ### Comment Routes
 #### POST: `/api/messageboard/:messageBoardId/comment`
-text and stuff go here
+
+
+  userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
+  messageBoardID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'messageBoard' },
+  content: { type: String, required: true },
+  createdOn: { type: Date, default: Date.now },
+  tags: [{type: String }],
 ```
 and stuff goes here
 ```
