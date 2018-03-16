@@ -22,14 +22,14 @@ describe('Profile routes', function() {
     return fakeProfile.create()
       .then( mock => {
         this.mock = mock;
-        this.mock.profile = this.mock.profile._rejectionHandler0;
+        // this.mock.profile = this.mock.profile._rejectionHandler0;
         done();
       })
       .catch(done);
   });
   afterEach( done => {
     Promise.all([
-      fakeProfile.remove,
+      fakeProfile.remove(),
     ])
       .then( () => done())
       .catch(done);

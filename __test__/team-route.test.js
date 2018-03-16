@@ -24,7 +24,7 @@ describe('Team routes', function() {
     return fakeProfile.create()
       .then( mock => {
         this.mock = mock;
-        this.mock.profile = this.mock.profile._rejectionHandler0;
+        // this.mock.profile = this.mock.profile._rejectionHandler0;
         done();
       })
       .catch(done);
@@ -39,7 +39,7 @@ describe('Team routes', function() {
   });
   afterEach( done => {
     Promise.all([
-      fakeProfile.remove,
+      fakeProfile.remove(),
       SportingEvent.remove({}),
       Team.remove({}),
     ])

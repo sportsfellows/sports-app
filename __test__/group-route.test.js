@@ -27,7 +27,7 @@ describe('Group Routes', function () {
     return fakeProfile.create()
       .then( mock => {
         this.mock = mock;
-        this.mock.profile = this.mock.profile._rejectionHandler0;
+        // this.mock.profile = this.mock.profile._rejectionHandler0;
         exampleGroup.owner = this.mock.profile.userID;
         exampleGroup.users = [this.mock.profile.userID];
         done();
@@ -48,7 +48,7 @@ describe('Group Routes', function () {
 
   afterEach(done => {
     Promise.all([
-      fakeProfile.remove,
+      fakeProfile.remove(),
       Group.remove({}),
     ])
       .then(() => done())
