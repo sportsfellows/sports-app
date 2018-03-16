@@ -46,6 +46,4 @@ const server = module.exports = app.listen(PORT, () => {
   debug(`cf madness is running on: ${PORT}`);
 });
 
-
-
 server.isRunning = true;

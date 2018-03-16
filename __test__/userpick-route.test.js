@@ -37,7 +37,6 @@ describe('UserPick routes', function() {
   beforeEach( done => {
     return new SportingEvent(updatedSportingEvent).save()
       .then( sportingEve => {
-        console.log('sportingeve ', sportingEve);
         this.sportingEvent = sportingEve;
         done();
       })
@@ -48,7 +47,6 @@ describe('UserPick routes', function() {
     exampleLeague.owner = this.mock.profile.userID;
     return new League(exampleLeague).save()
       .then( myLeague => {
-        console.log('myLeague: ', myLeague);
         this.league = myLeague;
         done();
       })
@@ -58,7 +56,6 @@ describe('UserPick routes', function() {
     return new ScoreBoard({ userID: this.mock.profile.userID, leagueID: this.league._id }).save()
       .then( sBoard => {
         this.scoreBoard = sBoard;
-        console.log('sboard: ', sBoard);
         done();
       })
       .catch(done);
@@ -67,7 +64,6 @@ describe('UserPick routes', function() {
     return new Team({ teamName: 'team1', sportingEventID: this.sportingEvent._id }).save()
       .then( team1 => {
         this.team1 = team1;
-        console.log('team1: ', team1);
         done();
       })
       .catch(done);
@@ -76,7 +72,6 @@ describe('UserPick routes', function() {
     return new Team({ teamName: 'team2', sportingEventID: this.sportingEvent._id }).save()
       .then( team2 => {
         this.team2 = team2;
-        console.log('team2: ', team2);
         done();
       })
       .catch(done);
@@ -85,7 +80,6 @@ describe('UserPick routes', function() {
     return new Game({ sportingEventID: this.sportingEvent._id, dateTime: Date.now(), homeTeam: this.team1._id, awayTeam: this.team2._id }).save()
       .then( game => {
         this.game = game;
-        console.log('game: ', game);
         done();
       })
       .catch(done);
@@ -168,7 +162,6 @@ describe('UserPick routes', function() {
       return new UserPick({ userID: this.mock.profile.userID, leagueID: this.league._id, gameID: this.game._id, pick: this.team1._id, gameTime: Date.now() }).save()
         .then( userPick => {
           this.userPick = userPick;
-          console.log('userPick: ', userPick);
           done();
         })
         .catch(done);

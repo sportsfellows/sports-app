@@ -33,7 +33,6 @@ describe('Game routes', function() {
   beforeEach( done => {
     return new SportingEvent(updatedSportingEvent).save()
       .then( sportingEve => {
-        console.log('sportingeve ', sportingEve);
         this.sportingEvent = sportingEve;
         done();
       })
@@ -43,7 +42,6 @@ describe('Game routes', function() {
     return new Team({ teamName: 'team1', sportingEventID: this.sportingEvent._id }).save()
       .then( team1 => {
         this.team1 = team1;
-        console.log('team1: ', team1);
         done();
       })
       .catch(done);
@@ -52,7 +50,6 @@ describe('Game routes', function() {
     return new Team({ teamName: 'team2', sportingEventID: this.sportingEvent._id }).save()
       .then( team2 => {
         this.team2 = team2;
-        console.log('team2: ', team2);
         done();
       })
       .catch(done);
@@ -127,7 +124,6 @@ describe('Game routes', function() {
         return new Game({ homeTeam: this.team1, awayTeam: this.team2, dateTime: Date.now(), sportingEventID: this.sportingEvent._id, tags: 'championship game' }).save()
           .then( game => {
             this.game = game;
-            console.log('game: ', game);
             done();
           })
           .catch(done);

@@ -38,7 +38,7 @@ teamRouter.get('/api/teams', bearerAuth, function(req, res, next) {
 
 teamRouter.put('/api/team/:teamId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/team:teamId');
-  // req.body is {} (truthy) even when nothing sent
+  
   if (!req.body) return next(createError(400, 'expected a request body'));
   Team.findByIdAndUpdate(req.params.teamId, req.body, {new:true})
     .then( team => res.json(team))
