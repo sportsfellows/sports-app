@@ -8,12 +8,9 @@ module.exports = exports = {};
 exports.create = function() {
   let mock = {};
   mock.request = {
-    sportingEventName: 'ncaa march madness',
-    desc: faker.lorem.sentence(),
-    tags: faker.random.word(),
+    sportingEventName: faker.name.firstName(),
+    desc: faker.company.catchPhraseNoun(),
   };
-
-
   return new SportingEvent(mock.request)
     .then(sportingEvent => sportingEvent.save())
     .then(sportingEvent => {
