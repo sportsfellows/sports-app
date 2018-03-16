@@ -69,24 +69,12 @@ describe('Message Board Routes', function () {
             Authorization: `Bearer ${this.mock.token}`,
           })
           .end((err, res) => {
+            console.log(res.body)
             expect(res.status).toEqual(200);
             expect(res.body._id).toEqual(this.tempGroup._id);
             done();
           });
       });
     });
-
-    // describe('with an invalid token', () => {
-    //   it('should return a 401 error', done => {
-    //     request.get(`${url}/api/messageboard/${this.tempMessageBoard._id}`)
-    //       .set({
-    //         Authorization: `Bearer `,
-    //       })
-    //       .end((err, res) => {
-    //         expect(res.status).toEqual(401);
-    //         done();
-    //       });
-    //   });
-    // });
   });
 });

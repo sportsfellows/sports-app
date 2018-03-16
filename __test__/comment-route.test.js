@@ -98,6 +98,7 @@ describe('Comment routes', function() {
           Authorization: `Bearer ${this.mock.token}`,
         })
         .end((err, res) => {
+          console.log(res.body);
           if(err) return done(err);
           expect(res.status).toEqual(200);
           expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());

@@ -14,8 +14,6 @@ const url = 'http://localhost:3000';
 
 const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated desc', tags: 'updated tag' };
 const exampleLeague = { leagueName: 'example league name', scoring: 'regular', poolSize: 0, privacy: 'private'}; 
-// const exampleSportingEvent = { sportingEventName: 'example name', desc: 'example desc', tags: 'example tag' };
-// const exampleSportingEvent2 = { desc: 'example desc', tags: 'example tag' };
 
 
 describe('Profile routes', function() {
@@ -58,7 +56,6 @@ describe('Profile routes', function() {
     return new ScoreBoard({ userID: this.mock.profile.userID, leagueID: this.league._id }).save()
       .then( sBoard => {
         this.scoreBoard = sBoard;
-        console.log('sboard: ', sBoard);
         done();
       })
       .catch(done);

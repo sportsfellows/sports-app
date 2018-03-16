@@ -2,23 +2,34 @@
 
 const request = require('superagent');
 const faker = require('faker');
-const fakeTeam = require('./lib/fakeTeam.js');
 const League = require('../model/league/league.js');
+const SportingEvent = require('../model/sportingEvent/sportingEvent.js');
+const fakeProfile = require('./lib/fakeProfile.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
+
+// const fakeLeague = require('./lib/fakeLeague.js');
 
 require('jest');
 
 const url = 'http://localhost:3000';
 
-let exampleLeague = {
+const exampleLeague = {
   leagueName: faker.company.companyName(),
-  scoring: 'something 1',
-  poolSize: 7,
+  scoring: 'some scoring',
+  poolSize: faker.random.number(),
   privacy: 'public',
 };
 
-describe('Game Routes', function () {
+const updatedSportingEvent = {
+  sportingEventName: 'updated name',
+  desc: 'updated desc',
+  tags: 'updated tag',
+};
+
+
+
+describe('League routes', function () {
   beforeAll(done => {
     serverToggle.serverOn(server, done);
   });
@@ -26,41 +37,139 @@ describe('Game Routes', function () {
     serverToggle.serverOff(server, done);
   });
 
-  beforeEach(() => {
-    return fakeTeam.create()
-      .then(mock => {
-        this.homeMock = mock;
-      });
-  });
-
   beforeEach(done => {
-    exampleLeague.owner = this.homeMock.user._id;
-    exampleLeague.sportingEventID = this.homeMock.sportingEvent._id;
-
-    new League(exampleLeague).save()
-      .then(game => {
-        this.tempLeague = game;
+    return fakeProfile.create()
+      .then(mock => {
+        this.mock = mock;
+        this.mock.profile = this.mock.profile._rejectionHandler0;
         done();
       })
       .catch(done);
   });
-
+  beforeEach(done => {
+    return new SportingEvent(updatedSportingEvent).save()
+      .then(sportingEve => {
+        this.sportingEvent = sportingEve;
+        done();
+      })
+      .catch(done);
+  });
+  beforeEach(done => {
+    exampleLeague.sportingEventID = this.sportingEvent._id;
+    exampleLeague.owner = this.mock.profile.userID;
+    return new League(exampleLeague).save()
+      .then(myLeague => {
+        this.league = myLeague;
+        done();
+      })
+      .catch(done);
+  });
   afterEach(done => {
     Promise.all([
-      fakeTeam.remove,
+      fakeProfile.remove,
+      SportingEvent.remove({}),
       League.remove({}),
     ])
       .then(() => done())
       .catch(done);
   });
-
-  describe('GET: /api/leagues', () => {
-    describe('with valid token', () => {
-      it('should give 200 status', done => {
-        console.log('homeMock', this.homeMock);
-        request.get(`${url}/api/leagues`)
+  afterEach(() => {
+    delete exampleLeague.sportingEventID;
+    delete exampleLeague.owner;
+  });
+  describe('POST: /api/sportingevent/sportingeventId/league', () => {
+    describe('with a valid body and token', () => {
+      it('should post and return a league', done => {
+        request.post(`${url}/api/sportingevent/${this.league.sportingEventID}/league`)
           .set({
-            Authorization: `Bearer ${this.homeMock.token}`,
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .send(exampleLeague)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body.leagueName).toEqual(exampleLeague.leagueName);
+            expect(res.body.scoring).toEqual('some scoring');
+            expect(res.body.poolSize).toEqual(exampleLeague.poolSize);
+            expect(res.body.privacy).toEqual(exampleLeague.privacy);
+            done();
+          });
+      });
+    });
+    describe('with a bad body', () => {
+      it('should send a 400 error', done => {
+        request.post(`${url}/api/sportingevent/${this.league.sportingEventID}/league`)
+          .send()
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
+            done();
+          });
+      });
+    });
+    describe('with valid body and no token', () => {
+      it('should give 401 status', done => {
+        request.post(`${url}/api/sportingevent/${this.league.sportingEventID}/league`)
+          .set({
+            Authorization: `Bearer `,
+          })
+          .send(exampleLeague)
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+    });
+  });
+  describe('PUT: /api/league/leagueID/adduser', () => {
+    describe('with a valid body and id', () => {
+      it('should give us a 200 status', done => {
+        request.put(`${url}/api/league/${this.league.id}/adduser`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .send(exampleLeague)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            done();
+          });
+      });
+    });
+  });
+  describe('with an invalid id', () => {
+    it('should give 404 status', done => {
+      request.put(`${url}/api/league/badid/adduser`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
+
+        .end((err, res) => {
+          expect(res.status).toEqual(404);
+          done();
+        });
+    });
+  });
+  describe('with no token', () => {
+    it('should give 401 status', done => {
+      request.put(`${url}/api/league/${this.league.id}/adduser`)
+        .set({
+          Authorization: `Bearer `,
+        })
+        .end((err, res) => {
+          expect(res.status).toEqual(401);
+          done();
+        });
+    });
+  });
+  describe('PUT: /api/group/:groupId/removeuser', () => {
+    describe('with valid id and token', () => {
+      it('should give 200 status', done => {
+        request.put(`${url}/api/league/${this.league.id}/removeuser`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
           })
           .end((err, res) => {
             expect(res.status).toEqual(200);
@@ -69,136 +178,113 @@ describe('Game Routes', function () {
       });
     });
   });
+  describe('with an invalid id', () => {
+    it('should give 404 status', done => {
+      request.put(`${url}/api/league/badid`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
 
-  // describe('GET: /api/game/:gameId', () => {
-  //   describe('with valid id and token', () => {
-  //     it('should give 200 status', done => {
-  //       request.get(`${url}/api/game/${this.tempLeague._id}`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(200);
-  //           expect(res.body.homeTeam).toEqual(this.homeMock.team._id.toString());
-  //           expect(res.body.awayTeam).toEqual(this.awayMock.team._id.toString());
-  //           done();
-  //         });
-  //     });
-  //   });
+        .end((err, res) => {
+          expect(res.status).toEqual(404);
+          done();
+        });
+    });
+  });
+  describe('with no token', () => {
+    it('should give 401 status', done => {
+      request.put(`${url}/api/league/${this.league.id}/removeuser`)
+        .set({
+          Authorization: `Bearer `,
+        })
+        .end((err, res) => {
+          expect(res.status).toEqual(401);
+          done();
+        });
+    });
+  });
+  describe('PUT: /api/league/:groupId', () => {
+    describe('with valid body and token', () => {
+      it('should give 200 status', done => {
+        request.put(`${url}/api/league/${this.league.id}`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .send({ leagueName: 'new league name' })
+          .end((err, res) => {
+            expect(res.status).toEqual(200);
+            expect(res.body.leagueName).toEqual('new league name');
+            done();
+          });
+      });
+    });
+  });
+  describe('with valid body and no token', () => {
+    it('should give 401 status', done => {
+      request.put(`${url}/api/league/${this.league._id}`)
+        .set({
+          Authorization: `Bearer `,
+        })
+        .send({ leagueName: 'new league name' })
+        .end((err, res) => {
+          expect(res.status).toEqual(401);
+          done();
+        });
+    });
+  });
+  describe('with no body and valid token', () => {
+    it('should give 404 status', done => {
+      request.put(`${url}/api/league/badid`)
+        .set({
+          Authorization: `Bearer ${this.mock.token}`,
+        })
 
-  //   describe('with valid id and no token', () => {
-  //     it('should give 401 status', done => {
-  //       request.get(`${url}/api/game/${this.tempLeague._id}`)
-  //         .set({
-  //           Authorization: `Bearer `,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(401);
-  //           done();
-  //         });
-  //     });
-  //   });
+        .end((err, res) => {
+          expect(res.status).toEqual(404);
+          done();
+        });
+    });
+  });
+  describe('DELETE: /api/league/:leagueId', () => {
+    describe('with valid token', () => {
+      it('should give 204 status', done => {
+        request.delete(`${url}/api/league/${this.league._id}`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(204);
+            done();
+          });
+      });
+    });
 
-  //   describe('with valid id and no token', () => {
-  //     it('should give 404 status', done => {
-  //       request.get(`${url}/api/game/123456`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(404);
-  //           done();
-  //         });
-  //     });
-  //   });
-  // });
+    describe('with no token', () => {
+      it('should give 401 status', done => {
+        request.delete(`${url}/api/league/${this.league._id}`)
+          .set({
+            Authorization: `Bearer `,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(401);
+            done();
+          });
+      });
+    });
 
-  // describe('POST: /api/game', () => {
-  //   describe('with valid token and body', () => {
-  //     it('should return 200 status', done => {
-  //       request.post(`${url}/api/sportingevent/${this.homeMock.sportingEvent._id}/game`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .send(exampleGame)
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(200);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with no token and valid body', () => {
-  //     it('should return 401 status', done => {
-  //       request.post(`${url}/api/sportingevent/${this.homeMock.sportingEvent._id}/game`)
-  //         .set({
-  //           Authorization: `Bearer `,
-  //         })
-  //         .send(exampleGame)
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(401);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with valid token and no body', () => {
-  //     it('should return 200 status', done => {
-  //       request.post(`${url}/api/sportingevent/${this.homeMock.sportingEvent._id}/game`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(400);
-  //           done();
-  //         });
-  //     });
-  //   });
-  // });
-
-  // describe('PUT: /api/game/:gameId', () => {
-  //   describe('with valid body and token', () => {
-  //     it('should give 200 status', done => {
-  //       request.put(`${url}/api/game/${this.tempLeague._id}`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .send({status: 'ended'})
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(200);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with valid body and no token', () => {
-  //     it('should give 401 status', done => {
-  //       request.put(`${url}/api/game/${this.tempLeague._id}`)
-  //         .set({
-  //           Authorization: `Bearer `,
-  //         })
-  //         .send({status: 'ended'})
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(401);
-  //           done();
-  //         });
-  //     });
-  //   });
-
-  //   describe('with invalid id and token', () => {
-  //     it('should give 404 status', done => {
-  //       request.put(`${url}/api/game/123456`)
-  //         .set({
-  //           Authorization: `Bearer ${this.homeMock.token}`,
-  //         })
-  //         .send({status: 'ended'})
-  //         .end((err, res) => {
-  //           expect(res.status).toEqual(404);
-  //           done();
-  //         });
-  //     });
-  //   });
-  // });
-
+    describe('with invalid id', () => {
+      it('should give 404 status', done => {
+        request.delete(`${url}/api/league/123456`)
+          .set({
+            Authorization: `Bearer ${this.mock.token}`,
+          })
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+    });
+  });
 
 });
+
