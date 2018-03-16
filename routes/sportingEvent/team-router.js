@@ -23,7 +23,7 @@ teamRouter.post('/api/sportingevent/:sportingEventId/team', bearerAuth, jsonPars
 teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
   debug('GET: /api/team/:teamId');
 
-  Team.findById(req.params.team)
+  Team.findById(req.params.teamId)
     .then( team => res.json(team))
     .catch(next);
 });

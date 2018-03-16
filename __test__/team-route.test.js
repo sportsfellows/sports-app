@@ -3,9 +3,8 @@
 const request = require('superagent');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
-// const fakeSportingEvent = require('./lib/fakeSportingEvent.js');
+const faker = require('faker');
 const fakeTeam = require('./lib/fakeTeam.js');
-// const fakeUser = require('./lib/fakeUser.js');
 
 require('jest');
 
@@ -28,8 +27,24 @@ describe('SportingEvent routes', function () {
 
   afterEach(fakeTeam.remove);
 
-  it('should', () => {
-    console.log(JSON.stringify(this.mock, null, 2));
+  it('should post and return a team', done => {
+    const teamRequest = {
+      teamName: faker.name.firstName(),
+      seed: faker.random.number(),
+      pretournamentRecord: faker.random.number() + ' - ' + faker.random.number(),
+    };
+
+    request.post(`${url}/api/sportingevent/${this.mock.teamRequest.sportingEventID}/team`)
+      .set({
+        Authorization: `Bearer ${this.mock.token}`,
+      })
+      .send(teamRequest)
+     
+      .end((err, res) => {
+        if (err) return done(err);
+        expect(res.status).toEqual(200);
+        done();
+      });
   });
 });
 // Don't write any code below this line
