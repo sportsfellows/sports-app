@@ -1,4 +1,11 @@
+// Review: Here are some general comments:
+// Review: Overall the readme is good, but there are some inconsistencies and pieces missing that you might want to add.
+// Review: In some instances you show a sample response, but in many you don't. It's usually nice to know what to expect.
+// Review: You have linked resources, which means you need to make some before you can make others, you might want to indicate when that is true.
+
 [![Coverage Status](https://coveralls.io/repos/github/sportsfellows/sports-app/badge.svg?branch=master)](https://coveralls.io/github/sportsfellows/sports-app?branch=master)
+
+// Review: You can also grab a badge from Travis to show that your build is passing.
 
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
@@ -54,6 +61,8 @@ Clone this repo, cd into the root of the project, run `npm i` from your command 
 
 Run `npm run start` from terminal to start the server. Open a new tab in terminal and run `mongod` to start the Mongo process. Open another terminal tab and run `mongo` to open a Mongo shell (for viewing the contents of your local database). Lastly, open up a final terminal tab; this is where you will be making all of your server requests. Instructions and examples are below.
 
+// Review: you should also indicate what environment variables a user would need to put into their .env
+
 ## Routes
 
 ### Auth/User Routes
@@ -65,11 +74,15 @@ http POST :3000/api/signup username=<username> email=<email> password=<password>
 ```
 #### GET: `/api/signin`
 As an existing user you can login to your profile, which will authenticate you with a json web token and allow you to make requests to our API.
+
+// Review: looks like you copied and pasted the code from above but didn't change it.
 ```
 http POST :3000/api/signup username=newusername email=newemail@gmail.com password=newpassword
 http POST :3000/api/signup username=<username> email=<email> password=<password>
 ```
 Throws an error if any of the requested properties that are not created for you are missing.
+
+// Review: Doesn't this happen on signup, not signin?
 
 The User model will return a json web token if there are no errors, and create a profile model for the newly instantiated user to add more detailed information to.
 
@@ -77,15 +90,20 @@ The User model will return a json web token if there are no errors, and create a
 #### GET: `/api/profile/<profile id>`
 Retrieve your user profile and update your information for other users to see.
 
+// Review: the routes in the codeblock beloew don't match what you've listed above
 ```
 http -a newusername:newpassword :3000/api/signin
 http -a <username>:<password> :3000/api/signin
 ```
 Throws an error if any of the requested properties that are not created for you are missing.
 
+// Review: is this line valid here? You get a JWT when getting your profile?
+
 The User model will return a json web token if there are no errors.
 #### PUT: `/api/profile/<profile id>`
 This will allow you to make changes to a specific profile.
+
+// Review: Should indicate you need to send bearer auth. You do, don't you?
 
 ### Sporting Event Routes
 #### POST: `/api/sportingevent`
@@ -109,10 +127,15 @@ After a successful POST, you receive an object of the new sporting event you cre
 
 #### GET: `/api/sportingevent/<sporting event id>`
 
+// Review: What does this route do?
+
 ```
 http GET :3000/api/sportingevent/<sporting event id> 'Authorization:Bearer <token>'
 ```
 ### Game Routes
+
+// Review: What about POST games?
+
 #### GET: `/api/games`
 This will allow you to get all games.
 ```
@@ -159,7 +182,11 @@ You will receive an object of the team you updated.
 
 ### Group Routes
 #### POST: `/api/group`
-You can create a new group (ie. family, friends, work friends), in which to compete with by choosing teams of sporting games. The properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
+You can create a new group (ie. family, friends, work friends), in which to compete with by choosing teams of sporting games. 
+
+// Review: This isn't a sentence 
+
+The properties `groupName`, `privacy`, `size`, `motto`, `createdOn`, `image`, `owner`, `password`, `users`, and `tags`. Values that are required are `groupName`, and `privacy`. 
 
 ```
 http POST :3000/api/group 'Authorization:Bearer <token>' groupName=<groupname> privacy=<privacysetting>
@@ -195,6 +222,9 @@ http PUT :3000/api/group/<groupId> 'Authorization:Bearer <token>' property=<prop
 ```
 #### PUT: `/api/group/groupId/adduser`
 Use this call to make edits adding a group user to a specific group.
+
+// Review: what do you send?
+
 ```
 http PUT :3000/api/group/<groupId>/adduser 'Authorization:Bearer <token>' 
 ```
@@ -253,6 +283,8 @@ http PUT :3000/api/leagues/leagueId/removeuser 'Authorization:Bearer <token>'
 ```
 #### DELETE: `/api/league/:leagueId`
 Use this call to delete a specific group.
+
+// Review: delete a group or a league?
 ```
 http DELETE :3000/api/leagues/leagueId/ 'Authorization:Bearer <token>'
 ```
@@ -295,6 +327,9 @@ Upon success, you will receive an object containing the user pick object that wa
 
 ### Score Board Routes
 #### GET: `/api/scoreboards`
+
+// Review: user's
+
 A users score is updated on the scoreboard according to their picks and the winning teams. Values required are `userID`, and `leagueID`.
 
 This will return an object of your sporting event, like the example below:
@@ -321,6 +356,8 @@ http :3000//api/messageboard/messageBoardId 'Authorization:Bearer <token>'
 ```
 This will return an object of your sporting event, like the example below:
 
+// Review: an object of the sporting event? Or of the comments? Or...?
+
 ```
    { leagueID: 5aaba3f0fd43a4f3b802efa3,
       tags: [ 'example tag' ],
@@ -330,6 +367,9 @@ This will return an object of your sporting event, like the example below:
 ```
 #### GET: `/api/messageboard/messageBoardId`
 Use this call to get a specific messageBoard object.
+
+// Review: something off with that route, extra slash
+
 ```
 http :3000//api/messageboard/messageBoardId 'Authorization:Bearer <token>'
 ```
@@ -352,6 +392,8 @@ This will return an object of your sporting event, like the example below:
 ```
 #### GET: `/api/comments`
 
+// Review: description?
+
 ```
 http :3000/api/comments 'Authorization:Bearer <token>'
 ```
@@ -363,13 +405,19 @@ http :3000/api/comment/commentId 'Authorization:Bearer <token>'
 
 ## Tests
 
+// Review: Don't forget about starting mongo! Maybe explain a little bit about what the tests test?
+
 Tests are ran by using the jest testing suite. To run tests, first you must download and copy this repo and run `npm i` in the root directory to install all application dependancies. Run `npm run test` in the root directory of the application in your terminal to check tests.
 
 ## Contribute
 
+// Review: These are my words, not yours.
+
 You can totally contribute to this project if you want. Fork the repo, make some cool changes and then submit a PR.
 
 ## Credits
+
+// Review: This codebase is yours, not CodeFellows'
 
 Initial codebase created by Code Fellows.
 
@@ -382,5 +430,6 @@ Greg Nordeng
 Ken Unterseher
 
 ## License
+// Review: These are also my words, not yours.
 
 MIT. Use it up!
