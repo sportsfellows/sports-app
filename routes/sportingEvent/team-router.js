@@ -20,6 +20,7 @@ teamRouter.post('/api/sportingevent/:sportingEventId/team', bearerAuth, jsonPars
     .catch(next);
 });
 
+// Review: organizationally speaking it might be nice for the related routes to be grouped togehter
 teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
   debug('GET: /api/team/:teamId');
 
@@ -30,7 +31,7 @@ teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
 
 teamRouter.get('/api/teams', bearerAuth, function(req, res, next) {
   debug('GET: /api/teams');
-
+  // Review: does this route work, do you not need to pass an empty object into the find?
   Team.find()
     .then(teams => res.json(teams))
     .catch(next);
@@ -38,7 +39,7 @@ teamRouter.get('/api/teams', bearerAuth, function(req, res, next) {
 
 teamRouter.put('/api/team/:teamId', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/team:teamId');
-  
+  // Review: Maybe this check should be more specific?
   if (!req.body) return next(createError(400, 'expected a request body'));
   Team.findByIdAndUpdate(req.params.teamId, req.body, {new:true})
     .then( team => res.json(team))
