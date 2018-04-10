@@ -1,3 +1,5 @@
+// Review: What is this file? If it isn't needed you should cull it.
+
 ### `Sporting Event Routes`
 #### POST: `/api/sportingevent`
 Add a sporting event with the properties `name`, `desc`, `createdOn`, and `tags`. The property `createdOn` is generated automatically and the `tags` property is available for any extra information that a user may want to add.
