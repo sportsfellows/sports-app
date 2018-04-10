@@ -1,7 +1,12 @@
 // Review: Here are some general comments:
+
 // Review: Overall the readme is good, but there are some inconsistencies and pieces missing that you might want to add.
+
 // Review: In some instances you show a sample response, but in many you don't. It's usually nice to know what to expect.
+
 // Review: You have linked resources, which means you need to make some before you can make others, you might want to indicate when that is true.
+
+// Review: Overall I'd say you've done a great job showing what routes there are and how to use them, but I am at a loss for understanding how to actually do anything, or to what end. The app is so big and there are so many different things to do it feels overwhelming. It would be super helpful if you could provide some examples of how someone might actually use this, like a quick little demo/walkthrough to show not only how to interact with the routes, but in what order and to what end.
 
 [![Coverage Status](https://coveralls.io/repos/github/sportsfellows/sports-app/badge.svg?branch=master)](https://coveralls.io/github/sportsfellows/sports-app?branch=master)
 
