@@ -16,4 +16,5 @@ const gameSchema = mongoose.Schema ({
   tags: [{type: String }],
 });
 
+// Review: Maybe use the name 'game' instead of 'gameSchema'?
 module.exports = mongoose.model('gameSchema', gameSchema);

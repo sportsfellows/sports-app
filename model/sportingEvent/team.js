@@ -9,6 +9,7 @@ const teamSchema = mongoose.Schema({
   seed: { type: Number },
   wins: {type: Number, default: 0 },
   losses: {type: Number, default: 0 },
+  // Review: preTournamentRecord: String,
   pretournamentRecord: {type: String},
   tags: [{type: String }],
 });
