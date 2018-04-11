@@ -15,20 +15,31 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
+
 const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated desc', tags: 'updated tag' };
 const exampleLeague = { leagueName: 'example league name', scoring: 'regular', poolSize: 0, privacy: 'private'}; 
 
+// Review: Take a look into the jest docs. You don't need done() if your test returns a promise. Makes for much cleaner code.
+
 describe('UserPick routes', function() {
+  // Review: Consider adding a single line break after each hook.
+  // Review: A little whitespace can make your code a LOT cleaner
   beforeAll( done => {
     serverToggle.serverOn(server, done);
   });
   afterAll( done => {
     serverToggle.serverOff(server, done);
   });
+
+  // Review: Since you have so many beforeHooks it makes it hard to follow. This would benefit from a refactor.
+  // Review: It would be nice if each thing you are creating had it's own mockLibrary where you could just call a .create() method. Then you could have a single beforeEach where you return a Promise.all() of each function's .create() method, like you did for your afterEach essentially.
+
+  // Review: Since the first thing you are doing is returning, you can write this as an implicit return
   beforeEach( done => {
     return fakeProfile.create()
       .then( mock => {
         this.mock = mock;
+        // Review: what is this stuff? _rejectionHandler?
         // this.mock.profile = this.mock.profile._rejectionHandler0;
         done();
       })
@@ -36,6 +47,7 @@ describe('UserPick routes', function() {
   });
   beforeEach( done => {
     return new SportingEvent(updatedSportingEvent).save()
+      // Review: sportingEve ?
       .then( sportingEve => {
         this.sportingEvent = sportingEve;
         done();
@@ -105,6 +117,7 @@ describe('UserPick routes', function() {
   describe('POST: /api/league/:leagueId/userpick', () => {
     it('should return a scoreboard and a 200 status', done => {
       request.post(`${url}/api/league/${this.league._id}/userpick`)
+        // Review: Long line, break down into multiple
         .send({ userID: this.mock.profile.userID, leagueID: this.league._id, gameID: this.game._id, pick: this.team1._id, gameTime: Date.now() })
         .set({
           Authorization: `Bearer ${this.mock.token}`,
@@ -146,6 +159,7 @@ describe('UserPick routes', function() {
 
     it('should return a 400 error, no body', done => {
       request.post(`${url}/api/league/${this.league._id}/userpick`)
+        // Review: This should also work without putting the .send()
         .send()
         .set({
           Authorization: `Bearer ${this.mock.token}`,
@@ -205,6 +219,7 @@ describe('UserPick routes', function() {
         });
     });
 
+    // Review: What about testing this with more than one user pick?
     it('should return all lists and a 200 status', done => {
       request.get(`${url}/api/userpicks`)
         .set({
@@ -221,6 +236,8 @@ describe('UserPick routes', function() {
         });
     });
 
+    // Review: All of these tests where you send Authorization: `Bearer`, without a token are actually checking the same thing, since they go to your bearer auth BEFORE hitting your route logic.
+    // Review: It's good to have them, but important to recognize that they won't result in additional code coverage
     it('should return a 401 when no token is provided', done => {
       request.get(`${url}/api/userpicks`)
         .set({
@@ -262,6 +279,7 @@ describe('UserPick routes', function() {
           });
       });
  
+      // Review: This will error out because wegegewgw isn't a valid mongoose ID, so you will get 'Cast to ObjectID failed' as the error, not a not found
       it('should not update and return a 404 status for userpick not found', done => {
         request.put(`${url}/api/userpick/wegegewgw`)
           .send({ pick: this.team2._id})
