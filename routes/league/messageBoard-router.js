@@ -8,6 +8,7 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const messageBoardRouter = module.exports = Router();
 
+// Review: Careful with inconsistencies like id vs Id vs ID. You use ID in most places but not here. That can result in hard to find errors.
 messageBoardRouter.get('/api/messageboard/:messageBoardId', bearerAuth, function(req, res, next) {
   debug('GET: /api/messageboard/:messageBoardId');
 

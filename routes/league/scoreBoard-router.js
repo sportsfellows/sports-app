@@ -7,7 +7,7 @@ const ScoreBoard = require('../../model/league/scoreBoard.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const scoreBoardRouter = module.exports = Router();
-
+// Review: Do you not update scoreBoards directly? That is all managed automatically based off of the wins/losses?
 
 scoreBoardRouter.get('/api/scoreboard/:scoreBoardId', bearerAuth, function(req, res, next) {
   debug('GET: /api/scoreboard/:scoreBoardId');

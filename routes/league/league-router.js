@@ -19,9 +19,13 @@ const leagueRouter = module.exports = Router();
 leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, jsonParser, function(req, res, next) {
   debug(`POST: /api/sportingevent/:sportingeventId/league`);
 
+  // Review: This line is wayyyyy too long
   if (!req.body.leagueName || !req.body.scoring || !req.body.poolSize || !req.body.privacy) return next(createError(400, 'expected a request body  leagueName, sportingeventID, owner, scoring, poolSize and privacy'));
+
+  // Review: I'm assuming users is an array on your model, does it not need to be one here?
   req.body.owner = req.user._id;
   req.body.users = req.user._id;
+  // Review: Id vs ID hurts me
   req.body.sportingEventID = req.params.sportingeventId;
  
   let league = new League(req.body).save()
@@ -36,6 +40,7 @@ leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, json
     })
     .then( () => {
       return Profile.findOne({ userID: req.user._id })
+      // Review: Why do you have the catch here vs at the end?
         .catch( err => Promise.reject(createError(404, err.message)))
         .then( profile => {
           profile.leagues.push(league._id);
@@ -59,6 +64,7 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
       let scoreboard = { leagueID: league._id, userID: req.user._id };
       if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
       return new ScoreBoard(scoreboard).save()
+      // Review: Ditto above, re catch
         .catch( err => Promise.reject(createError(404, err.message)))
         .then( (scoreBoard) => {
           return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
@@ -69,6 +75,7 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
         .catch( err => Promise.reject(createError(404, err.message)))
         .then( profile => {
           profile.leagues.push(req.params.leagueId);
+          // Review: This is an async call and should be handled as such
           profile.save();
           returnObj.profileLeagues = profile.leagues;
           res.json(returnObj);
@@ -94,6 +101,7 @@ leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, fun
         });
     })
     .then( returnObj => {
+      // Review: Do you need the .exec()? What happens if you don't have it?
       return UserPick.remove({ userID: req.user._id, leagueID: req.params.leagueId }).exec()
         .catch( err => Promise.reject(createError(404, err.message)))
         .then( () => {
@@ -121,6 +129,7 @@ leagueRouter.put('/api/league/:leagueId', bearerAuth, jsonParser, function(req, 
   if (!req.body) return next(createError(400, 'expected a request body'));
   return League.findById(req.params.leagueId)
     .then( league => {
+      // Review: Forbidden! Hell yeah!
       if(league.owner.toString() !== req.user._id.toString()) return next(createError(403, 'forbidden access'));
       League.findByIdAndUpdate(req.params.leagueId, req.body, {new: true})
         .then( league => res.json(league));
@@ -152,6 +161,8 @@ leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next
     .then( league => {
       if(league.owner.toString() !== req.user._id.toString()) return next(createError(403, 'forbidden access'));
       let profileUpdates = [];
+
+      // Review: Instead of a forEach with a push, a map might be in order here
       league.users.forEach(function(luser) {
         profileUpdates.push(
           Profile.findOne({ userID: luser })

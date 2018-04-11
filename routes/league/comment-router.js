@@ -17,6 +17,15 @@ commentRouter.post('/api/messageboard/:messageBoardId/comment', bearerAuth, json
   if (!req.body.content) return next(createError(400, 'expected a request body userID and content'));
   req.body.userID = req.user._id;
 
+  // Review: Good use of your own method, I would encourage more of this
+  // Review: One thing I learned from sluggram which is super cool is that you can
+  //         bind the response object with your own custom middleware.
+  //         That would allow you to make your code below look like this:
+  //
+  // MessageBoard.findByIdAndAddComment(req.params.messageBoardId, req.body)
+  //   .then (res.json) // look how nice this line is
+  //   .catch(next);
+
   MessageBoard.findByIdAndAddComment(req.params.messageBoardId, req.body)
     .then ( comment => res.json(comment))
     .catch(next);
