@@ -24,12 +24,16 @@ const leagueSchema = mongoose.Schema({
   tags: [{type: String }],
 });
 
+// Review: SUPER awesome that you figured out how to use these 'pre' hooks. Way to go!
+// Review: Did you discover the 'post' hooks as well?
 leagueSchema.pre('remove', function(next) {
   MessageBoard.findOne({ leagueID: this._id })
     .then( messageBoard => {
       Comment.remove({messageBoardID: messageBoard._id}).exec();
     })
     .catch(next);
+  // Review: What happens if any of these async calls fail?
+  // Review: Are any of them linked? Should they be handled in a promise chain instead?
   MessageBoard.remove({leagueID: this._id}).exec();
   ScoreBoard.remove({leagueID: this._id}).exec();
   UserPick.remove({leagueID: this._id}).exec();

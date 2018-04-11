@@ -18,7 +18,7 @@ const groupSchema = mongoose.Schema({
   tags: [{type: String }], 
 });
 
-
+// Review: Same notes as in league.js
 groupSchema.pre('remove', function(next) {
   MessageBoard.findOne({ groupID: this._id })
     .then( messageBoard => {
