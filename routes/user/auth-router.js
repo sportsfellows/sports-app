@@ -9,7 +9,7 @@ const User = require('../../model/user/user.js');
 
 const authRouter = module.exports = Router();
 
-// http POST :3000/api/signup username=briguy999 email=brianbixby0@gmail.com password=password1
+// http POST :3000/api/signup username=aaaaaaa email=brewgewgewbianbixby0@gmail.com password=password1
 authRouter.post('/api/signup', jsonParser, function(req, res, next) {
   debug('POST: /api/signup');
   if (!req.body.username || !req.body.email || !req.body.password) return next(createError(400, 'expected a request body username, email and password'));
@@ -21,11 +21,11 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
   user.generatePasswordHash(password)
     .then( user => user.save())
     .then( () => user.generateToken())
-    .then( token => res.send({token: token, userID: user._id}))
+    .then( token => res.send(token))
     .catch(next);
 });
 
-// http -a briguy999:password1 :3000/api/signin
+// http -a aaaaaaa:password1 :3000/api/signin
 authRouter.get('/api/signin', basicAuth, function(req, res, next) {
   debug('GET: /api/signin');
  
