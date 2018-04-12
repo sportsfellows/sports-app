@@ -6,7 +6,6 @@ const createError = require('http-errors');
 const Router = require('express').Router;
 const basicAuth = require('../../lib/basic-auth-middleware.js');
 const User = require('../../model/user/user.js');
-const Profile = require('../../model/user/profile.js');
 
 const authRouter = module.exports = Router();
 
@@ -21,12 +20,8 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
   let user = new User(req.body);
   user.generatePasswordHash(password)
     .then( user => user.save())
-    .then( myUser => {
-      user = myUser;
-      return new Profile({userID: user._id, username: user.username}).save();
-    })
     .then( () => user.generateToken())
-    .then( token => res.send(token))
+    .then( token => res.send({token: token, userID: user._id}))
     .catch(next);
 });
 
@@ -35,12 +30,12 @@ authRouter.get('/api/signin', basicAuth, function(req, res, next) {
   debug('GET: /api/signin');
  
   User.findOne({ username: req.auth.username})
-    .then(user => {
-      if(!user) throw createError(401);
-      return user;
+    .then(myUser => {
+      if(!myUser) throw createError(401);
+      return myUser;
     })
-    .then( user => user.comparePasswordHash(req.auth.password))
-    .then( user => user.generateToken())
+    .then( myUser => myUser.comparePasswordHash(req.auth.password))
+    .then( myUser => myUser.generateToken())
     .then( token => res.send(token))
     .catch(next);
 });

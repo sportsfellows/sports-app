@@ -18,16 +18,18 @@ describe('Profile routes', function() {
   afterAll( done => {
     serverToggle.serverOff(server, done);
   });
-  beforeEach( () => {
+  beforeEach( done => {
     return fakeProfile.create()
       .then( mock => {
         this.mock = mock;
-        return this.mock.profile = this.mock.profile._rejectionHandler0;
-      });
-  }); 
+        // this.mock.profile = this.mock.profile._rejectionHandler0;
+        done();
+      })
+      .catch(done);
+  });
   afterEach( done => {
     Promise.all([
-      fakeProfile.remove,
+      fakeProfile.remove(),
     ])
       .then( () => done())
       .catch(done);

@@ -23,18 +23,20 @@ describe('Group Routes', function () {
   afterAll(done => {
     serverToggle.serverOff(server, done);
   });
-
-  beforeEach(() => {
+  beforeEach( done => {
     return fakeProfile.create()
-      .then(mock => {
+      .then( mock => {
         this.mock = mock;
-        return this.mock.profile = this.mock.profile._rejectionHandler0;
-      });
+        // this.mock.profile = this.mock.profile._rejectionHandler0;
+        exampleGroup.owner = this.mock.profile.userID;
+        exampleGroup.users = [this.mock.profile.userID];
+        done();
+      })
+      .catch(done);
   });
-
   beforeEach(done => {
-    exampleGroup.owner = this.mock.profile.userID;
-    exampleGroup.users = [this.mock.profile.userID];
+    // exampleGroup.owner = this.mock.profile.userID;
+    // exampleGroup.users = [this.mock.profile.userID];
 
     new Group(exampleGroup).save()
       .then(group => {
@@ -46,7 +48,7 @@ describe('Group Routes', function () {
 
   afterEach(done => {
     Promise.all([
-      fakeProfile.remove,
+      fakeProfile.remove(),
       Group.remove({}),
     ])
       .then(() => done())

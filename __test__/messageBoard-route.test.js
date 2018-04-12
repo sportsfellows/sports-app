@@ -27,7 +27,7 @@ describe('MessageBoard routes', function() {
     return fakeProfile.create()
       .then( mock => {
         this.mock = mock;
-        this.mock.profile = this.mock.profile._rejectionHandler0;
+        // this.mock.profile = this.mock.profile._rejectionHandler0;
         done();
       })
       .catch(done);
@@ -40,11 +40,11 @@ describe('MessageBoard routes', function() {
       })
       .catch(done);
   });
-  beforeEach( done => {
+  beforeEach(done => {
     exampleLeague.sportingEventID = this.sportingEvent._id;
     exampleLeague.owner = this.mock.profile.userID;
     return new League(exampleLeague).save()
-      .then( myLeague => {
+      .then(myLeague => {
         this.league = myLeague;
         done();
       })
@@ -86,7 +86,7 @@ describe('MessageBoard routes', function() {
   });
   afterEach( done => {
     Promise.all([
-      fakeProfile.remove,
+      fakeProfile.remove(),
       SportingEvent.remove({}),
       League.remove({}),
       MessageBoard.remove({}),
@@ -108,7 +108,6 @@ describe('MessageBoard routes', function() {
             Authorization: `Bearer ${this.mock.token}`,
           })
           .end((err, res) => {
-            console.log(res.body);
             if (err) return done(err);
             expect(res.status).toEqual(200);
             expect(res.body.leagueID.toString()).toEqual(this.league._id.toString());
