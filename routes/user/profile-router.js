@@ -2,6 +2,7 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
+const createError = require('http-errors');
 const debug = require('debug')('sportsapp:profile-router');
 
 const Profile = require('../../model/user/profile.js');
@@ -10,6 +11,25 @@ const bearerAuth = require('../../lib/bearer-auth-middleware.js');
 
 const profileRouter = module.exports = Router();
 
+// http POST :3000/api/5acd96a97f2c024cc4edee08/profile 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImZmY2VmYzczNzA1OTJiNTdkYTI0ODQ4ZjkyNTMxM2ZlZjlkODc3NGQyY2RlNjQ0ZTA4YjhmMGRkNTY3MTk2MzgiLCJpYXQiOjE1MjM0MjI4ODl9.mTJvkL_ktAuLsbd7U6i31Uh4WjR7abEUsBGroRniXck' username='testing123'
+profileRouter.post('/api/:userId/profile', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/profile');
+
+  if (!req.body.username ) return next(createError(400, 'expected a request body username'));
+  req.body.userID = req.params.userId;
+
+  new Profile(req.body).save()
+    .then( myProfile => {
+      return User.findById(req.params.userId)
+        .then( user => {
+          user.profileID = myProfile._id;
+          user.save();
+          return myProfile;
+        });
+    })
+    .then( myProfile => res.json(myProfile))
+    .catch(next);
+});
 
 profileRouter.get('/api/profile/:profileId', bearerAuth, function (req, res, next) {
   debug('GET: /api/profile/:profileId');

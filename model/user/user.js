@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: {type: String, required: true },
   findHash: { type: String, unique: true },
+  profileID: { type: mongoose.Schema.Types.ObjectId, ref: 'profile' },
 });
 
 userSchema.methods.generatePasswordHash = function(password) {
