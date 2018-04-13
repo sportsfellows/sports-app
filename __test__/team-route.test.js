@@ -47,6 +47,8 @@ describe('Team routes', function() {
       .catch(done);
   });
 
+  // Review: these routes should be set within their own describe block for POST
+
   it('should post and return a team', done => {
     request.post(`${url}/api/sportingevent/${this.sportingEvent._id}/team`)
       .send({ teamName: 'Washington State', sportingEventID: this.sportingEvent._id, seed: 1, pretournamentRecord: '20-10', tags: 'PAC-12' })
@@ -169,6 +171,7 @@ describe('Team routes', function() {
           });
       });
 
+      // Review: this PUT describe is nested in side your GET describe
       describe('PUT: /api/team/:teamId', () => {
         it('should update and return a teamwith a 200 status', done => {
           request.put(`${url}/api/team/${this.team._id}`)
