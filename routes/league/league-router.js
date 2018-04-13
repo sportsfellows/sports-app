@@ -167,3 +167,16 @@ leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next
     .then(() => res.status(204).send())
     .catch(next);
 });
+
+leagueRouter.get('/api/leagueNames/:leagueName', function (req, res, next) {
+  debug('GET: /api/leagueNames/:leagueName');
+
+  League.findOne({ leagueName: req.params.leagueName })
+    .then( league => {
+      if(!league) {
+        return res.sendStatus(200);
+      }
+      return res.sendStatus(409);
+    })
+    .catch(next);
+});

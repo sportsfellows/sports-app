@@ -13,7 +13,7 @@ const leagueSchema = mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
   scoring: { type: String, required: true},
   poolSize: { type: Number, required: true },
-  privacy: { type: String, required: true },
+  privacy: { type: String, default: 'public', required: true },
   password: { type: String },
   winner: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   status: { type: String, default: 'active' },
