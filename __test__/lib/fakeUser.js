@@ -1,5 +1,7 @@
 'use strict';
 
+// Review: Way to work through this mocking. It's a little bit to setup, but it pays off big!
+
 const faker = require('faker');
 const User = require('../../model/user/user.js');
 

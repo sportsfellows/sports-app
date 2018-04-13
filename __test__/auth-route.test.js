@@ -1,5 +1,7 @@
 'use strict';
 
+// Review: This is clean, looks good!
+
 const request = require('superagent');
 const fakeUser  = require('./lib/fakeUser.js');
 const serverToggle = require('../lib/server-toggle.js');
@@ -9,6 +11,7 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
+// Review: Consider using faker here to get different data each time your tests are run. It gives them a little more validity.
 const testUser = {
   username: 'testUserName',
   email: 'testEmail',

@@ -34,6 +34,8 @@ I'm super excited to see the React front end!
 
 - If you run your tests with `jest -i --verbose` you can see that you have some nesting issues with your tests. For example, in your `UserPick` tests your `PUT` tests are nested inside of your `GET` routes. You need to be very careful with that, because that can create weird issues that you don't expect.
 
+- You have a mix of external mocking libraries and in-test mocks in your hooks. I would pick one style and go with it so it is easier to follow and identify where pieces are coming from. I would encourage more mocking, as it would cut down significantly on the number of hooks you have in your describes.
+
 ## Specific Notes in Code
 
 I have provided more specific feedback in most of your files. Please read them carefully. Most of the time if I make a comment in one place it applies in numerous places across your files, but generally I only made that specific type of comment in the one spot. It will be on you to apply these notes/thoughts across your work (if you choose to). 

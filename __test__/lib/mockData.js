@@ -1,5 +1,7 @@
 'use strict';
 
+// Review: Good call abstracting all of this here. I like it! Keeps it clean.
+
 const faker = require('faker');
 
 let exampleUser = {

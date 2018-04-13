@@ -14,6 +14,7 @@ require('jest');
 
 const url = 'http://localhost:3000';
 
+// Review: Why not use the mockData library you made?
 const updatedSportingEvent = { sportingEventName: 'updated name', desc: 'updated desc', tags: 'updated tag' };
 const exampleLeague = { leagueName: 'example league name', scoring: 'regular', poolSize: 0, privacy: 'private'}; 
 // const exampleSportingEvent = { sportingEventName: 'example name', desc: 'example desc', tags: 'example tag' };
