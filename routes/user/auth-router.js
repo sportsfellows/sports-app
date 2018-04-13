@@ -44,3 +44,14 @@ authRouter.get('/api/signin', basicAuth, function(req, res, next) {
     .then( token => res.send(token))
     .catch(next);
 });
+
+authRouter.get('/api/signup/usernames/:username', (req, res, next) => {
+  User.findOne({username: req.params.username})
+    .then(user => {
+      if(!user)
+        return res.sendStatus(200);
+      return res.sendStatus(409);
+    })
+    .catch(next);
+});
+
