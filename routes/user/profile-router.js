@@ -7,6 +7,7 @@ const debug = require('debug')('sportsapp:profile-router');
 const Profile = require('../../model/user/profile.js');
 const User = require('../../model/user/user.js');
 const bearerAuth = require('../../lib/bearer-auth-middleware.js');
+const createError = require('http-errors');
 
 const profileRouter = module.exports = Router();
 
@@ -31,5 +32,15 @@ profileRouter.put('/api/profile/:profileId', bearerAuth, jsonParser, function (r
         .catch(next);
     })
     .then(profile => res.json(profile))
+    .catch(next);
+});
+
+profileRouter.get('/api/profiles/currentuser', bearerAuth, (req, res, next) => {
+  Profile.findOne({userID: req.user._id})
+    .then(profile => {
+      if(!profile)
+        return next(createError(404, 'NOT FOUND ERROR: profile not found'));
+      res.json(profile);
+    })
     .catch(next);
 });

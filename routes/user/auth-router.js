@@ -33,17 +33,26 @@ authRouter.post('/api/signup', jsonParser, function(req, res, next) {
 // http -a briguy999:password1 :3000/api/signin
 authRouter.get('/api/signin', basicAuth, function(req, res, next) {
   debug('GET: /api/signin');
- 
-  User.findOne({ username: req.auth.username})
+  // console.log('req.user._id', req.user._id);
+  let currentUser = User.findOne({ username: req.auth.username})
     .then(user => {
       if(!user) throw createError(401);
-      return user;
+      return currentUser = user;
     })
     .then( user => user.comparePasswordHash(req.auth.password))
     .then( user => user.generateToken())
-    .then( token => res.send(token))
+    .then( token => {
+      return Profile.findOne({ userID: currentUser._id })
+        .then( profile => {
+          profile.lastLogin = new Date();
+          profile.save();
+          res.send(token);
+        });
+    })
+    // .then( token => res.send(token))
     .catch(next);
 });
+// .then( token => res.send(token))
 
 authRouter.get('/api/signup/usernames/:username', (req, res, next) => {
   User.findOne({username: req.params.username})
