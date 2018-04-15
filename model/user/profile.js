@@ -11,7 +11,7 @@ const profileSchema = mongoose.Schema({
   image: { type: String },
   country: { type: String, uppercase: true },
   state: { type: String, uppercase: true },
-  birthdate: { type: Number }, //(mmddyyyy);
+  birthdate: { type: Date }, //(mmddyyyy);
   accountBalance: { type: Number, default: 0 },
   status: { type: String, default: 'active'},
   createdOn: { type: Date, default: Date.now },
