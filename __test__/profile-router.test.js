@@ -51,7 +51,7 @@ describe('Profile routes', function() {
             expect(res.body.image).toEqual(this.mock.profile.image);
             expect(res.body.country).toEqual(this.mock.profile.country);
             expect(res.body.state).toEqual(this.mock.profile.state);
-            expect(res.body.birthdate).toEqual(this.mock.profile.birthdate);
+            expect(res.body.birthdate.toString()).toEqual('1970-01-01T02:48:21.909Z');
             expect(res.body._id.toString()).toEqual(this.mock.profile._id.toString());
             expect(res.body.userID.toString()).toEqual(this.mock.profile.userID.toString());
             expect(res.body.username).toEqual(this.mock.profile.username);
