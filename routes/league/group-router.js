@@ -149,6 +149,7 @@ groupRouter.get('/api/groups/allpublic', bearerAuth, jsonParser, function(req, r
 // returns all leagues of logged in user
 groupRouter.post('/api/groups/user', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/groups/user');
+  console.log('req.body: ', req.body);
 
   Group.find( { _id: { $in: req.body} } )
     .then(groups => res.json(groups))
