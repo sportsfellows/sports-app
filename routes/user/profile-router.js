@@ -24,6 +24,7 @@ profileRouter.get('/api/profile/:profileId', bearerAuth, function (req, res, nex
 profileRouter.put('/api/profile/:profileId', bearerAuth, jsonParser, function (req, res, next) {
   debug('PUT: /api/profile:profileId');
 
+  req.body.lastLogin = new Date();
   Profile.findByIdAndUpdate(req.params.profileId, req.body, { new: true })
     .then( myProfile => {
       let usernameObj = {username: myProfile.username };
