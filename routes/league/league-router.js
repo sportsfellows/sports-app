@@ -146,14 +146,12 @@ leagueRouter.get('/api/leagues', bearerAuth, function(req, res, next) {
 
 leagueRouter.get('/api/leagues/user', bearerAuth, jsonParser, function(req, res, next) {
   debug('GET: /api/leagues/user');
-  debug('req.body: ', req.query);
-  var myArr = []; 
-  for (var k in req.query) { 
-    myArr.push(req.query[k]);
+  let arr = []; 
+  for (let k in req.query) { 
+    arr.push(req.query[k]);
   }
-  console.log('myArr: ', myArr);
-
-  League.find( { _id: { $in: myArr} } )
+  console.log('arr: ', arr);
+  League.find( { _id: { $in: arr} } )
     .then(leagues => {
       console.log('leagues: ', leagues);
       return res.json(leagues);
