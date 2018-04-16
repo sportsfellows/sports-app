@@ -119,6 +119,7 @@ groupRouter.delete('/api/group/:groupId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+// RETURNS 1 SPECIFIC GROUP
 groupRouter.get('/api/group/:groupId', bearerAuth, function(req, res, next) {
   debug('GET: /api/group/:groupId');
 
@@ -127,10 +128,29 @@ groupRouter.get('/api/group/:groupId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+// returns all groups
 groupRouter.get('/api/groups', bearerAuth, function(req, res, next) {
   debug('GET: /api/groups');
 
   Group.find()
+    .then(groups => res.json(groups))
+    .catch(next);
+});
+
+// returns all public groups
+groupRouter.get('/api/groups/allpublic', bearerAuth, jsonParser, function(req, res, next) {
+  debug('GET: /api/groups/allpublic');
+
+  Group.find({ privacy: 'public' })
+    .then(groups => res.json(groups))
+    .catch(next);
+});
+
+// returns all leagues of logged in user
+groupRouter.post('/api/groups/user', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/groups/user');
+
+  Group.find( { _id: { $in: req.body} } )
     .then(groups => res.json(groups))
     .catch(next);
 });

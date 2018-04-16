@@ -144,22 +144,6 @@ leagueRouter.get('/api/leagues', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
-leagueRouter.get('/api/leagues/user', bearerAuth, jsonParser, function(req, res, next) {
-  debug('GET: /api/leagues/user');
-  let arr = []; 
-  for (let k in req.query) { 
-    arr.push(req.query[k]);
-  }
-  console.log('arr: ', arr);
-  League.find( { _id: { $in: arr} } )
-    .then(leagues => {
-      console.log('leagues: ', leagues);
-      return res.json(leagues);
-    })
-    .catch(next);
-});
-
-
 // http DELETE :3000/api/league/5aa757d3c73ef35216478a19 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjBlOGUzNDZiMWMzYzllNzM0YjJhMzE4ZjMwMDA5NWNjZTFkNGQyNjA2OGM2ZTJhMzI4N2M1Y2MzZjFjMDI2M2IiLCJpYXQiOjE1MjA5OTY0OTh9.oicba8S1vhkLI4JLjn0ZZXa68cf-zoAQ6Noq9H6zTs0'
 leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next) {
   debug('DELETE: /api/league/:leagueId');
@@ -193,5 +177,23 @@ leagueRouter.get('/api/leagueNames/:leagueName', function (req, res, next) {
       }
       return res.sendStatus(409);
     })
+    .catch(next);
+});
+
+// returns all leagues of logged in user
+leagueRouter.post('/api/leagues/user', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/leagues/user');
+
+  League.find( { _id: { $in: req.body} } )
+    .then(leagues => res.json(leagues))
+    .catch(next);
+});
+
+// returns all public groups
+leagueRouter.get('/api/leagues/allpublic', bearerAuth, jsonParser, function(req, res, next) {
+  debug('GET: /api/leagues/allpublic');
+
+  League.find({ privacy: 'public' })
+    .then(leagues => res.json(leagues))
     .catch(next);
 });
