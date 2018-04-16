@@ -159,21 +159,6 @@ leagueRouter.get('/api/leagues/user', bearerAuth, jsonParser, function(req, res,
     .catch(next);
 });
 
-leagueRouter.get('/api/leagues/user', bearerAuth, jsonParser, function(req, res, next) {
-  debug('GET: /api/leagues/user');
-  let arr = []; 
-  for (let k in req.query) { 
-    arr.push(req.query[k]);
-  }
-  console.log('arr: ', arr);
-  League.find( { _id: { $in: arr} } )
-    .then(leagues => {
-      console.log('leagues: ', leagues);
-      return res.json(leagues);
-    })
-    .catch(next);
-});
-
 
 // http DELETE :3000/api/league/5aa757d3c73ef35216478a19 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjBlOGUzNDZiMWMzYzllNzM0YjJhMzE4ZjMwMDA5NWNjZTFkNGQyNjA2OGM2ZTJhMzI4N2M1Y2MzZjFjMDI2M2IiLCJpYXQiOjE1MjA5OTY0OTh9.oicba8S1vhkLI4JLjn0ZZXa68cf-zoAQ6Noq9H6zTs0'
 leagueRouter.delete('/api/league/:leagueId', bearerAuth, function(req, res, next) {
