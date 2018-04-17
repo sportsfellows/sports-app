@@ -232,13 +232,11 @@ leagueRouter.post('/api/leagues/user', bearerAuth, jsonParser, function(req, res
     .catch(next);
 });
 
-// returns all public groups
+// returns all public leagues
 leagueRouter.get('/api/leagues/allpublic', bearerAuth, jsonParser, function(req, res, next) {
   debug('GET: /api/leagues/allpublic');
   
   League.find({ privacy: 'public' })
-    .then(leagues => { 
-      return res.json(leagues);
-    })
+    .then(leagues =>  res.json(leagues))
     .catch(next);
 });

@@ -54,8 +54,34 @@ groupRouter.put('/api/group/:groupId/adduser', bearerAuth, jsonParser, function(
         .then( profile => {
           profile.groups.push(req.params.groupId);
           profile.save();
-          let returnObj = { groupUsers: group.users, profileGroups: profile.groups };
-          res.json(returnObj);
+          // let returnObj = { groupUsers: group.users, profileGroups: profile.groups };
+          // res.json(returnObj);
+          res.json(group);
+        });
+    })
+    .catch(next);
+});
+
+// add user to private group
+groupRouter.post('/api/group/private/adduser', bearerAuth, jsonParser, function(req, res, next) {
+  debug('PUT: /api/group/private/adduser');
+  console.log('req.body: ', req.body);
+
+  return Group.findOne({ groupName: req.body.groupName, password: req.body.password })
+    .then( group => {
+      group.users.push(req.user._id);
+      group.size = group.size + 1;
+      return group.save();
+    })
+    .then( group => {
+      return Profile.findOne({ userID: req.user._id })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( profile => {
+          profile.groups.push(req.params.groupId);
+          profile.save();
+          // let returnObj = { groupUsers: group.users, profileGroups: profile.groups };
+          // res.json(returnObj);
+          res.json(group);
         });
     })
     .catch(next);
@@ -154,11 +180,14 @@ groupRouter.get('/api/groupNames/:groupName', function (req, res, next) {
 });
 
 // returns all public groups
-groupRouter.get('/api/groups/allpublic', bearerAuth, jsonParser, function(req, res, next) {
+groupRouter.get('/api/groups/all/public', bearerAuth, jsonParser, function(req, res, next) {
   debug('GET: /api/groups/allpublic');
-
+  console.log('all public groups server route hit');
   Group.find({ privacy: 'public' })
-    .then(groups => res.json(groups))
+    .then(groups => {
+      console.log('groups: ', groups);
+      res.json(groups);
+    })
     .catch(next);
 });
 
