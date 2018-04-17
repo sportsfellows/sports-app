@@ -82,6 +82,43 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
     .catch(next);
 });
 
+// add user to private league
+leagueRouter.post('/api/league/private/adduser', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/league/private/adduser');
+  console.log('req.body: ', req.body);
+
+  return League.findOne({ leagueName: req.body.leagueName, password: req.body.password })
+    .then( league => {
+      league.users.push(req.user._id);
+      league.size = league.size + 1;
+      return league.save();
+    })
+    .then( league => {
+      let scoreboard = { leagueID: league._id, userID: req.user._id };
+      if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
+      return new ScoreBoard(scoreboard).save()
+        .then(() => league)
+        .catch( err => Promise.reject(createError(404, err.message)))
+        // .then( scoreBoard => {
+        //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
+        // });
+    })
+    .then( returnObj => {
+      return Profile.findOne({ userID: req.user._id })
+        .catch( err => Promise.reject(createError(404, err.message)))
+        .then( profile => {
+          profile.leagues.push(req.params.leagueId);
+          profile.save();
+          // returnObj.profileLeagues = profile.leagues;
+          console.log('returnobj: ', returnObj);
+          res.json(returnObj);
+          // console.log('myLeague: myLeague');
+          // res.json(myLeague);
+        });
+    })
+    .catch(next);
+});
+
 // http PUT :3000/api/league/5aa757d3c73ef35216478a19/removeuser 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjFjZjdjNDQwYTFkMmVhYTU3YTE1YmFmZDBmODA0NzFjZGFmNmUxY2FkZGVhYTA4YzE5M2E2NzkyM2JmMzY2ZDQiLCJpYXQiOjE1MjA5ODU0MjJ9.kdf9mPwEf8ROhg7iWfc8O-QxUXtK89D_-EL3goD0sWk'
 leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, function(req, res, next) {
   debug('PUT: /api/league/:leagueId/removeuser');
@@ -195,13 +232,11 @@ leagueRouter.post('/api/leagues/user', bearerAuth, jsonParser, function(req, res
     .catch(next);
 });
 
-// returns all public groups
+// returns all public leagues
 leagueRouter.get('/api/leagues/allpublic', bearerAuth, jsonParser, function(req, res, next) {
   debug('GET: /api/leagues/allpublic');
   
   League.find({ privacy: 'public' })
-    .then(leagues => { 
-      return res.json(leagues);
-    })
+    .then(leagues =>  res.json(leagues))
     .catch(next);
 });
