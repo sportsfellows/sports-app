@@ -21,6 +21,7 @@ leagueRouter.post('/api/sportingevent/:sportingeventId/league', bearerAuth, json
 
   if (!req.body.leagueName || !req.body.scoring || !req.body.poolSize || !req.body.privacy) return next(createError(400, 'expected a request body  leagueName, sportingeventID, owner, scoring, poolSize and privacy'));
   req.body.owner = req.user._id;
+  req.body.ownerName = req.user.username;
   req.body.users = req.user._id;
   req.body.sportingEventID = req.params.sportingeventId;
  
@@ -53,6 +54,7 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
   return League.findById(req.params.leagueId)
     .then( league => {
       league.users.push(req.user._id);
+      league.size = league.size + 1;
       return league.save();
     })
     .then( (league) => {
@@ -84,6 +86,7 @@ leagueRouter.put('/api/league/:leagueId/removeuser', bearerAuth, jsonParser, fun
   return League.findById(req.params.leagueId)
     .then( league => {
       league.users.pull(req.user._id);
+      league.size = league.size - 1;
       return league.save();
     })
     .then( league => {
