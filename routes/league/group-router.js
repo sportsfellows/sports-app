@@ -19,6 +19,7 @@ groupRouter.post('/api/group', bearerAuth, jsonParser, function(req, res, next) 
   if (!req.body.groupName || !req.body.privacy) return next(createError(400, 'expected a request body groupName, privacy'));
   req.body.owner = req.user._id;
   req.body.users = req.user._id;
+  req.body.ownerName = req.user.username;
  
   let group = new Group(req.body).save()
     .then( myGroup => {
@@ -44,6 +45,7 @@ groupRouter.put('/api/group/:groupId/adduser', bearerAuth, jsonParser, function(
   return Group.findById(req.params.groupId)
     .then( group => {
       group.users.push(req.user._id);
+      group.size = group.size + 1;
       return group.save();
     })
     .then( group => {
@@ -66,6 +68,7 @@ groupRouter.put('/api/group/:groupId/removeuser', bearerAuth, jsonParser, functi
   return Group.findById(req.params.groupId)
     .then( group => {
       group.users.pull(req.user._id);
+      group.size = group.size - 1;
       return group.save();
     })
     .then( group => {
@@ -119,6 +122,7 @@ groupRouter.delete('/api/group/:groupId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+// RETURNS 1 SPECIFIC GROUP
 groupRouter.get('/api/group/:groupId', bearerAuth, function(req, res, next) {
   debug('GET: /api/group/:groupId');
 
@@ -127,10 +131,43 @@ groupRouter.get('/api/group/:groupId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+// returns all groups
 groupRouter.get('/api/groups', bearerAuth, function(req, res, next) {
   debug('GET: /api/groups');
 
   Group.find()
+    .then(groups => res.json(groups))
+    .catch(next);
+});
+
+groupRouter.get('/api/groupNames/:groupName', function (req, res, next) {
+  debug('GET: /api/groupNames/:groupName');
+
+  Group.findOne({ groupName: req.params.groupName })
+    .then( group => {
+      if(!group) {
+        return res.sendStatus(200);
+      }
+      return res.sendStatus(409);
+    })
+    .catch(next);
+});
+
+// returns all public groups
+groupRouter.get('/api/groups/allpublic', bearerAuth, jsonParser, function(req, res, next) {
+  debug('GET: /api/groups/allpublic');
+
+  Group.find({ privacy: 'public' })
+    .then(groups => res.json(groups))
+    .catch(next);
+});
+
+// returns all leagues of logged in user
+groupRouter.post('/api/groups/user', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST: /api/groups/user');
+  console.log('req.body: ', req.body);
+
+  Group.find( { _id: { $in: req.body} } )
     .then(groups => res.json(groups))
     .catch(next);
 });
