@@ -57,14 +57,15 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
       league.size = league.size + 1;
       return league.save();
     })
-    .then( (league) => {
+    .then( league => {
       let scoreboard = { leagueID: league._id, userID: req.user._id };
       if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
       return new ScoreBoard(scoreboard).save()
+        .then(() => league)
         .catch( err => Promise.reject(createError(404, err.message)))
-        .then( (scoreBoard) => {
-          return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
-        });
+        // .then( scoreBoard => {
+        //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
+        // });
     })
     .then( returnObj => {
       return Profile.findOne({ userID: req.user._id })
@@ -72,8 +73,10 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
         .then( profile => {
           profile.leagues.push(req.params.leagueId);
           profile.save();
-          returnObj.profileLeagues = profile.leagues;
+          // returnObj.profileLeagues = profile.leagues;
           res.json(returnObj);
+          // console.log('myLeague: myLeague');
+          // res.json(myLeague);
         });
     })
     .catch(next);
