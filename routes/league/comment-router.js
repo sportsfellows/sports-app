@@ -42,7 +42,7 @@ commentRouter.get('/api/comments', bearerAuth, function(req, res, next) {
 commentRouter.post('/api/comments/messageboard', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/comments/messageboard');
   console.log('req.body: ', req.body);
-  Comment.find( { messageBoardID: { $in: req.body} } )
+  Comment.find( { _id: { $in: req.body} } )
     .then(comments => {
       console.log('comments: ', comments);
       res.json(comments);
