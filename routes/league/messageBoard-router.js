@@ -16,6 +16,24 @@ messageBoardRouter.get('/api/messageboard/:messageBoardId', bearerAuth, function
     .catch(next);
 });
 
+// get messageBoard by league ID
+messageBoardRouter.get('/api/messageboard/league/:leagueId', bearerAuth, function(req, res, next) {
+  debug('GET: /api/messageboard/league/:leagueId');
+
+  MessageBoard.find({ leagueID: req.params.leagueId })
+    .then( messageBoard => res.json(messageBoard))
+    .catch(next);
+});
+
+// get messageBoard by group ID
+messageBoardRouter.get('/api/messageboard/group/:groupId', bearerAuth, function(req, res, next) {
+  debug('GET: /api/messageboard/group/:groupId');
+
+  MessageBoard.find({ groupID: req.params.groupId })
+    .then( messageBoard => res.json(messageBoard))
+    .catch(next);
+});
+
 messageBoardRouter.get('/api/messageboards', bearerAuth, function(req, res, next) {
   debug('GET: /api/messageboards');
 
