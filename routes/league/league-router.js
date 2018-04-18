@@ -174,6 +174,7 @@ leagueRouter.put('/api/league/:leagueId', bearerAuth, jsonParser, function(req, 
 leagueRouter.get('/api/league/:leagueId', bearerAuth, function(req, res, next) {
   debug('GET: /api/league/:leagueId');
 
+  console.log('req.params: ', req.params.leagueId);
   League.findById(req.params.leagueId)
     .then( league => res.json(league))
     .catch(next);
