@@ -216,6 +216,7 @@ leagueRouter.get('/api/leagueNames/:leagueName', function (req, res, next) {
 
   League.findOne({ leagueName: req.params.leagueName })
     .then( league => {
+      console.log('league', league);
       if(!league) {
         return res.sendStatus(200);
       }
