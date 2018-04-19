@@ -234,7 +234,7 @@ leagueRouter.post('/api/leagues/user', bearerAuth, jsonParser, function(req, res
 });
 
 // returns all public leagues
-leagueRouter.get('/api/leagues/allpublic', bearerAuth, jsonParser, function(req, res, next) {
+leagueRouter.get('/api/leagues/allpublic', bearerAuth, function(req, res, next) {
   debug('GET: /api/leagues/allpublic');
   
   League.find({ privacy: 'public' })
