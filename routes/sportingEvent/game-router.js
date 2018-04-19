@@ -42,16 +42,15 @@ gameRouter.get('/api/games', bearerAuth, function(req, res, next) {
 });
 
 // all games by sporting event ID
-gameRouter.get('/api/games/:sportingEventID', bearerAuth, function(req, res, next) {
-  debug('GET:/api/games/:sportingEventID');
+// Game.find( {sportingEventID: req.params.sportingEventID })
+gameRouter.post('/api/games/:sportingEventID', bearerAuth, jsonParser, function(req, res, next) {
+  debug('POST:/api/games/:sportingEventID');
 
-  Game.find( {sportingEventID: req.params.sportingEventID }).populate({path: 'awayTeam homeTeam', select: 'teamName wins losses'})
-    .then(games => {
-      console.log('all games by sporting event: ', games);
-      res.json(games);
-    })
+  Game.find( { _id: { $nin: req.body[0] }}).populate({path: 'awayTeam homeTeam', select: 'teamName wins losses'})
+    .then(games => res.json(games))
     .catch(next);
 });
+
 
 // http PUT :3000/api/game/5aaa8ae6f2db6d1315d2934a 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiZTQzODQwMTBiZmJjN2I2NDJiNTlkZTM1ZjgxMDE3NDhlMTA3MDJmNmU3NmExZWEzOGJmN2M3ZWY2NDUyODUiLCJpYXQiOjE1MjExMjU4Njd9.4p5DqkayofQHjCbHYzSDr8FPexGFcdtJCsM8gTc3maU' gameID='5aaa8ae6f2db6d1315d2934a' winner='5aa8c322091555739d8cb12c' loser='5aa8c340091555739d8cb12d' homeScore=50 awayScore=40 status='played'
 gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, next) {
