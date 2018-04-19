@@ -62,10 +62,10 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
       if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
       return new ScoreBoard(scoreboard).save()
         .then(() => league)
-        .catch( err => Promise.reject(createError(404, err.message)))
-        // .then( scoreBoard => {
-        //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
-        // });
+        .catch( err => Promise.reject(createError(404, err.message)));
+      // .then( scoreBoard => {
+      //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
+      // });
     })
     .then( returnObj => {
       return Profile.findOne({ userID: req.user._id })
@@ -98,10 +98,10 @@ leagueRouter.post('/api/league/private/adduser', bearerAuth, jsonParser, functio
       if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
       return new ScoreBoard(scoreboard).save()
         .then(() => league)
-        .catch( err => Promise.reject(createError(404, err.message)))
-        // .then( scoreBoard => {
-        //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
-        // });
+        .catch( err => Promise.reject(createError(404, err.message)));
+      // .then( scoreBoard => {
+      //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
+      // });
     })
     .then( returnObj => {
       return Profile.findOne({ userID: req.user._id })
