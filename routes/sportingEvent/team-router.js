@@ -28,8 +28,8 @@ teamRouter.get('/api/team/:teamId', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
-teamRouter.get('/api/teams', bearerAuth, function(req, res, next) {
-  debug('GET: /api/teams');
+teamRouter.get('/api/team', bearerAuth, function(req, res, next) {
+  debug('GET: /api/team');
 
   Team.find()
     .then(teams => res.json(teams))
