@@ -20,13 +20,20 @@ userPickRouter.get('/api/userpick/:userPickId', bearerAuth, function(req, res, n
     .catch(next);
 });
 
-userPickRouter.get('/api/userpicks', bearerAuth, function(req, res, next) {
+
+// retrieves all users picks in specific league
+userPickRouter.get('/api/userpicks/:leagueID', bearerAuth, function(req, res, next) {
   debug('GET: /api/userpicks');
 
-  UserPick.find()
-    .then(userPicks => res.json(userPicks))
+  UserPick.find({ leagueID: req.params.leagueID, userID: req.user._id }).populate({ path: 'gameID pick', populate: { path: 'homeTeam awayTeam', select: 'teamName' }})
+    .then(userPicks => {
+      console.log('userpicks res: ', userPicks);
+      return res.json(userPicks);
+    })
     .catch(next);
 });
+
+
 // http POST :3000/api/league/5aaa8a2af2db6d1315d29347/userpick 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiZTQzODQwMTBiZmJjN2I2NDJiNTlkZTM1ZjgxMDE3NDhlMTA3MDJmNmU3NmExZWEzOGJmN2M3ZWY2NDUyODUiLCJpYXQiOjE1MjExMjU4Njd9.4p5DqkayofQHjCbHYzSDr8FPexGFcdtJCsM8gTc3maU' gameID='5aaa8ae6f2db6d1315d2934a' pick='5aa8c322091555739d8cb12c' gameTime='2018-03-16 23:37:52-0700'
 userPickRouter.post('/api/league/:leagueId/userpick', bearerAuth, jsonParser, function(req, res, next) {
   debug('POST: /api/league/:leagueId/userpick');
@@ -36,7 +43,10 @@ userPickRouter.post('/api/league/:leagueId/userpick', bearerAuth, jsonParser, fu
   req.body.userID = req.user._id;
   req.body.leagueID = req.params.leagueId;
   new UserPick(req.body).save()
-    .then( userPick => res.json(userPick))
+    .then( userPick => {
+      console.log('userpick res: ', userPick);
+      return res.json(userPick);
+    })
     .catch(next);
 });
 
@@ -45,6 +55,9 @@ userPickRouter.put('/api/userpick/:userPickId', bearerAuth, jsonParser, function
 
   if (!req.body) return next(createError(400, 'expected a request body'));
   UserPick.findByIdAndUpdate(req.params.userPickId, req.body, {new: true})
-    .then( userPick => res.json(userPick))
+    .then( userPick => {
+      console.log('userpick res: ', userPick);
+      return res.json(userPick);
+    })
     .catch(next);
 });

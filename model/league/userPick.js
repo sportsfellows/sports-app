@@ -6,8 +6,8 @@ mongoose.Promise = require('bluebird');
 const userPickSchema = mongoose.Schema({
   userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'user' },
   leagueID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'league' },
-  gameID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'game' },
-  pick: { type: mongoose.Schema.Types.ObjectId, required: true },
+  gameID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'gameSchema' },
+  pick: { type: mongoose.Schema.Types.ObjectId, ref: 'team' },
   correct: {type: Boolean },
   gameTime: { type: Date, required: true },
 });
