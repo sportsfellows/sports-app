@@ -23,17 +23,6 @@ gameRouter.post('/api/sportingevent/:sportingeventId/game', bearerAuth, jsonPars
   new Game(req.body).save()
     .then( game => res.json(game))
     .catch(next);
-  // .then( newGame => game = newGame)
-  // .then( () => {
-  //   let leagueObjArr = [];
-  //   League.find({ sportingEventID: req.params.sportingeventId })
-  //     .then( leagues => {
-  //       leagues.forEach(league => {
-  //         // leagueObjArr.push({ leagueID: league._id, userIDS: league.users, gameID: game._id, gameTime: game.dateTime })
-  //         leagueObjArr.push({ leagueID: league._id, userIDS: league.users })
-  //       })return leagueObjArr.push({ leagues._id, users: leagues.users})
-  //     })
-  // })
 });
 
 gameRouter.get('/api/game/:gameId', bearerAuth, function(req, res, next) {
@@ -52,9 +41,21 @@ gameRouter.get('/api/games', bearerAuth, function(req, res, next) {
     .catch(next);
 });
 
+// all games by sporting event ID
+gameRouter.get('/api/games/:sportingEventID', bearerAuth, function(req, res, next) {
+  debug('GET:/api/games/:sportingEventID');
+
+  Game.find( {sportingEventID: req.params.sportingEventID }).populate({path: 'awayTeam homeTeam', select: 'teamName wins losses'})
+    .then(games => {
+      console.log('all games by sporting event: ', games);
+      res.json(games);
+    })
+    .catch(next);
+});
+
 // http PUT :3000/api/game/5aaa8ae6f2db6d1315d2934a 'Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImNiZTQzODQwMTBiZmJjN2I2NDJiNTlkZTM1ZjgxMDE3NDhlMTA3MDJmNmU3NmExZWEzOGJmN2M3ZWY2NDUyODUiLCJpYXQiOjE1MjExMjU4Njd9.4p5DqkayofQHjCbHYzSDr8FPexGFcdtJCsM8gTc3maU' gameID='5aaa8ae6f2db6d1315d2934a' winner='5aa8c322091555739d8cb12c' loser='5aa8c340091555739d8cb12d' homeScore=50 awayScore=40 status='played'
 gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, next) {
-  debug('PUT: /api/game:gameId');
+  debug('PUT: /api/game/:gameId');
 
   if (!req.body) return next(createError(400, 'expected a request body'));
   let game = Game.findByIdAndUpdate(req.params.gameId, req.body, {new: true})
@@ -105,11 +106,3 @@ gameRouter.put('/api/game/:gameId', bearerAuth, jsonParser, function(req, res, n
     .then(() => res.send('success'))
     .catch(next);
 });
-
-// League.find({ sportingEventID: req.params.sportingeventId })
-//     .then( leagues => {
-//       leagues.forEach(league => {
-//         // leagueObjArr.push({ leagueID: league._id, userIDS: league.users, gameID: game._id, gameTime: game.dateTime })
-//         leagueObjArr.push({ leagueID: league._id, userIDS: league.users })
-//       })return leagueObjArr.push({ leagues._id, users: leagues.users})
-//     })

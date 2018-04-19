@@ -27,7 +27,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 mongoose.connect(process.env.MONGODB_URI);
 
-app.use(cors());
+// app.use(cors());
+app.use(cors({credentials: true, origin: process.env.CORS_ORIGINS}));
 app.use(morgan('dev'));
 app.use(authRouter);
 app.use(profileRouter);
@@ -45,7 +46,5 @@ app.use(errors);
 const server = module.exports = app.listen(PORT, () => {
   debug(`cf madness is running on: ${PORT}`);
 });
-
-
 
 server.isRunning = true;

@@ -26,19 +26,16 @@ exports.create = function() {
   let user = new User(mock.requestUser);
   return user.generatePasswordHash(mock.requestUser.password)
     .then( user => user.save())
-    .then( user => {
-      mock.requestProfile.userID = user._id;
-      mock.requestProfile.username = user.username;
-      let profile = new Profile(mock.requestProfile).save();
+    .then( tempUser => {
+      mock.requestProfile.userID = tempUser._id;
+      mock.requestProfile.username = tempUser.username;
+      mock.user = tempUser;
+      return new Profile(mock.requestProfile).save();
+    })
+    .then( profile => {
       mock.profile = profile;
-      console.log(mock.profile);
-      return user;
+      return mock.user.generateToken();
     })
-    .then( user => {
-      mock.user = user;
-      return user;
-    })
-    .then( user => user.generateToken())
     .then( token => {
       mock.token = token;
       return mock;    
@@ -47,6 +44,8 @@ exports.create = function() {
 };    
       
 exports.remove = function() {
-  User.remove({});
-  return Profile.remove({});
+  return Promise.all([
+    User.remove({}),
+    Profile.remove({}),
+  ]);
 };
