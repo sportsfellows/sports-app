@@ -62,10 +62,10 @@ leagueRouter.put('/api/league/:leagueId/adduser', bearerAuth, jsonParser, functi
       if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
       return new ScoreBoard(scoreboard).save()
         .then(() => league)
-        .catch( err => Promise.reject(createError(404, err.message)))
-        // .then( scoreBoard => {
-        //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
-        // });
+        .catch( err => Promise.reject(createError(404, err.message)));
+      // .then( scoreBoard => {
+      //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
+      // });
     })
     .then( returnObj => {
       return Profile.findOne({ userID: req.user._id })
@@ -98,10 +98,10 @@ leagueRouter.post('/api/league/private/adduser', bearerAuth, jsonParser, functio
       if (!scoreboard.leagueID || !scoreboard.userID ) return next(createError(400, 'expected a request body leagueID and userID'));
       return new ScoreBoard(scoreboard).save()
         .then(() => league)
-        .catch( err => Promise.reject(createError(404, err.message)))
-        // .then( scoreBoard => {
-        //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
-        // });
+        .catch( err => Promise.reject(createError(404, err.message)));
+      // .then( scoreBoard => {
+      //   return { scoreBoardLeague: scoreBoard.leagueID, scoreBoardUser: scoreBoard.userID, leagueUsers: league.users };
+      // });
     })
     .then( returnObj => {
       return Profile.findOne({ userID: req.user._id })
@@ -174,6 +174,7 @@ leagueRouter.put('/api/league/:leagueId', bearerAuth, jsonParser, function(req, 
 leagueRouter.get('/api/league/:leagueId', bearerAuth, function(req, res, next) {
   debug('GET: /api/league/:leagueId');
 
+  console.log('req.params: ', req.params.leagueId);
   League.findById(req.params.leagueId)
     .then( league => res.json(league))
     .catch(next);
@@ -233,7 +234,7 @@ leagueRouter.post('/api/leagues/user', bearerAuth, jsonParser, function(req, res
 });
 
 // returns all public leagues
-leagueRouter.get('/api/leagues/allpublic', bearerAuth, jsonParser, function(req, res, next) {
+leagueRouter.get('/api/leagues/allpublic', bearerAuth, function(req, res, next) {
   debug('GET: /api/leagues/allpublic');
   
   League.find({ privacy: 'public' })
