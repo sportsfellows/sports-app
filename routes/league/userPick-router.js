@@ -15,7 +15,7 @@ const userPickRouter = module.exports = Router();
 userPickRouter.get('/api/userpick/:userPickId', bearerAuth, function(req, res, next) {
   debug('GET: /api/userpick/:userPickId');
 
-  UserPick.findById(req.params.userPickId).populate({path: 'gameID', select: 'homeTeam awayTeam', populate: {path: 'awayTeam homeTeam', select: 'teamName wins losses _id'}})
+  UserPick.findById(req.params.userPickId).populate({path: 'gameID', select: 'homeTeam awayTeam', populate: {path: 'awayTeam homeTeam', select: 'teamName wins losses _id image'}})
     .then(userPick => res.json(userPick))
     .catch(next);
 });
@@ -25,7 +25,7 @@ userPickRouter.get('/api/userpick/:userPickId', bearerAuth, function(req, res, n
 userPickRouter.get('/api/userpicks/:leagueID', bearerAuth, function(req, res, next) {
   debug('GET: /api/userpicks');
 
-  UserPick.find({ leagueID: req.params.leagueID, userID: req.user._id }).populate({path: 'gameID', select: 'homeTeam awayTeam', populate: {path: 'awayTeam homeTeam', select: 'teamName wins losses _id'}})
+  UserPick.find({ leagueID: req.params.leagueID, userID: req.user._id }).populate({path: 'gameID', select: 'homeTeam awayTeam', populate: {path: 'awayTeam homeTeam', select: 'teamName wins losses _id image'}})
     .then(userPicks => res.json(userPicks))
     .catch(next);
 });
